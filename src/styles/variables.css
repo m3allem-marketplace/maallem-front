@@ -1,0 +1,330 @@
+/*
+ * =====================================================================
+ * M3ALLEM — Design Tokens (CSS Custom Properties)
+ * =====================================================================
+ * Source of truth for ALL colors, typography, spacing, shadows, etc.
+ * Every engineer MUST use these variables — no hardcoded values allowed.
+ *
+ * Brand colors are derived from the M3allem logo:
+ *   Primary  → Deep Navy Blue  (#1B2B6E)
+ *   Accent   → Amber Gold      (#FFB400)
+ * =====================================================================
+ */
+
+:root {
+
+  /* -------------------------------------------------------------------
+   * 1. BRAND COLORS — Primary (Navy Blue)
+   * ------------------------------------------------------------------- */
+  --color-primary-50:   #eef0f9;   /* lightest tint — hover backgrounds   */
+  --color-primary-100:  #d4d9ef;
+  --color-primary-200:  #aab3df;
+  --color-primary-300:  #7f8dcf;
+  --color-primary-400:  #5567bf;
+  --color-primary-500:  #2b41af;   /* mid-range blue                      */
+  --color-primary-600:  #1f3194;
+  --color-primary-700:  #1b2b6e;   /* ← LOGO NAVY — main brand color      */
+  --color-primary-800:  #142054;
+  --color-primary-900:  #0d153a;   /* darkest shade — text on light bg    */
+
+  /* Semantic aliases — use these in code, not the numbered scale */
+  --color-primary:          var(--color-primary-700);  /* default primary  */
+  --color-primary-light:    var(--color-primary-500);  /* hover states     */
+  --color-primary-dark:     var(--color-primary-900);  /* pressed states   */
+  --color-primary-subtle:   var(--color-primary-50);   /* ghost bg, badges */
+  --color-primary-muted:    var(--color-primary-100);  /* disabled bg      */
+
+  /* -------------------------------------------------------------------
+   * 2. BRAND COLORS — Accent (Amber Gold)
+   * ------------------------------------------------------------------- */
+  --color-accent-50:    #fff8e1;   /* lightest tint                        */
+  --color-accent-100:   #ffecb3;
+  --color-accent-200:   #ffe082;
+  --color-accent-300:   #ffd54f;
+  --color-accent-400:   #ffca28;
+  --color-accent-500:   #ffb400;   /* ← LOGO GOLD — main accent color     */
+  --color-accent-600:   #e6a200;
+  --color-accent-700:   #cc9000;
+  --color-accent-800:   #996c00;
+  --color-accent-900:   #664800;   /* darkest shade                        */
+
+  /* Semantic aliases */
+  --color-accent:         var(--color-accent-500);   /* default accent     */
+  --color-accent-light:   var(--color-accent-300);   /* hover states       */
+  --color-accent-dark:    var(--color-accent-700);   /* pressed states     */
+  --color-accent-subtle:  var(--color-accent-50);    /* ghost bg           */
+
+  /* -------------------------------------------------------------------
+   * 3. NEUTRAL GRAY SCALE
+   * ------------------------------------------------------------------- */
+  --color-neutral-0:    #ffffff;   /* pure white                           */
+  --color-neutral-50:   #f8f9fa;   /* page background                      */
+  --color-neutral-100:  #f1f3f5;   /* card background                      */
+  --color-neutral-200:  #e9ecef;   /* dividers, borders                    */
+  --color-neutral-300:  #dee2e6;   /* input borders                        */
+  --color-neutral-400:  #ced4da;   /* placeholder text                     */
+  --color-neutral-500:  #adb5bd;   /* disabled text                        */
+  --color-neutral-600:  #6c757d;   /* secondary text                       */
+  --color-neutral-700:  #495057;   /* body text                            */
+  --color-neutral-800:  #343a40;   /* heading text                         */
+  --color-neutral-900:  #212529;   /* darkest — high-contrast text         */
+
+  /* -------------------------------------------------------------------
+   * 4. SEMANTIC STATUS COLORS
+   * ------------------------------------------------------------------- */
+
+  /* Success — green */
+  --color-success-light:  #d4edda;
+  --color-success:        #28a745;
+  --color-success-dark:   #1e7e34;
+
+  /* Error / Danger — red */
+  --color-error-light:    #f8d7da;
+  --color-error:          #dc3545;
+  --color-error-dark:     #bd2130;
+
+  /* Warning — amber (softer than accent, more orange) */
+  --color-warning-light:  #fff3cd;
+  --color-warning:        #fd7e14;
+  --color-warning-dark:   #e96b02;
+
+  /* Info — blue */
+  --color-info-light:     #d1ecf1;
+  --color-info:           #17a2b8;
+  --color-info-dark:      #117a8b;
+
+  /* -------------------------------------------------------------------
+   * 5. TIER COLORS (for TierBadgeComponent)
+   * ------------------------------------------------------------------- */
+  --color-tier-bronze:      #cd7f32;
+  --color-tier-bronze-bg:   #fdf3e7;
+  --color-tier-silver:      #9e9e9e;
+  --color-tier-silver-bg:   #f5f5f5;
+  --color-tier-gold:        #ffb400;   /* same as brand accent              */
+  --color-tier-gold-bg:     #fff8e1;
+  --color-tier-master:      #9b59b6;
+  --color-tier-master-bg:   #f5eefb;
+
+  /* -------------------------------------------------------------------
+   * 6. BACKGROUND & SURFACE TOKENS
+   * ------------------------------------------------------------------- */
+  --bg-page:          var(--color-neutral-50);    /* main app background    */
+  --bg-surface:       var(--color-neutral-0);     /* cards, modals, panels  */
+  --bg-surface-alt:   var(--color-neutral-100);   /* alternate card bg      */
+  --bg-overlay:       rgba(27, 43, 110, 0.55);    /* modal backdrop (navy)  */
+
+  /* -------------------------------------------------------------------
+   * 7. TEXT TOKENS
+   * ------------------------------------------------------------------- */
+  --text-primary:     var(--color-neutral-900);   /* headings, labels       */
+  --text-body:        var(--color-neutral-700);   /* paragraphs             */
+  --text-secondary:   var(--color-neutral-600);   /* captions, hints        */
+  --text-disabled:    var(--color-neutral-500);   /* disabled state         */
+  --text-placeholder: var(--color-neutral-400);   /* input placeholder      */
+  --text-inverse:     var(--color-neutral-0);     /* on dark/primary bg     */
+  --text-accent:      var(--color-accent);        /* highlight text         */
+  --text-link:        var(--color-primary);       /* hyperlinks             */
+  --text-link-hover:  var(--color-primary-light); /* hovered hyperlinks     */
+
+  /* -------------------------------------------------------------------
+   * 8. BORDER TOKENS
+   * ------------------------------------------------------------------- */
+  --border-color:         var(--color-neutral-200);
+  --border-color-focus:   var(--color-primary);
+  --border-color-error:   var(--color-error);
+  --border-width:         1px;
+  --border-width-thick:   2px;
+
+  /* -------------------------------------------------------------------
+   * 9. BORDER RADIUS
+   * ------------------------------------------------------------------- */
+  --radius-xs:    4px;    /* tags, chips                                   */
+  --radius-sm:    6px;    /* inputs, small buttons                         */
+  --radius-md:    8px;    /* cards, panels                                 */
+  --radius-lg:    12px;   /* modals, large cards                           */
+  --radius-xl:    16px;   /* hero sections                                 */
+  --radius-2xl:   24px;   /* feature cards                                 */
+  --radius-full:  9999px; /* pills, avatars, badge                         */
+
+  /* -------------------------------------------------------------------
+   * 10. SPACING SCALE (based on 4px grid)
+   * ------------------------------------------------------------------- */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+
+  /* -------------------------------------------------------------------
+   * 11. TYPOGRAPHY
+   * ------------------------------------------------------------------- */
+
+  /* Font families */
+  --font-sans:   'Inter', 'Segoe UI', system-ui, sans-serif;  /* Latin text  */
+  --font-arabic: 'Cairo', 'Tajawal', 'Noto Kufi Arabic', sans-serif; /* Arabic */
+  --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Font sizes (fluid-friendly rem scale) */
+  --text-xs:    0.75rem;    /* 12px — captions, badges                     */
+  --text-sm:    0.875rem;   /* 14px — secondary text, labels               */
+  --text-base:  1rem;       /* 16px — body                                 */
+  --text-lg:    1.125rem;   /* 18px — lead paragraphs                      */
+  --text-xl:    1.25rem;    /* 20px — card titles                          */
+  --text-2xl:   1.5rem;     /* 24px — section headings                     */
+  --text-3xl:   1.875rem;   /* 30px — page headings                        */
+  --text-4xl:   2.25rem;    /* 36px — hero title                           */
+  --text-5xl:   3rem;       /* 48px — marketing headline                   */
+
+  /* Font weights */
+  --font-regular:    400;
+  --font-medium:     500;
+  --font-semibold:   600;
+  --font-bold:       700;
+  --font-extrabold:  800;
+
+  /* Line heights */
+  --leading-tight:   1.25;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.025em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.025em;
+  --tracking-wider:   0.05em;
+  --tracking-widest:  0.1em;
+
+  /* -------------------------------------------------------------------
+   * 12. SHADOWS
+   * ------------------------------------------------------------------- */
+  --shadow-xs:  0 1px 2px rgba(27, 43, 110, 0.06);
+  --shadow-sm:  0 1px 3px rgba(27, 43, 110, 0.1), 0 1px 2px rgba(27, 43, 110, 0.06);
+  --shadow-md:  0 4px 6px rgba(27, 43, 110, 0.07), 0 2px 4px rgba(27, 43, 110, 0.06);
+  --shadow-lg:  0 10px 15px rgba(27, 43, 110, 0.1), 0 4px 6px rgba(27, 43, 110, 0.05);
+  --shadow-xl:  0 20px 25px rgba(27, 43, 110, 0.1), 0 10px 10px rgba(27, 43, 110, 0.04);
+  --shadow-2xl: 0 25px 50px rgba(27, 43, 110, 0.18);
+
+  /* Focus ring — shown on keyboard navigation */
+  --shadow-focus: 0 0 0 3px rgba(27, 43, 110, 0.3);
+  --shadow-focus-error: 0 0 0 3px rgba(220, 53, 69, 0.3);
+
+  /* Card hover lift effect */
+  --shadow-hover: 0 8px 24px rgba(27, 43, 110, 0.15);
+
+  /* -------------------------------------------------------------------
+   * 13. TRANSITIONS & ANIMATIONS
+   * ------------------------------------------------------------------- */
+  --transition-fast:    150ms ease;
+  --transition-base:    200ms ease;
+  --transition-slow:    300ms ease;
+  --transition-slower:  500ms ease;
+
+  /* Common transition shorthands */
+  --transition-color:      color var(--transition-base),
+                            background-color var(--transition-base),
+                            border-color var(--transition-base);
+  --transition-shadow:     box-shadow var(--transition-base);
+  --transition-transform:  transform var(--transition-base);
+  --transition-all:        all var(--transition-base);
+
+  /* -------------------------------------------------------------------
+   * 14. Z-INDEX SCALE
+   * ------------------------------------------------------------------- */
+  --z-below:      -1;
+  --z-base:        0;
+  --z-raised:     10;    /* cards on hover                                 */
+  --z-dropdown:   100;   /* dropdowns, category picker                     */
+  --z-sticky:     200;   /* navbar (sticky)                                */
+  --z-overlay:    300;   /* modal backdrop                                 */
+  --z-modal:      400;   /* modal dialog                                   */
+  --z-toast:      500;   /* toast notifications                            */
+  --z-tooltip:    600;   /* tooltips (above everything)                    */
+
+  /* -------------------------------------------------------------------
+   * 15. BREAKPOINTS (for reference — use in media queries directly)
+   *
+   *   --bp-sm:   576px   (small devices)
+   *   --bp-md:   768px   (tablets)
+   *   --bp-lg:   992px   (small desktops)
+   *   --bp-xl:   1200px  (large desktops)
+   *   --bp-2xl:  1400px  (wide screens)
+   *
+   * NOTE: CSS custom properties cannot be used inside @media queries.
+   * These values are listed here as documentation only.
+   * Use the pixel values directly in your media queries.
+   * ------------------------------------------------------------------- */
+
+  /* -------------------------------------------------------------------
+   * 16. COMPONENT-SPECIFIC TOKENS
+   * ------------------------------------------------------------------- */
+
+  /* Navbar */
+  --navbar-height:      64px;
+  --navbar-bg:          var(--color-primary);
+  --navbar-text:        var(--text-inverse);
+  --navbar-border:      rgba(255, 255, 255, 0.1);
+  --navbar-link-hover:  rgba(255, 180, 0, 0.15); /* gold tint on hover    */
+  --navbar-active:      var(--color-accent);
+
+  /* Sidebar */
+  --sidebar-width:      240px;
+  --sidebar-bg:         var(--color-neutral-0);
+  --sidebar-border:     var(--border-color);
+
+  /* Inputs */
+  --input-height:       42px;
+  --input-height-sm:    34px;
+  --input-height-lg:    52px;
+  --input-bg:           var(--color-neutral-0);
+  --input-border:       var(--color-neutral-300);
+  --input-radius:       var(--radius-sm);
+  --input-padding-x:    var(--space-3);
+
+  /* Buttons */
+  --btn-radius:         var(--radius-sm);
+  --btn-height:         42px;
+  --btn-height-sm:      34px;
+  --btn-height-lg:      52px;
+  --btn-font-weight:    var(--font-semibold);
+
+  /* Cards */
+  --card-bg:            var(--color-neutral-0);
+  --card-border:        var(--border-color);
+  --card-radius:        var(--radius-md);
+  --card-shadow:        var(--shadow-sm);
+  --card-shadow-hover:  var(--shadow-hover);
+  --card-padding:       var(--space-6);
+
+  /* Avatar sizes */
+  --avatar-sm:  32px;
+  --avatar-md:  48px;
+  --avatar-lg:  64px;
+  --avatar-xl:  96px;
+
+  /* Badges */
+  --badge-radius:       var(--radius-full);
+  --badge-padding-x:    var(--space-2);
+  --badge-padding-y:    2px;
+  --badge-font-size:    var(--text-xs);
+  --badge-font-weight:  var(--font-semibold);
+
+  /* Toast */
+  --toast-width:    360px;
+  --toast-radius:   var(--radius-md);
+  --toast-shadow:   var(--shadow-lg);
+
+  /* Modal */
+  --modal-radius:       var(--radius-lg);
+  --modal-shadow:       var(--shadow-2xl);
+  --modal-max-width:    540px;
+  --modal-padding:      var(--space-8);
+}

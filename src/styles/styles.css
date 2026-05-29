@@ -1,0 +1,172 @@
+/*
+ * =====================================================================
+ * M3ALLEM — Global Styles
+ * =====================================================================
+ * Import this file once in angular.json → styles array.
+ * Do NOT import it inside component stylesheets.
+ * =====================================================================
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+@import './variables.css';
+
+/* -------------------------------------------------------------------
+ * Reset & Base
+ * ------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Arabic text — applied to elements with [lang="ar"] or .arabic class */
+[lang="ar"], .font-arabic {
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+/* -------------------------------------------------------------------
+ * Typography Base
+ * ------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+h6 { font-size: var(--text-base); }
+
+p { line-height: var(--leading-relaxed); }
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: var(--transition-color);
+}
+a:hover { color: var(--text-link-hover); }
+
+strong { font-weight: var(--font-semibold); }
+
+/* -------------------------------------------------------------------
+ * Focus — accessibility ring (shown on keyboard navigation only)
+ * ------------------------------------------------------------------- */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* -------------------------------------------------------------------
+ * Scrollbar (webkit — optional style)
+ * ------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-neutral-100); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-400);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-400); }
+
+/* -------------------------------------------------------------------
+ * Utility Classes
+ * ------------------------------------------------------------------- */
+
+/* Colors */
+.text-primary   { color: var(--color-primary) !important; }
+.text-accent    { color: var(--color-accent) !important; }
+.text-success   { color: var(--color-success) !important; }
+.text-error     { color: var(--color-error) !important; }
+.text-warning   { color: var(--color-warning) !important; }
+.text-muted     { color: var(--text-secondary) !important; }
+
+/* Backgrounds */
+.bg-primary     { background-color: var(--color-primary) !important; }
+.bg-accent      { background-color: var(--color-accent) !important; }
+.bg-surface     { background-color: var(--bg-surface) !important; }
+
+/* Display */
+.d-flex       { display: flex; }
+.d-grid       { display: grid; }
+.d-block      { display: block; }
+.d-none       { display: none !important; }
+.flex-column  { flex-direction: column; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2  { gap: var(--space-2); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+
+/* Spacing helpers */
+.mt-auto { margin-top: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+
+/* Typography helpers */
+.font-medium    { font-weight: var(--font-medium) !important; }
+.font-semibold  { font-weight: var(--font-semibold) !important; }
+.font-bold      { font-weight: var(--font-bold) !important; }
+.text-sm        { font-size: var(--text-sm) !important; }
+.text-xs        { font-size: var(--text-xs) !important; }
+.text-center    { text-align: center; }
+.text-right     { text-align: right; }
+.truncate       { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Visibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* -------------------------------------------------------------------
+ * Page Layout Shell
+ * ------------------------------------------------------------------- */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: var(--navbar-height); /* offset for sticky navbar */
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 var(--space-4); }
+}
