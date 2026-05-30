@@ -1,3 +1,4 @@
-export { ButtonComponent } from './button/button.component';
-export { InputComponent }  from './input/input.component';
-export { ModalComponent }  from './modal/modal.component';
+export { ButtonComponent }         from './button/button.component';
+export { InputComponent }          from './input/input.component';
+export { ModalComponent }          from './modal/modal.component';
+export { ToastService, ToastContainerComponent } from './toast/toast.service';
