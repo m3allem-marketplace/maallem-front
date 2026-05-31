@@ -1,0 +1,44 @@
+<div class="worker-card">
+
+  <!-- Top accent bar -->
+  <div class="worker-card__accent"></div>
+
+  <div class="worker-card__body">
+
+    <!-- Header: Avatar + Name + Tier -->
+    <div class="worker-card__header">
+      <app-avatar
+        [imageUrl]="worker.avatar"
+        [name]="worker.name"
+        size="lg"
+      />
+      <div class="worker-card__info">
+        <h3 class="worker-card__name">{{ worker.name }}</h3>
+        <p class="worker-card__category">{{ worker.category }}</p>
+        <app-tier-badge [tier]="worker.tier" />
+      </div>
+    </div>
+
+    <!-- Rating -->
+    <div class="worker-card__rating">
+      <app-star-rating [rating]="worker.rating" [readonly]="true" />
+      <span class="worker-card__rating-value">({{ worker.rating }})</span>
+    </div>
+
+    <div class="worker-card__divider"></div>
+
+    <!-- Footer: Rate + CTA -->
+    <div class="worker-card__footer">
+      <div class="worker-card__rate-wrapper">
+        <span class="worker-card__rate-label">Per Hour</span>
+        <span class="worker-card__rate">{{ worker.ratePerHour | currencyFormat }}</span>
+      </div>
+
+      <a class="worker-card__btn" [routerLink]="['/workers', worker.id]">
+        View Profile
+        <span class="worker-card__btn-arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</div>

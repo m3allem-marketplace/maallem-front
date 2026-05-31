@@ -1,0 +1,9 @@
+<span [class]="classes" [attr.aria-label]="name">
+  <img
+    *ngIf="imageUrl"
+    [src]="imageUrl"
+    [alt]="name"
+    class="avatar__img"
+  />
+  <span *ngIf="!imageUrl">{{ initials }}</span>
+</span>

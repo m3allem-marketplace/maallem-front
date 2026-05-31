@@ -1,0 +1,9 @@
+<span
+  class="tier-badge"
+  [style.background-color]="current.bg"
+  [style.color]="current.color"
+  [attr.aria-label]="current.label + ' tier'"
+>
+  <span aria-hidden="true">{{ current.icon }}</span>
+  <span>{{ current.label }}</span>
+</span>
