@@ -5,48 +5,57 @@ import { CommonModule } from '@angular/common';
   selector: 'app-star-rating',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './star-rating.component.html',
+  template: `
+    <div
+      class="stars"
+      [attr.aria-label]="rating + ' out of 5 stars'"
+      role="img"
+      (mouseleave)="onLeave()"
+    >
+      <span
+        *ngFor="let star of stars"
+        class="star-wrap"
+        [class.star-wrap--clickable]="!readonly"
+        (mouseenter)="onHover(star)"
+        (click)="onClick(star)"
+      >
+        <!-- Background: empty star -->
+        <svg class="star star--empty" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        <!-- Foreground: filled star clipped to percentage -->
+        <svg class="star star--full" viewBox="0 0 24 24" [style.clip-path]="getClip(star)">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </span>
+    </div>
+  `,
   styles: [`
     .stars {
       display:     inline-flex;
       align-items: center;
-      gap:         2px;
+      gap:         3px;
     }
+
+    .star-wrap {
+      position: relative;
+      display:  inline-block;
+      width:    20px;
+      height:   20px;
+    }
+
+    .star-wrap--clickable { cursor: pointer; }
 
     .star {
-      position:    relative;
-      display:     inline-block;
-      width:       1.25em;
-      height:      1.25em;
-      font-size:   1.25rem;
-      line-height: 1;
-      cursor:      default;
-    }
-
-    .star--clickable { cursor: pointer; }
-
-    /* empty star (background) */
-    .star__empty,
-    .star__full {
       position: absolute;
-      inset:    0;
-      display:  flex;
-      align-items: center;
+      top:      0;
+      left:     0;
+      width:    20px;
+      height:   20px;
     }
 
-    .star__empty { color: var(--color-neutral-300); }
-    .star__full  { color: var(--color-accent); overflow: hidden; }
-
-    /* full  → show 100% */
-    .star--full  .star__full { width: 100%; }
-    /* half  → show 50%  */
-    .star--half  .star__full { width: 50%;  }
-    /* empty → show 0%   */
-    .star--empty .star__full { width: 0%;   }
-
-    /* hover tint in write mode */
-    .star--hovered .star__full,
-    .star--hovered .star__empty { color: var(--color-accent-light); }
+    .star--empty { fill: var(--color-neutral-300); }
+    .star--full  { fill: var(--color-accent); }
   `]
 })
 export class StarRatingComponent {
@@ -57,15 +66,13 @@ export class StarRatingComponent {
   hoverRating: number = 0;
   stars = [1, 2, 3, 4, 5];
 
-  getStarClass(star: number): string {
+  getClip(star: number): string {
     const active = this.hoverRating || this.rating;
-    let state: string;
-    if (active >= star)        state = 'full';
-    else if (active >= star - 0.5) state = 'half';
-    else                           state = 'empty';
-
-    const hovered = !this.readonly && this.hoverRating >= star ? 'star--hovered' : '';
-    return `star star--${state} ${this.readonly ? '' : 'star--clickable'} ${hovered}`;
+    let pct: number;
+    if (active >= star)            pct = 100;
+    else if (active >= star - 0.5) pct = 50;
+    else                           pct = 0;
+    return `inset(0 ${100 - pct}% 0 0)`;
   }
 
   onHover(star: number): void {
