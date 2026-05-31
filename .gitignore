@@ -4,3 +4,7 @@ dist/
 *.log
 .env
 .env.*
+
+api-docs.json
+task-context.md
+structure-private.md
