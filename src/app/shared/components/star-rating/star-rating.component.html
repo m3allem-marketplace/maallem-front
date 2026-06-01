@@ -1,0 +1,17 @@
+<div
+  class="stars"
+  [attr.aria-label]="rating + ' out of 5 stars'"
+  role="img"
+  (mouseleave)="onLeave()"
+>
+  <span
+    *ngFor="let star of stars"
+    [class]="getStarClass(star)"
+    [attr.aria-hidden]="true"
+    (mouseenter)="onHover(star)"
+    (click)="onClick(star)"
+  >
+    <span class="star__empty">★</span>
+    <span class="star__full">★</span>
+  </span>
+</div>
