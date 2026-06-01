@@ -1,0 +1,34 @@
+<app-modal
+  [isOpen]="isOpen"
+  [title]="title"
+  (closed)="onCancel()"
+>
+
+  <div modal-body>
+    <p>
+      {{ message }}
+    </p>
+  </div>
+
+  <div
+    modal-footer
+    class="flex justify-end gap-3"
+  >
+
+    <app-button
+      variant="ghost"
+      (click)="onCancel()"
+    >
+      {{ cancelLabel }}
+    </app-button>
+
+    <app-button
+      variant="primary"
+      (click)="onConfirm()"
+    >
+      {{ confirmLabel }}
+    </app-button>
+
+  </div>
+
+</app-modal>
