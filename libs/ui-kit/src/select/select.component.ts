@@ -2,11 +2,16 @@ import {
   Component,
   Input,
   forwardRef,
-  HostListener,
-  OnInit,
+  HostListener
 } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import {
+  FormsModule,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
 
 export interface SelectOption {
   label: string;
@@ -16,248 +21,303 @@ export interface SelectOption {
 @Component({
   selector: 'app-select',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => SelectComponent),
-      multi: true,
-    },
+      multi: true
+    }
   ],
   template: `
-    <div class="select-wrapper" [class.select-wrapper--open]="isOpen">
+    <div class="select-container">
 
       <!-- Trigger -->
-      <div class="select-trigger" (click)="toggleDropdown()" tabindex="0" (keydown.enter)="toggleDropdown()">
-        <span class="select-trigger__value">
-          <ng-container *ngIf="selectedLabels.length; else placeholder">
-            <span *ngIf="!multiSelect">{{ selectedLabels[0] }}</span>
-            <span *ngIf="multiSelect" class="select-trigger__tags">
-              <span class="select-tag" *ngFor="let lbl of selectedLabels">{{ lbl }}</span>
+      <div
+        class="select-trigger"
+        [class.select-open]="isOpen"
+        (click)="toggleDropdown()"
+        tabindex="0"
+        (keydown.enter)="toggleDropdown()"
+      >
+
+        <span class="select-value">
+
+          @if (selectedLabels.length) {
+
+            @if (!multiSelect) {
+
+              {{ selectedLabels[0] }}
+
+            } @else {
+
+              <span class="selected-tags">
+
+                @for (label of selectedLabels; track label) {
+                  <span class="selected-tag">
+                    {{ label }}
+                  </span>
+                }
+
+              </span>
+
+            }
+
+          } @else {
+
+            <span class="placeholder">
+              {{ placeholderText }}
             </span>
-          </ng-container>
-          <ng-template #placeholder>
-            <span class="select-trigger__placeholder">{{ placeholderText }}</span>
-          </ng-template>
+
+          }
+
         </span>
-        <span class="select-trigger__arrow" [class.select-trigger__arrow--open]="isOpen">&#x25BE;</span>
+
+        <span
+          class="select-arrow"
+          [class.rotate]="isOpen"
+        >
+          ▼
+        </span>
+
       </div>
 
       <!-- Dropdown -->
-      <div *ngIf="isOpen" class="select-dropdown">
+      @if (isOpen) {
 
-        <!-- Search -->
-        <div *ngIf="searchable" class="select-search">
-          <input
-            [(ngModel)]="searchQuery"
-            placeholder="بحث..."
-            class="select-search__input"
-            (click)="$event.stopPropagation()"
-          />
+        <div class="select-dropdown">
+
+          @if (searchable) {
+
+            <div class="search-wrapper">
+
+              <input
+                [(ngModel)]="searchQuery"
+                placeholder="بحث..."
+                class="search-input"
+                (click)="$event.stopPropagation()"
+              />
+
+            </div>
+
+          }
+
+          <ul class="options-list">
+
+            @for (option of filteredOptions; track option.value) {
+
+              <li
+                class="option"
+                [class.option-selected]="isSelected(option)"
+                (click)="selectOption(option)"
+              >
+
+                @if (multiSelect) {
+                  <span class="checkmark">
+                    {{ isSelected(option) ? '✓' : '' }}
+                  </span>
+                }
+
+                {{ option.label }}
+
+              </li>
+
+            }
+
+            @if (filteredOptions.length === 0) {
+
+              <li class="empty-option">
+                لا توجد نتائج
+              </li>
+
+            }
+
+          </ul>
+
         </div>
 
-        <!-- Options -->
-        <ul class="select-options" role="listbox">
-          <li
-            *ngFor="let option of filteredOptions"
-            class="select-option"
-            [class.select-option--selected]="isSelected(option)"
-            (click)="selectOption(option)"
-            role="option"
-            [attr.aria-selected]="isSelected(option)"
-          >
-            <span *ngIf="multiSelect" class="select-option__check">
-              {{ isSelected(option) ? '✓' : '' }}
-            </span>
-            {{ option.label }}
-          </li>
-
-          <li *ngIf="filteredOptions.length === 0" class="select-option select-option--empty">
-            لا توجد نتائج
-          </li>
-        </ul>
-      </div>
+      }
 
     </div>
   `,
   styles: [`
-    .select-wrapper {
+    .select-container {
       position: relative;
-      width:    100%;
+      width: 100%;
     }
 
-    /* ── Trigger ── */
     .select-trigger {
-      display:          flex;
-      align-items:      center;
-      justify-content:  space-between;
-      height:           var(--input-height);
-      padding:          0 var(--input-padding-x);
-      background:       var(--input-bg);
-      border:           var(--border-width) solid var(--input-border);
-      border-radius:    var(--input-radius);
-      cursor:           pointer;
-      font-size:        var(--text-base);
-      color:            var(--text-body);
-      transition:       var(--transition-color), var(--transition-shadow);
-      user-select:      none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      min-height: var(--input-height);
+
+      padding: 0 var(--input-padding-x);
+
+      background: var(--input-bg);
+
+      border: 1px solid var(--input-border);
+      border-radius: var(--input-radius);
+
+      cursor: pointer;
+
+      transition: var(--transition-all);
     }
 
-    .select-trigger:focus {
-      outline:      none;
+    .select-open {
       border-color: var(--border-color-focus);
-      box-shadow:   var(--shadow-focus);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
-    .select-wrapper--open .select-trigger {
-      border-color:        var(--border-color-focus);
-      border-bottom-color: transparent;
-      border-radius:       var(--input-radius) var(--input-radius) 0 0;
-    }
-
-    .select-trigger__placeholder {
-      color: var(--text-placeholder);
-    }
-
-    .select-trigger__value {
+    .select-value {
       flex: 1;
       overflow: hidden;
     }
 
-    .select-trigger__tags {
-      display:   flex;
-      flex-wrap: wrap;
-      gap:       var(--space-1);
+    .placeholder {
+      color: var(--text-placeholder);
     }
 
-    .select-tag {
-      background:    var(--color-primary-subtle);
-      color:         var(--color-primary);
-      border-radius: var(--radius-full);
-      font-size:     var(--text-xs);
-      padding:       2px var(--space-2);
-      font-weight:   var(--font-medium);
+    .select-arrow {
+      font-size: 12px;
+      transition: transform .2s ease;
     }
 
-    .select-trigger__arrow {
-      font-size:  12px;
-      color:      var(--text-secondary);
-      transition: transform var(--transition-base);
-      flex-shrink: 0;
-    }
-
-    .select-trigger__arrow--open {
+    .rotate {
       transform: rotate(180deg);
     }
 
-    /* ── Dropdown ── */
     .select-dropdown {
-      position:         absolute;
-      top:              100%;
-      left:             0;
-      right:            0;
-      z-index:          var(--z-dropdown);
-      background:       var(--bg-surface);
-      border:           var(--border-width) solid var(--border-color-focus);
-      border-top:       none;
-      border-radius:    0 0 var(--input-radius) var(--input-radius);
-      box-shadow:       var(--shadow-md);
-      max-height:       240px;
-      overflow-y:       auto;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+
+      z-index: var(--z-dropdown);
+
+      background: var(--bg-surface);
+
+      border: 1px solid var(--border-color-focus);
+      border-top: none;
+
+      border-radius: 0 0 var(--input-radius) var(--input-radius);
+
+      box-shadow: var(--shadow-md);
+
+      max-height: 240px;
+      overflow-y: auto;
     }
 
-    /* ── Search ── */
-    .select-search {
-      padding: var(--space-2) var(--space-3);
-      border-bottom: var(--border-width) solid var(--border-color);
+    .search-wrapper {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .select-search__input {
-      width:         100%;
-      height:        var(--input-height-sm);
-      padding:       0 var(--space-2);
-      border:        var(--border-width) solid var(--input-border);
+    .search-input {
+      width: 100%;
+      height: 36px;
+
+      padding-inline: 12px;
+
+      border: 1px solid var(--input-border);
       border-radius: var(--radius-xs);
-      font-size:     var(--text-sm);
-      outline:       none;
-      background:    var(--input-bg);
-      color:         var(--text-body);
+
+      outline: none;
     }
 
-    .select-search__input:focus {
-      border-color: var(--border-color-focus);
-    }
-
-    /* ── Options ── */
-    .select-options {
+    .options-list {
       list-style: none;
-      margin:     0;
-      padding:    var(--space-1) 0;
+      margin: 0;
+      padding: 4px 0;
     }
 
-    .select-option {
-      display:     flex;
+    .option {
+      display: flex;
       align-items: center;
-      gap:         var(--space-2);
-      padding:     var(--space-2) var(--space-4);
-      font-size:   var(--text-sm);
-      cursor:      pointer;
-      color:       var(--text-body);
-      transition:  background-color var(--transition-fast);
+      gap: 8px;
+
+      padding: 10px 16px;
+
+      cursor: pointer;
+
+      transition: background .15s ease;
     }
 
-    .select-option:hover {
-      background-color: var(--color-primary-subtle);
+    .option:hover {
+      background: var(--color-primary-subtle);
     }
 
-    .select-option--selected {
-      background-color: var(--color-primary-subtle);
-      color:            var(--color-primary);
-      font-weight:      var(--font-medium);
+    .option-selected {
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+      font-weight: 600;
     }
 
-    .select-option__check {
-      width:      16px;
-      color:      var(--color-primary);
-      font-weight: var(--font-bold);
-      font-size:  var(--text-xs);
+    .checkmark {
+      width: 16px;
+      color: var(--color-primary);
     }
 
-    .select-option--empty {
-      color:  var(--text-secondary);
-      cursor: default;
+    .empty-option {
+      padding: 10px 16px;
+      color: var(--text-secondary);
     }
 
-    .select-option--empty:hover {
-      background: transparent;
+    .selected-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .selected-tag {
+      padding: 2px 8px;
+
+      border-radius: 999px;
+
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+
+      font-size: 12px;
+      font-weight: 500;
     }
   `]
 })
-export class SelectComponent implements ControlValueAccessor, OnInit {
-  @Input() options:      SelectOption[] = [];
-  @Input() multiSelect:  boolean        = false;
-  @Input() searchable:   boolean        = false;
-  @Input() placeholderText: string      = 'اختر...';
+export class SelectComponent implements ControlValueAccessor {
 
-  isOpen:      boolean  = false;
-  searchQuery: string   = '';
-  selected:    any[]    = [];
+  @Input() options: SelectOption[] = [];
+  @Input() multiSelect = false;
+  @Input() searchable = false;
+  @Input() placeholderText = 'اختر...';
 
-  private onChange  = (_: any) => {};
+  isOpen = false;
+  searchQuery = '';
+  selected: any[] = [];
+
+  private onChange = (_: any) => {};
   private onTouched = () => {};
 
-  ngOnInit(): void {}
-
   get filteredOptions(): SelectOption[] {
-    if (!this.searchQuery) return this.options;
-    const q = this.searchQuery.toLowerCase();
-    return this.options.filter(o => o.label.toLowerCase().includes(q));
+
+    if (!this.searchQuery) {
+      return this.options;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+
+    return this.options.filter(
+      option => option.label.toLowerCase().includes(query)
+    );
   }
 
   get selectedLabels(): string[] {
     return this.options
-      .filter(o => this.selected.includes(o.value))
-      .map(o => o.label);
+      .filter(option => this.selected.includes(option.value))
+      .map(option => option.label);
   }
 
   isSelected(option: SelectOption): boolean {
@@ -266,21 +326,30 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
-    if (!this.isOpen) this.searchQuery = '';
+
+    if (!this.isOpen) {
+      this.searchQuery = '';
+    }
+
     this.onTouched();
   }
 
   selectOption(option: SelectOption): void {
+
     if (this.multiSelect) {
-      if (this.isSelected(option)) {
-        this.selected = this.selected.filter(v => v !== option.value);
-      } else {
-        this.selected = [...this.selected, option.value];
-      }
+
+      this.selected = this.isSelected(option)
+        ? this.selected.filter(v => v !== option.value)
+        : [...this.selected, option.value];
+
       this.onChange(this.selected);
+
     } else {
+
       this.selected = [option.value];
+
       this.onChange(option.value);
+
       this.isOpen = false;
       this.searchQuery = '';
     }
@@ -288,26 +357,27 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 
   @HostListener('document:click', ['$event'])
   onOutsideClick(event: MouseEvent): void {
+
     const target = event.target as HTMLElement;
+
     if (!target.closest('app-select')) {
       this.isOpen = false;
       this.searchQuery = '';
     }
   }
 
-  writeValue(val: any): void {
-    if (this.multiSelect) {
-      this.selected = Array.isArray(val) ? val : [];
-    } else {
-      this.selected = val != null ? [val] : [];
-    }
+  writeValue(value: any): void {
+
+    this.selected = this.multiSelect
+      ? (Array.isArray(value) ? value : [])
+      : (value != null ? [value] : []);
   }
 
-  registerOnChange(fn: (_: any) => void): void {
+  registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void): void {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 }

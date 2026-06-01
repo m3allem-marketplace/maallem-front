@@ -1,209 +1,185 @@
 import {
   Injectable,
-  Component,
-  OnInit,
-  OnDestroy,
+  Component
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subject, Subscription } from 'rxjs';
 
-/* ─────────────────────────────────────────
-   Toast Model
-───────────────────────────────────────── */
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  BehaviorSubject
+} from 'rxjs';
+
+export type ToastType =
+  | 'success'
+  | 'error'
+  | 'info'
+  | 'warning';
+
 export interface Toast {
-  id:       number;
-  message:  string;
-  type:     'success' | 'error' | 'info' | 'warning';
-  duration: number;
+  id: number;
+  message: string;
+  type: ToastType;
 }
 
-/* ─────────────────────────────────────────
-   Toast Service
-───────────────────────────────────────── */
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ToastService {
-  private counter = 0;
-  readonly toasts$ = new Subject<Toast>();
+
+  private readonly toastsSubject =
+    new BehaviorSubject<Toast[]>([]);
+
+  readonly toasts$ =
+    this.toastsSubject.asObservable();
+
+  private id = 0;
 
   show(
     message: string,
-    type: Toast['type'] = 'info',
-    duration: number    = 4000
+    type: ToastType,
+    duration = 4000
   ): void {
-    this.toasts$.next({ id: ++this.counter, message, type, duration });
+
+    const toast: Toast = {
+      id: ++this.id,
+      message,
+      type
+    };
+
+    this.toastsSubject.next([
+      ...this.toastsSubject.value,
+      toast
+    ]);
+
+    setTimeout(() => {
+      this.remove(toast.id);
+    }, duration);
   }
 
-  success(message: string, duration?: number): void {
-    this.show(message, 'success', duration);
-  }
-
-  error(message: string, duration?: number): void {
-    this.show(message, 'error', duration);
-  }
-
-  info(message: string, duration?: number): void {
-    this.show(message, 'info', duration);
-  }
-
-  warning(message: string, duration?: number): void {
-    this.show(message, 'warning', duration);
+  remove(id: number): void {
+    this.toastsSubject.next(
+      this.toastsSubject.value.filter(
+        toast => toast.id !== id
+      )
+    );
   }
 }
 
-/* ─────────────────────────────────────────
-   Toast Container Component
-   Add <app-toast-container> once in AppComponent
-───────────────────────────────────────── */
 @Component({
   selector: 'app-toast-container',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="toast-container" aria-live="polite" aria-atomic="false">
+    <div class="toast-container">
+
       <div
-        *ngFor="let toast of toasts; trackBy: trackById"
+        *ngFor="let toast of toastService.toasts$ | async"
         class="toast"
-        [class]="'toast toast--' + toast.type"
-        role="alert"
+        [class.toast-success]="toast.type === 'success'"
+        [class.toast-error]="toast.type === 'error'"
+        [class.toast-info]="toast.type === 'info'"
+        [class.toast-warning]="toast.type === 'warning'"
       >
-        <span class="toast__icon" aria-hidden="true">{{ iconFor(toast.type) }}</span>
-        <span class="toast__message">{{ toast.message }}</span>
-        <button class="toast__close" (click)="dismiss(toast.id)" aria-label="Close">
-          &#x2715;
+
+        <span>
+          {{ toast.message }}
+        </span>
+
+        <button
+          type="button"
+          class="toast-close"
+          (click)="toastService.remove(toast.id)"
+        >
+          ×
         </button>
+
       </div>
+
     </div>
   `,
   styles: [`
-    /* ── Container ── */
     .toast-container {
-      position:       fixed;
-      top:            var(--space-6);
-      right:          var(--space-6);
-      z-index:        var(--z-toast);
-      display:        flex;
+      position: fixed;
+
+      top: 24px;
+      right: 24px;
+
+      display: flex;
       flex-direction: column;
-      gap:            var(--space-3);
-      max-width:      var(--toast-width);
-      width:          100%;
-      pointer-events: none;
+      gap: 12px;
+
+      z-index: 9999;
+
+      max-width: 360px;
     }
 
-    /* ── Single Toast ── */
     .toast {
-      display:        flex;
-      align-items:    center;
-      gap:            var(--space-3);
-      padding:        var(--space-3) var(--space-4);
-      border-radius:  var(--toast-radius);
-      box-shadow:     var(--toast-shadow);
-      font-size:      var(--text-sm);
-      font-weight:    var(--font-medium);
-      pointer-events: all;
-      animation:      toastIn var(--transition-slow) ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      min-width: 280px;
+
+      padding: 16px;
+
+      border-radius: var(--radius-md);
+
+      color: white;
+
+      box-shadow: var(--shadow-lg);
+
+      animation: toast-in 200ms ease;
     }
 
-    @keyframes toastIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to   { transform: translateX(0);    opacity: 1; }
+    .toast-success {
+      background: #22c55e;
     }
 
-    /* ── Types ── */
-    .toast--success {
-      background-color: var(--color-success-light);
-      color:            var(--color-success-dark);
-      border-left:      4px solid var(--color-success);
+    .toast-error {
+      background: #ef4444;
     }
 
-    .toast--error {
-      background-color: var(--color-error-light);
-      color:            var(--color-error-dark);
-      border-left:      4px solid var(--color-error);
+    .toast-info {
+      background: #3b82f6;
     }
 
-    .toast--warning {
-      background-color: var(--color-warning-light);
-      color:            var(--color-warning-dark);
-      border-left:      4px solid var(--color-warning);
+    .toast-warning {
+      background: #f59e0b;
     }
 
-    .toast--info {
-      background-color: var(--color-info-light);
-      color:            var(--color-info-dark);
-      border-left:      4px solid var(--color-info);
-    }
+    .toast-close {
+      border: none;
+      background: transparent;
 
-    /* ── Icon ── */
-    .toast__icon {
-      font-size:  var(--text-base);
+      color: inherit;
+
+      font-size: 20px;
+
+      cursor: pointer;
+
       flex-shrink: 0;
     }
 
-    /* ── Message ── */
-    .toast__message {
-      flex: 1;
-      line-height: var(--leading-snug);
-    }
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
 
-    /* ── Close button ── */
-    .toast__close {
-      background:   transparent;
-      border:       none;
-      cursor:       pointer;
-      font-size:    var(--text-sm);
-      color:        inherit;
-      opacity:      0.6;
-      padding:      var(--space-1);
-      border-radius: var(--radius-xs);
-      transition:   var(--transition-base);
-      flex-shrink:  0;
-    }
-
-    .toast__close:hover {
-      opacity: 1;
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
   `]
 })
-export class ToastContainerComponent implements OnInit, OnDestroy {
-  toasts: Toast[] = [];
-  private timers      = new Map<number, ReturnType<typeof setTimeout>>();
-  private subscription!: Subscription;
+export class ToastContainerComponent {
 
-  constructor(private toastService: ToastService) {}
-
-  ngOnInit(): void {
-    this.subscription = this.toastService.toasts$.subscribe(toast => {
-      this.toasts.push(toast);
-      const timer = setTimeout(() => this.dismiss(toast.id), toast.duration);
-      this.timers.set(toast.id, timer);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.timers.forEach(t => clearTimeout(t));
-  }
-
-  dismiss(id: number): void {
-    this.toasts    = this.toasts.filter(t => t.id !== id);
-    const timer    = this.timers.get(id);
-    if (timer) {
-      clearTimeout(timer);
-      this.timers.delete(id);
-    }
-  }
-
-  trackById(_: number, toast: Toast): number {
-    return toast.id;
-  }
-
-  iconFor(type: Toast['type']): string {
-    const icons: Record<Toast['type'], string> = {
-      success: '✓',
-      error:   '✕',
-      warning: '⚠',
-      info:    'ℹ',
-    };
-    return icons[type];
-  }
+  constructor(
+    public toastService: ToastService
+  ) {}
 }

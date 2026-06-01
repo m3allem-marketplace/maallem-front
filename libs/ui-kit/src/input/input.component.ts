@@ -1,145 +1,155 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  forwardRef
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  ReactiveFormsModule,
+  NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => InputComponent),
-      multi: true,
-    },
+      multi: true
+    }
   ],
   template: `
-    <div class="input-wrapper" [class.has-error]="!!errorMessage">
+    <div class="input-wrapper">
 
-      <label *ngIf="label" [for]="inputId" class="input-label">
+      <label
+        *ngIf="label"
+        class="input-label"
+        [for]="inputId"
+      >
         {{ label }}
       </label>
 
       <input
+        class="input-field"
         [id]="inputId"
         [type]="type"
         [placeholder]="placeholder"
-        [disabled]="isDisabled"
+        [disabled]="disabled"
         [value]="value"
         (input)="onInput($event)"
         (blur)="onTouched()"
-        class="input-field"
       />
 
-      <span *ngIf="hint && !errorMessage" class="input-hint">
-        {{ hint }}
-      </span>
-
-      <span *ngIf="!!errorMessage" class="input-error">
+      <div
+        *ngIf="errorMessage"
+        class="input-error"
+      >
         {{ errorMessage }}
-      </span>
+      </div>
+
+      <div
+        *ngIf="!errorMessage && hint"
+        class="input-hint"
+      >
+        {{ hint }}
+      </div>
 
     </div>
   `,
   styles: [`
     .input-wrapper {
-      display:        flex;
+      display: flex;
       flex-direction: column;
-      gap:            var(--space-1);
-      width:          100%;
+      gap: var(--space-2);
+      width: 100%;
     }
 
-    /* ── Label ── */
     .input-label {
-      font-size:    var(--text-sm);
-      font-weight:  var(--font-medium);
-      color:        var(--text-primary);
-      cursor:       pointer;
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      cursor: pointer;
+      margin-bottom: 2px;
     }
 
-    /* ── Field ── */
     .input-field {
-      width:            100%;
-      height:           var(--input-height);
-      padding:          0 var(--input-padding-x);
-      font-family:      var(--font-sans);
-      font-size:        var(--text-base);
-      color:            var(--text-body);
+      width: 100%;
+      height: var(--input-height);
+
+      padding-inline: var(--input-padding-x);
+
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
+
       background-color: var(--input-bg);
-      border:           var(--border-width) solid var(--input-border);
-      border-radius:    var(--input-radius);
-      outline:          none;
-      transition:       var(--transition-color), var(--transition-shadow);
+      color: var(--text-body);
+
+      box-shadow: var(--shadow-xs);
+
+      transition: var(--transition-all);
     }
 
-    .input-field::placeholder {
-      color: var(--text-placeholder);
+    .input-field:hover {
+      border-color: var(--color-primary-300);
     }
 
     .input-field:focus {
+      outline: none;
+    }
+
+    .input-field:focus-visible {
       border-color: var(--border-color-focus);
-      box-shadow:   var(--shadow-focus);
+      box-shadow:
+        var(--shadow-focus),
+        var(--shadow-sm);
     }
 
     .input-field:disabled {
       background-color: var(--color-neutral-100);
-      color:            var(--text-disabled);
-      cursor:           not-allowed;
+      color: var(--text-disabled);
+      cursor: not-allowed;
+      box-shadow: none;
     }
 
-    /* ── Error state ── */
-    .has-error .input-field {
-      border-color: var(--border-color-error);
-    }
-
-    .has-error .input-field:focus {
-      box-shadow: var(--shadow-focus-error);
-    }
-
-    /* ── Hint ── */
     .input-hint {
-      font-size: var(--text-sm);
-      color:     var(--text-secondary);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      padding-inline: 2px;
     }
 
-    /* ── Error message ── */
     .input-error {
-      font-size: var(--text-sm);
-      color:     var(--color-error);
+      font-size: var(--text-xs);
+      font-weight: var(--font-medium);
+      color: var(--color-error);
+      padding-inline: 2px;
     }
   `]
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() label:        string = '';
-  @Input() placeholder:  string = '';
-  @Input() hint:         string = '';
-  @Input() errorMessage: string = '';
-  @Input() type:         string = 'text';
 
-  value:      string  = '';
-  isDisabled: boolean = false;
+  @Input() label = '';
+  @Input() placeholder = '';
+  @Input() hint = '';
+  @Input() errorMessage = '';
+  @Input() type = 'text';
 
-  private static idCounter = 0;
-  inputId = `app-input-${++InputComponent.idCounter}`;
+  value = '';
+  disabled = false;
 
-  private onChange  = (_: string) => {};
-  onTouched = () => {};
+  inputId = `input-${Math.random().toString(36).slice(2, 9)}`;
 
-  onInput(event: Event): void {
-    const val = (event.target as HTMLInputElement).value;
-    this.value = val;
-    this.onChange(val);
+  private onChange: (value: string) => void = () => {};
+  onTouched: () => void = () => {};
+
+  writeValue(value: string): void {
+    this.value = value ?? '';
   }
 
-  writeValue(val: string): void {
-    this.value = val ?? '';
-  }
-
-  registerOnChange(fn: (_: string) => void): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
@@ -147,7 +157,14 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  onInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+
+    this.value = value;
+    this.onChange(value);
   }
 }

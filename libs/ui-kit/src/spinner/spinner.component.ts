@@ -3,67 +3,102 @@ import { CommonModule } from '@angular/common';
 
 type SpinnerSize = 'sm' | 'md' | 'lg';
 
+const SIZE_CLASSES: Record<SpinnerSize, string> = {
+  sm: 'spinner-sm',
+  md: 'spinner-md',
+  lg: 'spinner-lg'
+};
+
 @Component({
   selector: 'app-spinner',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div *ngIf="fullPage; else inline" class="spinner-overlay" aria-label="Loading" role="status">
-      <span class="spinner" [class]="'spinner--' + size"></span>
-    </div>
+    @if (fullPage) {
 
-    <ng-template #inline>
-      <span class="spinner" [class]="'spinner--' + size" aria-label="Loading" role="status"></span>
-    </ng-template>
+      <div
+        class="spinner-overlay"
+        aria-label="Loading"
+        role="status"
+      >
+        <span
+          class="spinner"
+          [class]="sizeClass"
+        ></span>
+      </div>
+
+    } @else {
+
+      <span
+        class="spinner"
+        [class]="sizeClass"
+        aria-label="Loading"
+        role="status"
+      ></span>
+
+    }
   `,
   styles: [`
-    /* ── Full-page overlay ── */
     .spinner-overlay {
-      position:         fixed;
-      inset:            0;
-      z-index:          var(--z-overlay);
-      background-color: var(--bg-overlay);
-      display:          flex;
-      align-items:      center;
-      justify-content:  center;
+      position: fixed;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: var(--bg-overlay);
+
+      backdrop-filter: blur(4px);
+
+      z-index: var(--z-overlay);
     }
 
-    /* ── Spinner ring ── */
     .spinner {
-      display:       inline-block;
-      border-style:  solid;
-      border-color:  var(--color-primary-muted);
+      display: inline-block;
+
+      border-style: solid;
+      border-radius: 50%;
+
+      border-color: var(--color-primary-muted);
       border-top-color: var(--color-primary);
-      border-radius: var(--radius-full);
-      animation:     spin 0.7s linear infinite;
-      flex-shrink:   0;
+
+      animation: spin .7s linear infinite;
+
+      flex-shrink: 0;
     }
 
-    /* ── Sizes ── */
-    .spinner--sm {
-      width:        16px;
-      height:       16px;
+    .spinner-sm {
+      width: 16px;
+      height: 16px;
       border-width: 2px;
     }
 
-    .spinner--md {
-      width:        32px;
-      height:       32px;
+    .spinner-md {
+      width: 32px;
+      height: 32px;
       border-width: 3px;
     }
 
-    .spinner--lg {
-      width:        48px;
-      height:       48px;
+    .spinner-lg {
+      width: 48px;
+      height: 48px;
       border-width: 4px;
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
   `]
 })
 export class SpinnerComponent {
-  @Input() fullPage: boolean      = false;
-  @Input() size:     SpinnerSize  = 'md';
+
+  @Input() fullPage = false;
+  @Input() size: SpinnerSize = 'md';
+
+  get sizeClass(): string {
+    return SIZE_CLASSES[this.size];
+  }
 }
