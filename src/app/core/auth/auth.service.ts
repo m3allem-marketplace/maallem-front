@@ -94,4 +94,11 @@ export class AuthService {
       })
     );
   }
+
+  refreshToken(): Observable<any> {
+    const refreshToken = this.tokenStorage.getRefreshToken();
+    const headers = refreshToken ? new HttpHeaders({ Authorization: `Bearer ${refreshToken}` }) : undefined;
+    return this.http.post<any>(`${environment.apiUrl}/auth/refresh-token`, {}, { headers });
+  }
+
 }
