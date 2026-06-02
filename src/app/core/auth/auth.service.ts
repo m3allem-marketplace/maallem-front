@@ -42,57 +42,18 @@ export class AuthService {
   private readonly userContext = inject(UserContextService);
 
   login(payload: LoginPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, payload).pipe(
-      tap((response) => {
-        if (response && response.success && response.data) {
-          this.tokenStorage.setTokens(response.data.accessToken, response.data.refreshToken);
-          this.userContext.setUser(response.data.user);
-          const role = response.data.user.role;
-          if (role === 'user') {
-            this.router.navigate(['/customer/dashboard']);
-          } else if (role === 'worker' || role === 'company') {
-            this.router.navigate(['/worker/dashboard']);
-          }
-        }
-      })
-    );
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, payload);
   }
 
   register(payload: RegisterPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, payload).pipe(
-      tap((response) => {
-        if (response && response.success && response.data) {
-          this.tokenStorage.setTokens(response.data.accessToken, response.data.refreshToken);
-          this.userContext.setUser(response.data.user);
-          const role = response.data.user.role;
-          if (role === 'user') {
-            this.router.navigate(['/customer/dashboard']);
-          } else if (role === 'worker' || role === 'company') {
-            this.router.navigate(['/worker/dashboard']);
-          }
-        }
-      })
-    );
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, payload);
   }
 
   logout(): Observable<any> {
     const token = this.tokenStorage.getAccessToken();
     const refreshToken = this.tokenStorage.getRefreshToken();
     const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    return this.http.post(`${environment.apiUrl}/auth/logout`, { refreshToken }, { headers }).pipe(
-      tap({
-        next: () => {
-          this.tokenStorage.clear();
-          this.userContext.clearUser();
-          this.router.navigate(['/']);
-        },
-        error: () => {
-          this.tokenStorage.clear();
-          this.userContext.clearUser();
-          this.router.navigate(['/']);
-        }
-      })
-    );
+    return this.http.post(`${environment.apiUrl}/auth/logout`, { refreshToken }, { headers });
   }
 
   refreshToken(): Observable<any> {
@@ -101,4 +62,11 @@ export class AuthService {
     return this.http.post<any>(`${environment.apiUrl}/auth/refresh-token`, {}, { headers });
   }
 
+  /**
+   * Fetches the authenticated user's profile using the stored access token.
+   * Used by the NgRx loadCurrentUserEffect$ on app init.
+   */
+  getMe(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${environment.apiUrl}/auth/me`);
+  }
 }
