@@ -15,6 +15,9 @@ import { AppComponent }         from './app.component';
 import { environment }          from '../environments/environment';
 import { projectsReducer }       from './store/projects/projects.reducer';
 import { ProjectsEffects }       from './store/projects/projects.effects';
+import { proposalsReducer }      from './store/proposals/proposals.reducer';
+import { ProposalsEffects }      from './store/proposals/proposals.effects';
+
 
 
 @NgModule({
@@ -37,6 +40,8 @@ import { ProjectsEffects }       from './store/projects/projects.effects';
     EffectsModule.forRoot([]),
     StoreModule.forFeature('projects', projectsReducer),
     EffectsModule.forFeature([ProjectsEffects]),
+    StoreModule.forFeature('proposals', proposalsReducer),
+    EffectsModule.forFeature([ProposalsEffects]),
     StoreRouterConnectingModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge:   25,

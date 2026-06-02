@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ProposalService } from '../../../core/services/proposal.service';
 import { WorkerProfileService } from '../../../core/services/worker-profile.service';
 import { UserContextService } from '../../../core/services/user-context.service';
 import { ToastService } from '@m3allem/ui-kit';
 import { ProjectsActions } from '../../../store/projects/projects.actions';
 import { selectAllProjects, selectProjectsLoading, selectProjectsError } from '../../../store/projects/projects.selectors';
+import { ProposalsActions } from '../../../store/proposals/proposals.actions';
+import { selectAllProposals, selectProposalsLoading, selectProposalsError } from '../../../store/proposals/proposals.selectors';
 
 @Component({
   selector: 'app-test-api',
@@ -18,38 +19,38 @@ export class TestApiComponent implements OnInit {
   isLoggedIn$ = this.userContext.isLoggedIn$;
   role$ = this.userContext.role$;
 
-  // NgRx Store Streams
+  // NgRx Store Streams - Projects
   projects$ = this.store.select(selectAllProjects);
   projectsLoading$ = this.store.select(selectProjectsLoading);
   projectsError$ = this.store.select(selectProjectsError);
 
-  proposals: any[] = [];
+  // NgRx Store Streams - Proposals
+  proposals$ = this.store.select(selectAllProposals);
+  proposalsLoading$ = this.store.select(selectProposalsLoading);
+  proposalsError$ = this.store.select(selectProposalsError);
+
   workers: any[] = [];
   logs: string[] = [];
 
   constructor(
     private store: Store,
     private authService: AuthService,
-    private proposalService: ProposalService,
     private workerProfileService: WorkerProfileService,
     private userContext: UserContextService,
     private toast: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.addLog('Test API Playground initialized with NgRx Store binding.');
+    this.addLog('Test API Playground initialized with Projects & Proposals NgRx Store bindings.');
     
-    // Log selector events
+    // Log project selector events
     this.projects$.subscribe(projs => {
-      this.addLog(`[NgRx Selector] Projects state emitted. Current count: ${projs.length}`);
+      this.addLog(`[NgRx Selector] Projects count: ${projs.length}`);
     });
-    this.projectsLoading$.subscribe(loading => {
-      this.addLog(`[NgRx Selector] Loading status: ${loading}`);
-    });
-    this.projectsError$.subscribe(err => {
-      if (err) {
-        this.addLog(`[NgRx Selector] Error emitted: ${err}`);
-      }
+
+    // Log proposal selector events
+    this.proposals$.subscribe(props => {
+      this.addLog(`[NgRx Selector] Proposals count: ${props.length}`);
     });
   }
 
@@ -154,16 +155,8 @@ export class TestApiComponent implements OnInit {
   }
 
   fetchProposals(): void {
-    this.addLog('Fetching my submitted proposals...');
-    this.proposalService.getMyProposals().subscribe({
-      next: (res) => {
-        this.proposals = res.data?.proposals || [];
-        this.addLog(`Success: Loaded ${this.proposals.length} proposals.`);
-      },
-      error: (err) => {
-        this.addLog(`Error fetching proposals: ${err.message || 'Unauthorized role'}`);
-      }
-    });
+    this.addLog('[NgRx Dispatch] Triggering ProposalsActions.loadMyProposals()');
+    this.store.dispatch(ProposalsActions.loadMyProposals());
   }
 
   fetchWorkers(): void {

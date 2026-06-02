@@ -56,7 +56,7 @@
   </div>
 
   <!-- Data Tables Render Output -->
-  <div class="card data-card" *ngIf="(projects$ | async)?.length || proposals.length > 0 || workers.length > 0">
+  <div class="card data-card" *ngIf="(projects$ | async)?.length || (proposals$ | async)?.length || workers.length > 0">
     <h2>📊 Fetched Backend Data Visualizer</h2>
     
     <!-- Render Projects -->
@@ -94,29 +94,34 @@
     </div>
 
     <!-- Render Proposals -->
-    <div *ngIf="proposals.length > 0" class="data-section">
-      <h3>Submitted Worker Proposals ({{ proposals.length }} items)</h3>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Project Title</th>
-              <th>Price Proposal</th>
-              <th>Duration</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let prop of proposals">
-              <td><code>{{ prop._id }}</code></td>
-              <td>{{ prop.project?.title || 'Unknown Project' }}</td>
-              <td>EGP {{ prop.price }}</td>
-              <td>{{ prop.estimatedDuration }}</td>
-              <td><span class="status-chip" [attr.data-status]="prop.status">{{ prop.status }}</span></td>
-            </tr>
-          </tbody>
-        </table>
+    <div *ngIf="proposals$ | async as storeProposals" class="data-section">
+      <div *ngIf="proposalsLoading$ | async" class="loading-label">⚡ Loading from NgRx Store state...</div>
+      <div *ngIf="proposalsError$ | async as err" class="error-label">❌ Error: {{ err }}</div>
+      
+      <div *ngIf="storeProposals.length > 0">
+        <h3>Submitted Worker Proposals from NgRx Store ({{ storeProposals.length }} items)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Project Title</th>
+                <th>Price Proposal</th>
+                <th>Duration</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prop of storeProposals">
+                <td><code>{{ prop._id }}</code></td>
+                <td>{{ prop.project.title }}</td>
+                <td>EGP {{ prop.price }}</td>
+                <td>{{ prop.estimatedDuration }}</td>
+                <td><span class="status-chip" [attr.data-status]="prop.status">{{ prop.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
