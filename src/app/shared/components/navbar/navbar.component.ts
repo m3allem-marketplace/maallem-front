@@ -70,7 +70,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
     .nav-link:hover::after,
     .nav-link.active::after {
       transform: scaleX(1);
-      transform-origin: left;
+      transform-origin: right;
     }
 
     .nav-link.active {
@@ -163,7 +163,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
     }
 
     .cta-btn:hover .cta-arrow {
-      transform: translateX(4px);
+      transform: translateX(-4px);
     }
 
     /* ── Phone Ring ── */
@@ -241,6 +241,13 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
       opacity: 0;
       transform: translateY(12px) scale(0.96);
       pointer-events: none;
+      position: absolute;
+      left: 0 !important;
+      right: auto !important;
+      transform-origin: top left;
+      min-width: 14rem;
+      max-width: 14rem;
+      box-sizing: border-box;
       transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1),
                   transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
                   visibility 250ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -355,6 +362,23 @@ export class NavbarComponent {
   get isUser(): boolean { return this.currentUser?.role === 'user'; }
   get isWorker(): boolean {
     return ['individual_worker', 'company_worker'].includes(this.currentUser?.role);
+  }
+
+  get currentUserRoleLabel(): string {
+    if (!this.currentUser?.role) {
+      return '';
+    }
+
+    switch (this.currentUser.role) {
+      case 'user':
+        return 'عميل';
+      case 'individual_worker':
+        return 'عامل';
+      case 'company_worker':
+        return 'شركة';
+      default:
+        return this.currentUser.role;
+    }
   }
 
   toggleMenu(): void { this.isMenuOpen = !this.isMenuOpen; }

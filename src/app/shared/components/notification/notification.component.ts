@@ -81,15 +81,15 @@ export class NotificationComponent {
     {
       id: '1',
       type: 'booking',
-      message: 'New booking request received',
-      timeAgo: '2 min ago',
+      message: 'تم استلام طلب حجز جديد',
+      timeAgo: 'منذ دقيقتين',
       read: false
     },
     {
       id: '2',
       type: 'bid',
-      message: 'Your bid has been accepted',
-      timeAgo: '15 min ago',
+      message: 'تم قبول عرضك',
+      timeAgo: 'منذ 15 دقيقة',
       read: false
     }
   ];
