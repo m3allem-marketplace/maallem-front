@@ -114,7 +114,11 @@
 
       <!-- Logged In -->
       <ng-container *ngIf="!isGuest">
-<div class="notification-wrap relative">
+<div
+  class="notification-wrap relative"
+  appClickOutside
+  (clickOutside)="isNotificationOpen = false"
+>
 
   <button
     class="bell-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all"
@@ -144,7 +148,11 @@
 </div>
 
 
-        <div class="avatar-wrap relative">
+ <div
+  class="avatar-wrap relative"
+  appClickOutside
+  (clickOutside)="isDropdownOpen = false"
+>
           <button class="dropdown-btn flex items-center gap-2.5 border bg-transparent cursor-pointer px-3 py-1.5 rounded-xl transition-all" style="border-color: transparent;" (click)="toggleDropdown()">
             <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="sm" />
             <div class="text-left hidden sm:block">

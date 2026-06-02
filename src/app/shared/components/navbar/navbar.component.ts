@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { NotificationComponent } from '../notification/notification.component';
-
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, AvatarComponent,NotificationComponent],
+  imports: [CommonModule, RouterModule, AvatarComponent,NotificationComponent, ClickOutsideDirective],
   templateUrl: './navbar.component.html',
   styles: [`
   
@@ -350,20 +350,6 @@ export class NavbarComponent {
   @HostListener('window:scroll')
   onScroll(): void { this.isScrolled = window.scrollY > 20; }
 
-  @HostListener('document:click', ['$event'])
-onDocClick(e: MouseEvent): void {
-
-  const target = e.target as HTMLElement;
-
-  if (!target.closest('.avatar-wrap')) {
-    this.isDropdownOpen = false;
-  }
-
-  if (!target.closest('.notification-wrap')) {
-    this.isNotificationOpen = false;
-  }
-
-}
 
   get isGuest(): boolean { return !this.currentUser; }
   get isUser(): boolean { return this.currentUser?.role === 'user'; }
