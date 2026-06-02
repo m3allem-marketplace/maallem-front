@@ -56,35 +56,40 @@
   </div>
 
   <!-- Data Tables Render Output -->
-  <div class="card data-card" *ngIf="projects.length > 0 || proposals.length > 0 || workers.length > 0">
+  <div class="card data-card" *ngIf="(projects$ | async)?.length || proposals.length > 0 || workers.length > 0">
     <h2>📊 Fetched Backend Data Visualizer</h2>
     
     <!-- Render Projects -->
-    <div *ngIf="projects.length > 0" class="data-section">
-      <h3>Projects Listing ({{ projects.length }} items)</h3>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Budget</th>
-              <th>Status</th>
-              <th>Client</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let proj of projects">
-              <td><code>{{ proj._id }}</code></td>
-              <td>{{ proj.title }}</td>
-              <td><span class="category-chip">{{ proj.category }}</span></td>
-              <td>EGP {{ proj.budget }}</td>
-              <td><span class="status-chip" [attr.data-status]="proj.status">{{ proj.status }}</span></td>
-              <td>{{ proj.client?.name }}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div *ngIf="projects$ | async as storeProjects" class="data-section">
+      <div *ngIf="projectsLoading$ | async" class="loading-label">⚡ Loading from NgRx Store state...</div>
+      <div *ngIf="projectsError$ | async as err" class="error-label">❌ Error: {{ err }}</div>
+      
+      <div *ngIf="storeProjects.length > 0">
+        <h3>Projects Listing from NgRx Store ({{ storeProjects.length }} items)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Client</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let proj of storeProjects">
+                <td><code>{{ proj._id }}</code></td>
+                <td>{{ proj.title }}</td>
+                <td><span class="category-chip">{{ proj.category }}</span></td>
+                <td>EGP {{ proj.budget }}</td>
+                <td><span class="status-chip" [attr.data-status]="proj.status">{{ proj.status }}</span></td>
+                <td>{{ proj.client.name }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

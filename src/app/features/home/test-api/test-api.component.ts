@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ProjectService } from '../../../core/services/project.service';
 import { ProposalService } from '../../../core/services/proposal.service';
 import { WorkerProfileService } from '../../../core/services/worker-profile.service';
 import { UserContextService } from '../../../core/services/user-context.service';
 import { ToastService } from '@m3allem/ui-kit';
+import { ProjectsActions } from '../../../store/projects/projects.actions';
+import { selectAllProjects, selectProjectsLoading, selectProjectsError } from '../../../store/projects/projects.selectors';
 
 @Component({
   selector: 'app-test-api',
@@ -16,14 +18,18 @@ export class TestApiComponent implements OnInit {
   isLoggedIn$ = this.userContext.isLoggedIn$;
   role$ = this.userContext.role$;
 
-  projects: any[] = [];
+  // NgRx Store Streams
+  projects$ = this.store.select(selectAllProjects);
+  projectsLoading$ = this.store.select(selectProjectsLoading);
+  projectsError$ = this.store.select(selectProjectsError);
+
   proposals: any[] = [];
   workers: any[] = [];
   logs: string[] = [];
 
   constructor(
+    private store: Store,
     private authService: AuthService,
-    private projectService: ProjectService,
     private proposalService: ProposalService,
     private workerProfileService: WorkerProfileService,
     private userContext: UserContextService,
@@ -31,7 +37,20 @@ export class TestApiComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.addLog('Test API Playground initialized.');
+    this.addLog('Test API Playground initialized with NgRx Store binding.');
+    
+    // Log selector events
+    this.projects$.subscribe(projs => {
+      this.addLog(`[NgRx Selector] Projects state emitted. Current count: ${projs.length}`);
+    });
+    this.projectsLoading$.subscribe(loading => {
+      this.addLog(`[NgRx Selector] Loading status: ${loading}`);
+    });
+    this.projectsError$.subscribe(err => {
+      if (err) {
+        this.addLog(`[NgRx Selector] Error emitted: ${err}`);
+      }
+    });
   }
 
   addLog(message: string): void {
@@ -64,7 +83,7 @@ export class TestApiComponent implements OnInit {
 
   testLoginClient(): void {
     const payload = {
-      email: 'client@mail.com', // Pre-seeded or just testing route
+      email: 'client@mail.com',
       password: 'password123'
     };
 
@@ -114,16 +133,8 @@ export class TestApiComponent implements OnInit {
   }
 
   fetchProjects(): void {
-    this.addLog('Fetching projects...');
-    this.projectService.getProjects().subscribe({
-      next: (res) => {
-        this.projects = res.data?.projects || [];
-        this.addLog(`Success: Loaded ${this.projects.length} projects.`);
-      },
-      error: (err) => {
-        this.addLog(`Error fetching projects: ${err.message}`);
-      }
-    });
+    this.addLog('[NgRx Dispatch] Triggering ProjectsActions.loadProjects()');
+    this.store.dispatch(ProjectsActions.loadProjects({}));
   }
 
   createProject(): void {
@@ -138,18 +149,8 @@ export class TestApiComponent implements OnInit {
       }
     };
 
-    this.addLog('Creating temporary client project...');
-    this.projectService.createProject(payload).subscribe({
-      next: (res) => {
-        this.addLog(`Success: Created Project ID ${res.data?.project?._id}`);
-        this.toast.success('Project created successfully! 🛠️');
-        this.fetchProjects();
-      },
-      error: (err) => {
-        this.addLog(`Error creating project: ${err.message || 'Unauthorized role'}`);
-        this.toast.error('Project creation failed.');
-      }
-    });
+    this.addLog('[NgRx Dispatch] Triggering ProjectsActions.createProject()');
+    this.store.dispatch(ProjectsActions.createProject({ payload }));
   }
 
   fetchProposals(): void {

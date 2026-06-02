@@ -353,3 +353,23 @@ code {
   object-fit: cover;
   border: 2px solid #ffd166;
 }
+
+.loading-label {
+  color: #e5a502;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.error-label {
+  color: #e63946;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

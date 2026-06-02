@@ -13,6 +13,9 @@ import { AppRoutingModule }     from './app.routing.module';
 import { AppComponent }         from './app.component';
 
 import { environment }          from '../environments/environment';
+import { projectsReducer }       from './store/projects/projects.reducer';
+import { ProjectsEffects }       from './store/projects/projects.effects';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +35,8 @@ import { environment }          from '../environments/environment';
     // ── NgRx ─────────────────────────────────────────────────────────────
     StoreModule.forRoot({ router: routerReducer }),
     EffectsModule.forRoot([]),
+    StoreModule.forFeature('projects', projectsReducer),
+    EffectsModule.forFeature([ProjectsEffects]),
     StoreRouterConnectingModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge:   25,
