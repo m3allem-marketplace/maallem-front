@@ -14,6 +14,8 @@ import { authReducer } from '../store/auth/auth.reducer';
 import { AuthEffects } from '../store/auth/auth.effects';
 
 import { environment } from '../environments/environment';
+import { RouterModule } from '@angular/router';
+import { AppRoutingModule } from './app.routing.module';
 
 @NgModule({
     declarations: [
@@ -23,6 +25,8 @@ import { environment } from '../environments/environment';
         BrowserModule,
         HttpClientModule,
         CoreModule,
+        RouterModule.forRoot([]),
+        AppRoutingModule,
 
         // Root store (no root reducers yet — feature slices are loaded below)
         StoreModule.forRoot({}),
