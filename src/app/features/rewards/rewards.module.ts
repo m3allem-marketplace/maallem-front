@@ -1,2 +1,6 @@
-// RewardsModule placeholder
-// Purpose: Feature module for rewards (lazy-loaded)
+﻿import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+@NgModule({ imports: [CommonModule, RouterModule.forChild([])] })
+export class RewardsModule {}

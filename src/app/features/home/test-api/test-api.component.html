@@ -1,0 +1,149 @@
+<div class="playground-container">
+  <header class="playground-header">
+    <h1>🛠️ M3allem Live HTTP Integration Playground</h1>
+    <p>A secure testing suite to execute, debug, and monitor backend API calls in real-time. Navigate away or delete route to clean up.</p>
+  </header>
+
+  <div class="playground-grid">
+    <!-- COLUMN 1: Session Status & Auth Controls -->
+    <div class="card session-card">
+      <h2>👤 Current Session State</h2>
+      <div class="session-info">
+        <p><strong>Status:</strong> 
+          <span class="badge" [class.badge-success]="isLoggedIn$ | async" [class.badge-danger]="!(isLoggedIn$ | async)">
+            {{ (isLoggedIn$ | async) ? 'Authenticated' : 'Guest / Unauthorized' }}
+          </span>
+        </p>
+        <div *ngIf="currentUser$ | async as user" class="user-details">
+          <p><strong>Name:</strong> {{ user.name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Role:</strong> <span class="badge badge-role">{{ user.role }}</span></p>
+          <p><strong>ID:</strong> <code>{{ user._id }}</code></p>
+        </div>
+      </div>
+
+      <h2 class="section-title">🔑 Authentication REST API Actions</h2>
+      <div class="button-group">
+        <button class="btn btn-primary" (click)="testRegister()">🧪 Quick Register Worker</button>
+        <button class="btn btn-secondary" (click)="testLoginClient()">👤 Login client&#64;mail.com</button>
+        <button class="btn btn-secondary" (click)="testLoginWorker()">🔧 Login worker&#64;mail.com</button>
+        <button class="btn btn-danger" (click)="testLogout()" [disabled]="!(isLoggedIn$ | async)">🔒 Terminate Session</button>
+      </div>
+    </div>
+
+    <!-- COLUMN 2: Projects & Proposals Integration -->
+    <div class="card rest-card">
+      <h2>📂 Projects & Proposals (Bids) REST API Actions</h2>
+      <p class="description">Requires proper roles (Client 'user' to manage projects; Worker 'worker' to submit bids/proposals).</p>
+      
+      <div class="button-group">
+        <button class="btn btn-info" (click)="fetchProjects()">🔍 GET /projects (Public List)</button>
+        <button class="btn btn-gold" (click)="createProject()">🛠️ POST /projects (Client Job)</button>
+        <button class="btn btn-success" (click)="fetchProposals()">📨 GET /proposals/my (Worker Bids)</button>
+        <button class="btn btn-info" (click)="fetchWorkers()">👷 GET /profiles/workers (Public Directory)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="playground-grid-row">
+    <!-- Terminal Logs Box -->
+    <div class="card terminal-card">
+      <h2>🖥️ REST HTTP Network Log Console</h2>
+      <div class="terminal">
+        <div *ngFor="let log of logs" class="log-entry">{{ log }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Tables Render Output -->
+  <div class="card data-card" *ngIf="projects.length > 0 || proposals.length > 0 || workers.length > 0">
+    <h2>📊 Fetched Backend Data Visualizer</h2>
+    
+    <!-- Render Projects -->
+    <div *ngIf="projects.length > 0" class="data-section">
+      <h3>Projects Listing ({{ projects.length }} items)</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Budget</th>
+              <th>Status</th>
+              <th>Client</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let proj of projects">
+              <td><code>{{ proj._id }}</code></td>
+              <td>{{ proj.title }}</td>
+              <td><span class="category-chip">{{ proj.category }}</span></td>
+              <td>EGP {{ proj.budget }}</td>
+              <td><span class="status-chip" [attr.data-status]="proj.status">{{ proj.status }}</span></td>
+              <td>{{ proj.client?.name }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Render Proposals -->
+    <div *ngIf="proposals.length > 0" class="data-section">
+      <h3>Submitted Worker Proposals ({{ proposals.length }} items)</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Project Title</th>
+              <th>Price Proposal</th>
+              <th>Duration</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prop of proposals">
+              <td><code>{{ prop._id }}</code></td>
+              <td>{{ prop.project?.title || 'Unknown Project' }}</td>
+              <td>EGP {{ prop.price }}</td>
+              <td>{{ prop.estimatedDuration }}</td>
+              <td><span class="status-chip" [attr.data-status]="prop.status">{{ prop.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Render Workers -->
+    <div *ngIf="workers.length > 0" class="data-section">
+      <h3>Public Worker Profiles ({{ workers.length }} items)</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Name</th>
+              <th>Bio</th>
+              <th>Specializations</th>
+              <th>Experience</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let w of workers">
+              <td>
+                <img [src]="w.avatar || 'https://via.placeholder.com/40'" class="table-avatar" alt="Avatar" />
+              </td>
+              <td>{{ w.user?.name }}</td>
+              <td>{{ w.bio }}</td>
+              <td>
+                <span *ngFor="let spec of w.specializations" class="category-chip spec-chip">{{ spec }}</span>
+              </td>
+              <td>{{ w.experience }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

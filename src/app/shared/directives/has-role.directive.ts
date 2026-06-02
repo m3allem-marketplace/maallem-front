@@ -7,7 +7,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { UserContextService } from '../services/user-context.service';
+import { UserContextService } from '../../core/services/user-context.service';
 
 @Directive({ selector: '[hasRole]', standalone: true })
 export class HasRoleDirective implements OnInit, OnDestroy {

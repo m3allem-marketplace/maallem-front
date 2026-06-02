@@ -20,7 +20,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         *ngIf="removable"
         class="chip__remove"
         (click)="onRemove()"
-        aria-label="Remove {{ label }}"
+        [attr.aria-label]="'Remove ' + label"
         type="button"
       >&#x2715;</button>
     </span>

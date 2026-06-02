@@ -1,2 +1,6 @@
-// WorkerModule placeholder
-// Purpose: Feature module for worker (lazy-loaded)
+﻿import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+@NgModule({ imports: [CommonModule, RouterModule.forChild([])] })
+export class WorkerModule {}
