@@ -2,14 +2,15 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, AvatarComponent],
+  imports: [CommonModule, RouterModule, AvatarComponent,NotificationComponent],
   templateUrl: './navbar.component.html',
   styles: [`
-    /* ── Import Crest Typography Fonts & Cairo for Arabic ── */
+  
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Onest:wght@400;500;600;700&family=Rethink+Sans:wght@400;600;700;800&display=swap');
 
     .navbar-main {
@@ -350,11 +351,19 @@ export class NavbarComponent {
   onScroll(): void { this.isScrolled = window.scrollY > 20; }
 
   @HostListener('document:click', ['$event'])
-  onDocClick(e: MouseEvent): void {
-    if (!(e.target as HTMLElement).closest('.avatar-wrap')) {
-      this.isDropdownOpen = false;
-    }
+onDocClick(e: MouseEvent): void {
+
+  const target = e.target as HTMLElement;
+
+  if (!target.closest('.avatar-wrap')) {
+    this.isDropdownOpen = false;
   }
+
+  if (!target.closest('.notification-wrap')) {
+    this.isNotificationOpen = false;
+  }
+
+}
 
   get isGuest(): boolean { return !this.currentUser; }
   get isUser(): boolean { return this.currentUser?.role === 'user'; }
@@ -363,7 +372,20 @@ export class NavbarComponent {
   }
 
   toggleMenu(): void { this.isMenuOpen = !this.isMenuOpen; }
-  toggleDropdown(): void { this.isDropdownOpen = !this.isDropdownOpen; }
+  toggleDropdown(): void {
+
+  this.isNotificationOpen = false;
+  this.isDropdownOpen = !this.isDropdownOpen;
+
+}
   closeDropdown(): void { this.isDropdownOpen = false; }
   logout(): void { this.currentUser = null; this.isDropdownOpen = false; }
+  isNotificationOpen = false;
+
+toggleNotifications(): void {
+
+  this.isDropdownOpen = false;
+  this.isNotificationOpen = !this.isNotificationOpen;
+
+}
 }

@@ -114,10 +114,35 @@
 
       <!-- Logged In -->
       <ng-container *ngIf="!isGuest">
-        <button class="bell-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all" style="background: var(--color-primary-subtle); color: var(--color-primary);" aria-label="Notifications">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="pulse-dot absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full border-2 border-white" style="background: var(--color-error);"></span>
-        </button>
+<div class="notification-wrap relative">
+
+  <button
+    class="bell-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all"
+    style="background: var(--color-primary-subtle); color: var(--color-primary);"
+    aria-label="Notifications"
+    (click)="toggleNotifications()"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+
+    <span
+      class="pulse-dot absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full border-2 border-white"
+      style="background: var(--color-error);"
+    ></span>
+  </button>
+
+  @if (isNotificationOpen) {
+
+    <div class="absolute top-full -right-32 mt-2 z-[9999]">
+      <app-notification />
+    </div>
+
+  }
+
+</div>
+
 
         <div class="avatar-wrap relative">
           <button class="dropdown-btn flex items-center gap-2.5 border bg-transparent cursor-pointer px-3 py-1.5 rounded-xl transition-all" style="border-color: transparent;" (click)="toggleDropdown()">
