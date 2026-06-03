@@ -8,6 +8,8 @@ import { ProjectsActions } from '../../../store/projects/projects.actions';
 import { selectAllProjects, selectProjectsLoading, selectProjectsError } from '../../../store/projects/projects.selectors';
 import { ProposalsActions } from '../../../store/proposals/proposals.actions';
 import { selectAllProposals, selectProposalsLoading, selectProposalsError } from '../../../store/proposals/proposals.selectors';
+import { NotificationsActions } from '../../../store/notifications/notifications.actions';
+import { selectAllNotifications, selectUnreadCount, selectNotificationsLoading, selectNotificationsError } from '../../../store/notifications/notifications.selectors';
 
 @Component({
   selector: 'app-test-api',
@@ -29,6 +31,12 @@ export class TestApiComponent implements OnInit {
   proposalsLoading$ = this.store.select(selectProposalsLoading);
   proposalsError$ = this.store.select(selectProposalsError);
 
+  // NgRx Store Streams - Notifications
+  notifications$ = this.store.select(selectAllNotifications);
+  unreadCount$ = this.store.select(selectUnreadCount);
+  notificationsLoading$ = this.store.select(selectNotificationsLoading);
+  notificationsError$ = this.store.select(selectNotificationsError);
+
   workers: any[] = [];
   logs: string[] = [];
 
@@ -41,16 +49,14 @@ export class TestApiComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.addLog('Test API Playground initialized with Projects & Proposals NgRx Store bindings.');
+    this.addLog('Test API Playground initialized with NgRx Store.');
     
-    // Log project selector events
-    this.projects$.subscribe(projs => {
-      this.addLog(`[NgRx Selector] Projects count: ${projs.length}`);
-    });
+    // Auto-load notifications at start to populate unread badge
+    this.store.dispatch(NotificationsActions.loadNotifications());
 
-    // Log proposal selector events
-    this.proposals$.subscribe(props => {
-      this.addLog(`[NgRx Selector] Proposals count: ${props.length}`);
+    // Log selectors
+    this.unreadCount$.subscribe(count => {
+      this.addLog(`[NgRx Selector] Unread notifications count updated: ${count}`);
     });
   }
 
@@ -170,5 +176,28 @@ export class TestApiComponent implements OnInit {
         this.addLog(`Error fetching workers: ${err.message}`);
       }
     });
+  }
+
+  markAllRead(): void {
+    this.addLog('[NgRx Dispatch] Triggering NotificationsActions.markAllNotificationsRead()');
+    this.store.dispatch(NotificationsActions.markAllNotificationsRead());
+    this.toast.success('All notifications marked as read.');
+  }
+
+  simulateIncomingNotification(): void {
+    const mockNotif = {
+      id: `notif-${Date.now()}`,
+      userId: 'me',
+      type: 'SYSTEM' as any,
+      title: 'تنبيه نظام جديد',
+      body: 'تم استلام تحديث جديد للنظام من لوحة التحكم.',
+      referenceId: null,
+      referenceType: null,
+      isRead: false,
+      createdAt: new Date().toISOString()
+    };
+    this.addLog('[NgRx Dispatch] Simulated Push: Triggering NotificationsActions.receiveNotification()');
+    this.store.dispatch(NotificationsActions.receiveNotification({ notification: mockNotif }));
+    this.toast.success('New system notification simulated! 🔔');
   }
 }

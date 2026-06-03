@@ -17,6 +17,9 @@ import { projectsReducer }       from './store/projects/projects.reducer';
 import { ProjectsEffects }       from './store/projects/projects.effects';
 import { proposalsReducer }      from './store/proposals/proposals.reducer';
 import { ProposalsEffects }      from './store/proposals/proposals.effects';
+import { notificationsReducer }  from './store/notifications/notifications.reducer';
+import { NotificationsEffects }  from './store/notifications/notifications.effects';
+
 
 
 
@@ -42,6 +45,8 @@ import { ProposalsEffects }      from './store/proposals/proposals.effects';
     EffectsModule.forFeature([ProjectsEffects]),
     StoreModule.forFeature('proposals', proposalsReducer),
     EffectsModule.forFeature([ProposalsEffects]),
+    StoreModule.forFeature('notifications', notificationsReducer),
+    EffectsModule.forFeature([NotificationsEffects]),
     StoreRouterConnectingModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge:   25,

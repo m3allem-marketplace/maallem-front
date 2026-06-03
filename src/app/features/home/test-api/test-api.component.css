@@ -118,6 +118,13 @@
   color: #842029;
 }
 
+.badge-unread {
+  background-color: #e63946;
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
 .badge-role {
   background-color: #e2d9ff;
   color: #3b2a89;
