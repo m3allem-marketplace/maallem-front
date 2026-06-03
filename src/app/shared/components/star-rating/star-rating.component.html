@@ -1,17 +1,40 @@
 <div
-  class="stars"
+  class="inline-flex items-center gap-0.5"
   [attr.aria-label]="rating + ' out of 5 stars'"
   role="img"
   (mouseleave)="onLeave()"
 >
-  <span
-    *ngFor="let star of stars"
-    [class]="getStarClass(star)"
-    [attr.aria-hidden]="true"
-    (mouseenter)="onHover(star)"
-    (click)="onClick(star)"
-  >
-    <span class="star__empty">★</span>
-    <span class="star__full">★</span>
-  </span>
+
+  @for (star of stars; track star) {
+
+    <span
+      class="star-wrap"
+      [class.cursor-pointer]="!readonly"
+      (mouseenter)="onHover(star)"
+      (click)="onClick(star)"
+    >
+
+      <svg
+        class="star star--empty"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        />
+      </svg>
+
+      <svg
+        class="star star--full"
+        viewBox="0 0 24 24"
+        [style.clip-path]="getClip(star)"
+      >
+        <path
+          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        />
+      </svg>
+
+    </span>
+
+  }
+
 </div>
