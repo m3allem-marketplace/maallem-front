@@ -1,6 +1,17 @@
-import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  forwardRef
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
 
 @Component({
   selector: 'app-chip',
@@ -10,74 +21,91 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ChipComponent),
-      multi: true,
-    },
+      multi: true
+    }
   ],
   template: `
-    <span class="chip" [class.chip--removable]="removable">
-      <span class="chip__label">{{ label }}</span>
-      <button
-        *ngIf="removable"
-        class="chip__remove"
-        (click)="onRemove()"
-        [attr.aria-label]="'Remove ' + label"
-        type="button"
-      >&#x2715;</button>
+    <span class="chip">
+
+      <span class="chip-label">
+        {{ label }}
+      </span>
+
+      @if (removable) {
+        <button
+          type="button"
+          class="chip-remove"
+          [attr.aria-label]="'Remove ' + label"
+          (click)="onRemove()"
+        >
+          ×
+        </button>
+      }
+
     </span>
   `,
   styles: [`
     .chip {
-      display:        inline-flex;
-      align-items:    center;
-      gap:            var(--space-1);
-      padding:        var(--space-1) var(--space-3);
-      background:     var(--color-primary-subtle);
-      color:          var(--color-primary);
-      border-radius:  var(--radius-full);
-      font-size:      var(--text-sm);
-      font-weight:    var(--font-medium);
-      border:         var(--border-width) solid var(--color-primary-muted);
-      transition:     var(--transition-color);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 6px 12px;
+
+      border-radius: 999px;
+
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-muted);
+
+      color: var(--color-primary);
+
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+
+      transition: var(--transition-all);
     }
 
-    .chip__label {
+    .chip-label {
       line-height: 1;
     }
 
-    .chip__remove {
-      display:        inline-flex;
-      align-items:    center;
-      justify-content: center;
-      background:     transparent;
-      border:         none;
-      cursor:         pointer;
-      color:          var(--color-primary);
-      font-size:      10px;
-      padding:        0;
-      opacity:        0.7;
-      transition:     var(--transition-base);
-      line-height:    1;
+    .chip-remove {
+      border: none;
+      background: transparent;
+
+      cursor: pointer;
+
+      color: inherit;
+
+      padding: 0;
+
+      font-size: 12px;
+      line-height: 1;
+
+      opacity: .7;
     }
 
-    .chip__remove:hover {
+    .chip-remove:hover {
       opacity: 1;
     }
   `]
 })
 export class ChipComponent implements ControlValueAccessor {
-  @Input()  label:     string  = '';
-  @Input()  removable: boolean = false;
+
+  @Input() label = '';
+  @Input() removable = false;
+
   @Output() removed = new EventEmitter<void>();
 
-  private onChange  = (_: string) => {};
+  private onChange = (_: string) => {};
   private onTouched = () => {};
 
   onRemove(): void {
     this.removed.emit();
   }
 
-  writeValue(val: string): void {
-    this.label = val ?? '';
+  writeValue(value: string): void {
+    this.label = value ?? '';
   }
 
   registerOnChange(fn: (_: string) => void): void {

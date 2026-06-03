@@ -1,27 +1,49 @@
-<div class="search-wrap">
-  <div class="search-bar">
+<div class="w-full" style="direction: ltr;">
 
-    <span class="search-bar__icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  <div
+    class="flex items-center gap-3 rounded-full p-1.5"
+    style="background: var(--input-bg);"
+  >
+
+    <span
+      class="flex items-center shrink-0 pl-4"
+      style="color: var(--text-secondary);"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
     </span>
 
     <input
       #inputRef
-      class="search-bar__input"
+      class="search-bar__input flex-1 h-12 bg-transparent border-none text-base min-w-0"
       [placeholder]="placeholder"
       [formControl]="control"
       type="text"
       autocomplete="off"
+      style="
+        color: var(--text-body);
+        font-family: var(--font-sans);
+      "
     />
 
     <button
       *ngIf="hasValue"
-      class="search-bar__clear"
+      class="flex items-center justify-center w-7 h-7 rounded-full text-xs shrink-0 cursor-pointer border-none"
+      style="
+        background: var(--color-neutral-100);
+        color: var(--text-secondary);
+      "
       (click)="clear()"
       type="button"
       aria-label="مسح"
@@ -29,10 +51,19 @@
       ✕
     </button>
 
-    <button class="search-bar__btn" type="button">
+    <button
+      class="search-bar__btn flex items-center gap-2 h-11 px-7 rounded-full text-base font-bold shrink-0 whitespace-nowrap border-none cursor-pointer"
+      style="
+        background-color: var(--color-accent);
+        color: var(--color-primary-dark);
+        font-family: var(--font-sans);
+      "
+      type="button"
+    >
       بحث
-      <span class="search-bar__btn-arrow">→</span>
+      <span class="btn-arrow text-lg">→</span>
     </button>
 
   </div>
+
 </div>

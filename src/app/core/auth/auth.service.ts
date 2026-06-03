@@ -1,97 +1,69 @@
-import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { UserContextService } from '../services/user-context.service';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { TokenStorageService } from '../services/token-storage.service';
-import { User } from '../models/user.model';
-import { HttpClient } from '@angular/common/http';
+import { UserContextService } from '../services/user-context.service';
+import { User, UserRole } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
+export interface LoginPayload {
+  email:    string;
+  password: string;
+}
+
+export interface RegisterPayload {
+  name:            string;
+  email:           string;
+  phone:           string;
+  password:        string;
+  confirmPassword: string;
+  role?:           UserRole;
+}
+
+export interface AuthResponse {
+  success:  boolean;
+  message?: string;
+  data: {
+    user:         User;
+    accessToken:  string;
+    refreshToken: string;
+  };
+}
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = environment.apiUrl;
+  private readonly http         = inject(HttpClient);
+  private readonly router       = inject(Router);
+  private readonly tokenStorage = inject(TokenStorageService);
+  private readonly userContext  = inject(UserContextService);
 
-  constructor(
-    private http: HttpClient,
-    private tokenStorage: TokenStorageService,
-    private userContext: UserContextService
-  ) {}
-
-  register(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/register`, payload).pipe(
-      tap((res) => {
-        if (res.success && res.data) {
-          this.tokenStorage.saveTokens(res.data.accessToken, res.data.refreshToken);
-          this.userContext.setUser(res.data.user);
-          this.tokenStorage.saveUser(res.data.user);
-        }
-      })
-    );
+  login(payload: LoginPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, payload);
   }
 
-  login(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, payload).pipe(
-      tap((res) => {
-        if (res.success && res.data) {
-          this.tokenStorage.saveTokens(res.data.accessToken, res.data.refreshToken);
-          this.userContext.setUser(res.data.user);
-          this.tokenStorage.saveUser(res.data.user);
-        }
-      })
-    );
+  register(payload: RegisterPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, payload);
   }
 
-  getMe(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/auth/me`).pipe(
-      tap((res) => {
-        if (res.success && res.data && res.data.user) {
-          this.userContext.setUser(res.data.user);
-          this.tokenStorage.saveUser(res.data.user);
-        }
-      })
-    );
+  logout(): Observable<any> {
+    const token        = this.tokenStorage.getAccessToken();
+    const refreshToken = this.tokenStorage.getRefreshToken();
+    const headers      = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.post(`${environment.apiUrl}/auth/logout`, { refreshToken }, { headers });
   }
 
   refreshToken(): Observable<any> {
     const refreshToken = this.tokenStorage.getRefreshToken();
-    return this.http.post<any>(`${this.baseUrl}/auth/refresh-token`, { refreshToken }).pipe(
-      tap((res) => {
-        if (res.success && res.data) {
-          this.tokenStorage.saveTokens(res.data.accessToken, refreshToken || '');
-          this.userContext.setUser(res.data.user);
-          this.tokenStorage.saveUser(res.data.user);
-        }
-      })
-    );
+    const headers      = refreshToken ? new HttpHeaders({ Authorization: `Bearer ${refreshToken}` }) : undefined;
+    return this.http.post<any>(`${environment.apiUrl}/auth/refresh-token`, {}, { headers });
   }
 
-  logout(payload: any = {}): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/logout`, payload).pipe(
-      tap(() => {
-        this.clearSession();
-      })
-    );
-  }
-
-  logoutAll(): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/logout-all`, {}).pipe(
-      tap(() => {
-        this.clearSession();
-      })
-    );
-  }
-
-  initSession(): void {
-    const savedUser = this.tokenStorage.getUser();
-    const token = this.tokenStorage.getAccessToken();
-    if (savedUser && token) {
-      this.userContext.setUser(savedUser);
-    }
-  }
-
-  private clearSession(): void {
-    this.tokenStorage.clear();
-    this.userContext.clearUser();
+  /** Fetches authenticated user profile — used by NgRx loadCurrentUser effect */
+  getMe(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${environment.apiUrl}/auth/me`);
   }
 }

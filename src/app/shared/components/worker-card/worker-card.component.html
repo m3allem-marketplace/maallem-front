@@ -1,42 +1,50 @@
-<div class="worker-card">
+<div
+  class="worker-card overflow-hidden rounded-xl border border-gray-100 bg-white w-72"
+  style="direction: ltr; box-shadow: var(--shadow-sm);"
+>
 
-  <!-- Top accent bar -->
-  <div class="worker-card__accent"></div>
+  <!-- Accent bar -->
+  <div style="height: 4px; background: linear-gradient(90deg, var(--color-primary), var(--color-accent));"></div>
 
-  <div class="worker-card__body">
+  <div class="flex flex-col gap-4 p-6">
 
-    <!-- Header: Avatar + Name + Tier -->
-    <div class="worker-card__header">
-      <app-avatar
-        [imageUrl]="worker.avatar"
-        [name]="worker.name"
-        size="lg"
-      />
-      <div class="worker-card__info">
-        <h3 class="worker-card__name">{{ worker.name }}</h3>
-        <p class="worker-card__category">{{ worker.category }}</p>
+    <!-- Header -->
+    <div class="flex items-start gap-3">
+      <div class="shrink-0">
+        <app-avatar [imageUrl]="worker.avatar" [name]="worker.name" size="lg" />
+      </div>
+      <div class="flex flex-col gap-1 min-w-0 flex-1">
+        <h3 class="truncate font-bold text-lg" style="color: var(--text-primary);">{{ worker.name }}</h3>
+        <p class="text-sm" style="color: var(--text-secondary);">{{ worker.category }}</p>
         <app-tier-badge [tier]="worker.tier" />
       </div>
     </div>
 
     <!-- Rating -->
-    <div class="worker-card__rating">
+    <div class="flex items-center gap-2">
       <app-star-rating [rating]="worker.rating" [readonly]="true" />
-      <span class="worker-card__rating-value">({{ worker.rating }})</span>
+      <span class="text-sm" style="color: var(--text-secondary);">({{ worker.rating }})</span>
     </div>
 
-    <div class="worker-card__divider"></div>
+    <!-- Divider -->
+    <hr style="border-color: var(--border-color);" />
 
-    <!-- Footer: Rate + CTA -->
-    <div class="worker-card__footer">
-      <div class="worker-card__rate-wrapper">
-        <span class="worker-card__rate-label">Per Hour</span>
-        <span class="worker-card__rate">{{ worker.ratePerHour | currencyFormat }}</span>
+    <!-- Footer -->
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex flex-col">
+        <span class="text-xs" style="color: var(--text-secondary);">Per Hour</span>
+        <span class="text-xl font-bold whitespace-nowrap" style="color: var(--color-primary);">
+          {{ worker.ratePerHour | currencyFormat }}
+        </span>
       </div>
 
-      <a class="worker-card__btn" [routerLink]="['/workers', worker.id]">
+      <a
+        class="btn-cta flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap shrink-0"
+        style="background-color: var(--color-accent); color: var(--color-primary-dark);"
+        [routerLink]="['/workers', worker.id]"
+      >
         View Profile
-        <span class="worker-card__btn-arrow">→</span>
+        <span class="btn-arrow">→</span>
       </a>
     </div>
 

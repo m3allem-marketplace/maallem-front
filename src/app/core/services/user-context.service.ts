@@ -1,40 +1,54 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { TokenStorageService } from './token-storage.service';
 import { User, UserRole } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class UserContextService {
-  private _user$ = new BehaviorSubject<User | null>(null);
+  private readonly http           = inject(HttpClient);
+  private readonly tokenStorage   = inject(TokenStorageService);
 
-  readonly user$: Observable<User | null> = this._user$.asObservable();
+  private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
+  public  readonly currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  readonly role$: Observable<string | null> = this._user$.pipe(
-    map(u => u?.role ?? null),
-  );
-
-  readonly isLoggedIn$: Observable<boolean> = this._user$.pipe(
-    map(u => u !== null),
-  );
-
-  get snapshot(): User | null {
-    return this._user$.getValue();
-  }
-
-  get role(): UserRole | null {
-    return this._user$.getValue()?.role ?? null;
+  constructor() {
+    const token = this.tokenStorage.getAccessToken();
+    if (token) {
+      const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+      this.http.get<{ success: boolean; data: { user: User } }>(
+        `${environment.apiUrl}/auth/me`, { headers }
+      ).subscribe({
+        next:  (res) => res?.success && res?.data?.user
+          ? this.setUser(res.data.user)
+          : this.clearUser(),
+        error: () => this.clearUser(),
+      });
+    } else {
+      this.clearUser();
+    }
   }
 
   setUser(user: User): void {
-    this._user$.next(user);
+    this.currentUserSubject.next(user);
   }
 
   clearUser(): void {
-    this._user$.next(null);
+    this.currentUserSubject.next(null);
   }
 
-  hasRole(...roles: UserRole[]): boolean {
-    const current = this.role;
-    return current !== null && roles.includes(current);
+  get currentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.currentUser !== null;
+  }
+
+  get role(): UserRole | null {
+    return this.currentUser?.role ?? null;
   }
 }

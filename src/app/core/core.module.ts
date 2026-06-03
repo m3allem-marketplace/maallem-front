@@ -1,23 +1,26 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor }    from './interceptors/auth.interceptor';
+import { ErrorInterceptor }   from './interceptors/error.interceptor';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule],
-  exports: [HttpClientModule],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS,
+      provide:  HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true,
+      multi:    true,
+    },
+    {
+      provide:  HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi:    true,
+    },
+    {
+      provide:  HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi:    true,
     },
   ],
 })
-export class CoreModule {
-  constructor(@Optional() @SkipSelf() parent: CoreModule) {
-    if (parent) {
-      throw new Error('CoreModule is already loaded. Import it only in AppModule.');
-    }
-  }
-}
+export class CoreModule {}

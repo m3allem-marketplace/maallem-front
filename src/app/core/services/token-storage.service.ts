@@ -1,45 +1,49 @@
-import { Injectable } from '@angular/core';
-
-const ACCESS_TOKEN_KEY = 'auth-access-token';
-const REFRESH_TOKEN_KEY = 'auth-refresh-token';
-const USER_KEY = 'auth-user';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TokenStorageService {
-  saveTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  private isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+    return this.isBrowser ? localStorage.getItem('access_token') : null;
+  }
+
+  setAccessToken(token: string): void {
+    if (this.isBrowser) localStorage.setItem('access_token', token);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    return this.isBrowser ? localStorage.getItem('refresh_token') : null;
   }
 
-  saveUser(user: any): void {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  setRefreshToken(token: string): void {
+    if (this.isBrowser) localStorage.setItem('refresh_token', token);
   }
 
-  getUser(): any | null {
-    const user = localStorage.getItem(USER_KEY);
-    if (user) {
-      try {
-        return JSON.parse(user);
-      } catch (e) {
-        return null;
-      }
+  // Used by Engineer 2's auth.effects.ts
+  setTokens(accessToken: string, refreshToken: string): void {
+    if (this.isBrowser) {
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
     }
-    return null;
+  }
+
+  // Alias for our code that used saveTokens()
+  saveTokens(accessToken: string, refreshToken: string): void {
+    this.setTokens(accessToken, refreshToken);
   }
 
   clear(): void {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    if (this.isBrowser) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+    }
   }
 }

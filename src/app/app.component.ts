@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { ToastContainerComponent } from '@m3allem/ui-kit';
 
 @Component({
-  selector:    'app-root',
-  standalone:  false,
-  template: `
-    <router-outlet></router-outlet>
-    <app-toast-container></app-toast-container>
-  `,
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: []
 })
-export class AppComponent {}
+export class AppComponent {
+    title = 'm3allem-front';
+}

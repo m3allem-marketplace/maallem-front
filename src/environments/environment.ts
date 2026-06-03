@@ -1,5 +1,6 @@
-export const environment = {
+import { Environment } from './environment.interface';
+
+export const environment: Environment = {
   production: false,
   apiUrl: 'https://maallem-backend.vercel.app/api/v1',
-  wsUrl:  'wss://maallem-backend.vercel.app',
 };
