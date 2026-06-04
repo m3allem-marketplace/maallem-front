@@ -9,6 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
+import { ButtonComponent, InputComponent } from '@m3allem/ui-kit';
+
 @NgModule({
     declarations: [
         LoginComponent,
@@ -20,6 +22,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
         AuthRoutingModule,
         ReactiveFormsModule,
         SharedModule,
+        ButtonComponent,
+        InputComponent
     ]
 })
 export class AuthModule { }
