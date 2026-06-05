@@ -1,50 +1,159 @@
 <div
-  class="worker-card overflow-hidden rounded-xl border border-gray-100 bg-white w-72"
-  style="direction: ltr; box-shadow: var(--shadow-sm);"
+  class="worker-card overflow-hidden rounded-xl border border-gray-100 bg-white"
+  style="
+    width: 360px;
+    box-shadow: var(--shadow-sm);
+  "
 >
-
-  <!-- Accent bar -->
-  <div style="height: 4px; background: linear-gradient(90deg, var(--color-primary), var(--color-accent));"></div>
+  <!-- Accent Bar -->
+  <div
+    style="
+      height: 4px;
+      background: linear-gradient(
+        90deg,
+        var(--color-primary),
+        var(--color-accent)
+      );
+    "
+  ></div>
 
   <div class="flex flex-col gap-4 p-6">
 
     <!-- Header -->
     <div class="flex items-start gap-3">
       <div class="shrink-0">
-        <app-avatar [imageUrl]="worker.avatar" [name]="worker.name" size="lg" />
+        <app-avatar
+          [imageUrl]="worker.avatar"
+          [name]="worker.name"
+          size="lg"
+        />
       </div>
+
       <div class="flex flex-col gap-1 min-w-0 flex-1">
-        <h3 class="truncate font-bold text-lg" style="color: var(--text-primary);">{{ worker.name }}</h3>
-        <p class="text-sm" style="color: var(--text-secondary);">{{ worker.category }}</p>
+        <h3
+          class="truncate font-bold text-lg"
+          style="color: var(--text-primary);"
+        >
+          {{ worker.name }}
+        </h3>
+
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
+          {{ worker.category }}
+        </p>
+
         <app-tier-badge [tier]="worker.tier" />
       </div>
     </div>
 
-    <!-- Rating -->
-    <div class="flex items-center gap-2">
-      <app-star-rating [rating]="worker.rating" [readonly]="true" />
-      <span class="text-sm" style="color: var(--text-secondary);">({{ worker.rating }})</span>
-    </div>
+<!-- Rating -->
+<div
+  style="
+    width: 100%;
+    display: flex;
+  "
+>
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      direction: rtl;
+    "
+  >
+    <app-star-rating
+      [rating]="worker.rating"
+      [readonly]="true">
+    </app-star-rating>
 
+<span
+  style="
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1;
+    position: relative;
+    top: -2px;
+  "
+>
+  ({{ worker.rating }})
+</span>
+  </div>
+</div>
     <!-- Divider -->
     <hr style="border-color: var(--border-color);" />
 
     <!-- Footer -->
-    <div class="flex items-center justify-between gap-4">
+    <div
+      class="flex items-center justify-between"
+      style="
+        direction: rtl;
+        gap: 12px;
+      "
+    >
       <div class="flex flex-col">
-        <span class="text-xs" style="color: var(--text-secondary);">Per Hour</span>
-        <span class="text-xl font-bold whitespace-nowrap" style="color: var(--color-primary);">
+      <span
+  class="text-xs"
+  style="
+    color: var(--text-secondary);
+    font-family: var(--font-arabic);
+  "
+>
+  سعر الساعة
+</span>
+
+        <span
+          class="text-xl font-bold whitespace-nowrap"
+          style="color: var(--color-primary);"
+        >
           {{ worker.ratePerHour | currencyFormat }}
         </span>
       </div>
 
       <a
-        class="btn-cta flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap shrink-0"
-        style="background-color: var(--color-accent); color: var(--color-primary-dark);"
+        class="btn-cta"
         [routerLink]="['/workers', worker.id]"
+        style="
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+
+          height: var(--btn-height-lg);
+          padding: 0 20px;
+
+          border-radius: var(--radius-sm);
+
+          background: var(--color-accent);
+          color: var(--color-primary-900);
+
+          border: 2px solid var(--color-accent);
+
+          font-size: var(--text-base);
+          font-weight: var(--font-bold);
+          font-family: var(--font-arabic);
+
+          text-decoration: none;
+          cursor: pointer;
+
+          transition: all .3s ease;
+
+          flex-shrink: 0;
+        "
       >
-        View Profile
-        <span class="btn-arrow">→</span>
+        عرض الملف الشخصي
+
+        <svg
+          class="btn-arrow"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          width="16"
+          height="16"
+        >
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
       </a>
     </div>
 
