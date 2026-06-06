@@ -1,0 +1,186 @@
+<div class="auth-wrapper" dir="rtl">
+  <div class="auth-card">
+
+    <div class="logo-container">
+      <span class="logo-text">
+        M<span class="logo-accent">3</span>allem
+      </span>
+
+      <div class="logo-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      </div>
+    </div>
+
+    <h1 class="auth-title">إنشاء حساب جديد</h1>
+
+    <!-- Dynamic Subtitle according to Step -->
+    <p class="auth-subtitle" *ngIf="currentStep === 1">
+      الرجاء إدخال البيانات الخاصة بك لإنشاء حساب
+    </p>
+    <p class="auth-subtitle" *ngIf="currentStep === 2">
+      أدخل نوع الحساب
+    </p>
+    <p class="auth-subtitle" *ngIf="currentStep === 3">
+      علي وشك الانتهاء !
+    </p>
+
+    <div class="step-indicator">
+      <div class="step-dot" [class.active]="currentStep === 1"></div>
+      <div class="step-dot" [class.active]="currentStep === 2"></div>
+      <div class="step-dot" [class.active]="currentStep === 3"></div>
+    </div>
+
+    <form [formGroup]="registerForm" class="auth-form">
+
+      <!-- Step 1 -->
+      <ng-container *ngIf="currentStep === 1">
+        <div class="form-group">
+          <label class="form-label">الاسم الكامل *</label>
+          <app-input type="text" formControlName="name" placeholder="محمد أحمد" (keydown.enter)="handleEnter()">
+          </app-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">البريد الإلكتروني *</label>
+          <app-input type="email" formControlName="email" placeholder="username@mail.com"
+            (keydown.enter)="handleEnter()">
+          </app-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">رقم الهاتف *</label>
+          <app-input type="text" formControlName="phone" placeholder="01012345678" (keydown.enter)="handleEnter()">
+          </app-input>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label class="form-label">كلمة المرور *</label>
+            <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility()">
+              {{ passwordType === 'password' ? 'عرض' : 'إخفاء' }}
+            </button>
+          </div>
+          <app-input [type]="passwordType" formControlName="password" placeholder="••••••••"
+            (keydown.enter)="handleEnter()">
+          </app-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">تأكيد كلمة المرور *</label>
+          <app-input [type]="passwordType" formControlName="confirmPassword" placeholder="••••••••"
+            (keydown.enter)="handleEnter()">
+          </app-input>
+        </div>
+
+        <div class="submit-wrap">
+          <app-button type="button" [disabled]="!isStep1Valid()" [fullWidth]="true" (click)="nextStep()">
+            التالي
+          </app-button>
+        </div>
+      </ng-container>
+
+      <!-- Step 2 -->
+      <ng-container *ngIf="currentStep === 2">
+        <div class="form-group">
+          <label class="form-label">نوع الحساب *</label>
+          <div class="role-cards">
+            <!--  User Card with Person Icon -->
+            <div class="role-card" [class.active]="registerForm.get('role')?.value === 'user'" (click)="setRole('user')"
+              (keydown.enter)="handleEnter()" tabindex="0">
+              <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>أنا عميل</span>
+            </div>
+
+            <div class="role-card" [class.active]="registerForm.get('role')?.value === 'worker'"
+              (click)="setRole('worker')" (keydown.enter)="handleEnter()" tabindex="0">
+
+              <svg viewBox="0 0 512 512" fill="currentColor" style="width: 30px; height: 30px;">
+                <path
+                  d="M507.514,54.231c-0.857-2.476-2.928-4.337-5.48-4.924c-2.552-0.586-5.228,0.182-7.081,2.034l-39.023,39.024 c-0.635,0.635-1.395,0.73-1.792,0.73c-0.396,0-1.157-0.095-1.791-0.73l-30.477-30.476c-0.971-0.971-0.972-2.614,0-3.585 l39.023-39.023c1.852-1.852,2.621-4.529,2.033-7.081c-0.587-2.553-2.447-4.624-4.923-5.48 c-29.289-10.131-61.082-2.821-82.98,19.076c-21.785,21.785-29.067,53.697-19.218,82.561L106.465,355.693 c-28.964-10.037-61.005-2.803-82.904,19.096C1.665,396.685-5.645,428.481,4.486,457.767c0.857,2.476,2.928,4.337,5.481,4.924 c2.55,0.587,5.228-0.181,7.081-2.034l39.022-39.022c0.636-0.636,1.396-0.731,1.793-0.731c0.396,0,1.157,0.095,1.791,0.73 l30.476,30.476c0.971,0.971,0.971,2.614,0,3.585l-39.023,39.023c-1.852,1.852-2.621,4.529-2.033,7.081 c0.587,2.553,2.447,4.624,4.923,5.48c8.721,3.016,17.657,4.486,26.494,4.486c20.844-0.001,41.108-8.184,56.487-23.562 c21.899-21.901,29.131-53.943,19.094-82.904l249.118-249.118c29.058,10.224,61.232,3.041,83.246-18.973 C510.335,115.314,517.644,83.518,507.514,54.231z M477.685,126.457c-18.838,18.838-46.863,24.271-71.394,13.849 c-2.852-1.211-6.158-0.571-8.349,1.622L141.836,398.032c-2.182,2.183-2.828,5.468-1.635,8.316 c10.25,24.454,4.765,52.364-13.974,71.104c-14.679,14.676-34.839,21.267-54.808,18.462l29.466-29.466 c6.916-6.917,6.916-18.172,0-25.089l-30.477-30.476c-3.343-3.343-7.798-5.185-12.545-5.185c-4.746,0-9.201,1.841-12.545,5.185 l-29.464,29.466c-2.805-19.964,3.785-40.129,18.462-54.807c18.739-18.74,46.65-24.226,71.104-13.976 c2.848,1.194,6.133,0.547,8.316-1.636l256.287-256.287c2.174-2.174,2.823-5.441,1.649-8.281 c-10.075-24.375-4.541-52.172,14.104-70.815c14.678-14.676,34.843-21.266,54.806-18.461l-29.465,29.466 c-6.916,6.917-6.916,18.172,0,25.09l30.477,30.476c3.343,3.343,7.798,5.184,12.544,5.184c4.747,0,9.202-1.841,12.545-5.184 l29.464-29.466C498.952,91.616,492.361,111.781,477.685,126.457z">
+                </path>
+                <path
+                  d="M364.514,147.709c-2.97-2.968-7.784-2.968-10.754,0.001L154.629,346.84c-2.969,2.969-2.969,7.784,0,10.752 c1.485,1.484,3.432,2.227,5.377,2.227c1.945,0,3.892-0.742,5.377-2.227l199.131-199.131 C367.483,155.492,367.483,150.677,364.514,147.709z">
+                </path>
+              </svg>
+              <span>أنا معلم</span>
+            </div>
+
+            <!--  Company Card with Building Icon -->
+            <div class="role-card" [class.active]="registerForm.get('role')?.value === 'company'"
+              (click)="setRole('company')" (keydown.enter)="handleEnter()" tabindex="0">
+              <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="12 3 20 7 20 21 4 21 4 7 12 3"></polyline>
+                <line x1="9" y1="12" x2="15" y2="12"></line>
+                <line x1="9" y1="16" x2="15" y2="16"></line>
+                <line x1="9" y1="8" x2="9" y2="8"></line>
+                <line x1="15" y1="8" x2="15" y2="8"></line>
+              </svg>
+              <span>أنا شركة</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-wrap">
+          <app-button type="button" variant="secondary" [fullWidth]="true" (click)="prevStep()">
+            السابق
+          </app-button>
+          <app-button type="button" [disabled]="!isStep2Valid()" [fullWidth]="true" (click)="nextStep()">
+            التالي
+          </app-button>
+        </div>
+      </ng-container>
+
+      <!-- Step 3 -->
+      <ng-container *ngIf="currentStep === 3">
+        <div class="summary-box" (keydown.enter)="handleEnter()" tabindex="0">
+          <div class="summary-item">
+            <span class="summary-label">الاسم:</span>
+            <span class="summary-value">{{ registerForm.get('name')?.value }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">البريد الإلكتروني:</span>
+            <span class="summary-value">{{ registerForm.get('email')?.value }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">رقم الهاتف:</span>
+            <span class="summary-value">{{ registerForm.get('phone')?.value }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">نوع الحساب:</span>
+            <span class="summary-value">{{ getRoleDisplay(registerForm.get('role')?.value ?? '') }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="displayError" class="store-error-msg">
+          {{ displayError }}
+        </div>
+
+        <div class="submit-wrap">
+          <app-button type="button" variant="secondary" [fullWidth]="true" (click)="prevStep()">
+            السابق
+          </app-button>
+          <app-button type="button" [disabled]="registerForm.invalid" [loading]="(authLoading$ | async) ?? false"
+            [fullWidth]="true" (click)="onSubmit()">
+            تأكيد التسجيل
+          </app-button>
+        </div>
+      </ng-container>
+
+    </form>
+
+    <div class="register-prompt">
+      <span>لديك حساب بالفعل؟</span>
+      <a routerLink="/auth/login" class="register-link">تسجيل الدخول</a>
+    </div>
+
+  </div>
+</div>
