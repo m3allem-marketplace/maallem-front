@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { TokenStorageService } from './token-storage.service';
 import { User, UserRole } from '../models/user.model';
 import { environment } from '../../../environments/environment';
@@ -14,6 +15,12 @@ export class UserContextService {
 
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   public  readonly currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
+  public  readonly isLoggedIn$: Observable<boolean> = this.currentUser$.pipe(
+    map(user => user !== null)
+  );
+  public  readonly role$: Observable<UserRole | null> = this.currentUser$.pipe(
+    map(user => user?.role ?? null)
+  );
 
   constructor() {
     const token = this.tokenStorage.getAccessToken();

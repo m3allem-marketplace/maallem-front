@@ -1,0 +1,161 @@
+<div class="post-job-container max-w-3xl mx-auto my-8 px-4" style="direction: rtl;">
+  <header class="mb-8 text-right">
+    <h1 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">🛠️ نشر طلب خدمة جديد</h1>
+    <p class="text-sm text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">أكمل الخطوات التالية لنشر عملك واستقبال عروض أسعار تنافسية من أفضل معلمين المنصة.</p>
+  </header>
+
+  <!-- Step Wizard Progress Stepper -->
+  <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm mb-6">
+    <app-step-wizard [steps]="steps" [currentStep]="currentStep"></app-step-wizard>
+  </div>
+
+  <!-- Form Content Area -->
+  <div class="card p-8 bg-white border border-gray-100 rounded-2xl shadow-sm mb-6 text-right">
+    
+    <!-- STEP 1: CATEGORY SELECTION -->
+    <div *ngIf="currentStep === 0" class="animate-fade-in">
+      <h2 class="text-base font-extrabold text-gray-800 mb-6" style="font-family: 'Cairo', var(--font-arabic);">🪚 اختر التخصص المطلوب للعمل</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div 
+          *ngFor="let cat of categories"
+          class="category-option-card flex flex-col items-center justify-center p-5 rounded-2xl border text-center cursor-pointer transition-all"
+          [class.active]="category === cat.value"
+          [class.border-primary]="category === cat.value"
+          [class.bg-blue-50]="category === cat.value"
+          [class.border-gray-100]="category !== cat.value"
+          [class.hover:bg-gray-50]="category !== cat.value"
+          (click)="selectCategory(cat.value)"
+        >
+          <span class="text-2xl mb-3">{{ cat.icon }}</span>
+          <span class="text-xs font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">{{ cat.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: JOB DETAILS -->
+    <div *ngIf="currentStep === 1" class="animate-fade-in flex flex-col gap-5">
+      <h2 class="text-base font-extrabold text-gray-800 mb-2" style="font-family: 'Cairo', var(--font-arabic);">📝 صف المشكلة أو العمل المطلوب بدقة</h2>
+      
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">عنوان الطلب (مثال: تصليح صنبور مطبخ مسرب)</label>
+        <app-input 
+          placeholder="اكتب عنواناً معبراً ومختصراً..." 
+          [(ngModel)]="title"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        ></app-input>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">شرح وتفاصيل المشكلة</label>
+        <textarea 
+          rows="5"
+          placeholder="اكتب تفاصيل أكثر عن المشكلة، مثلاً: نوع الأعطال، المواد المتوفرة لديك، الأوقات المناسبة للعمل..."
+          class="w-full p-4 rounded-xl border border-gray-200 outline-none text-sm font-semibold focus:border-primary transition-all text-right resize-none"
+          [value]="description"
+          (input)="description = $any($event.target).value"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 3: BUDGET AND LOCATION -->
+    <div *ngIf="currentStep === 2" class="animate-fade-in flex flex-col gap-5">
+      <h2 class="text-base font-extrabold text-gray-800 mb-2" style="font-family: 'Cairo', var(--font-arabic);">📍 الميزانية والموقع الجغرافي</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">الميزانية التقريبية (EGP)</label>
+          <app-input 
+            type="number" 
+            placeholder="مثال: 350" 
+            [(ngModel)]="budget"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          ></app-input>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">المحافظة</label>
+          <select 
+            class="w-full p-4 rounded-xl border border-gray-200 outline-none text-sm font-semibold focus:border-primary transition-all text-right cursor-pointer bg-white"
+            [value]="city"
+            (change)="city = $any($event.target).value"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">العنوان التفصيلي (مثال: شارع التحرير، الدقي، بجوار بنك مصر)</label>
+        <app-input 
+          placeholder="اكتب العنوان بالتفصيل..." 
+          [(ngModel)]="address"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        ></app-input>
+      </div>
+    </div>
+
+    <!-- STEP 4: REVIEW & CONFIRMATION -->
+    <div *ngIf="currentStep === 3" class="animate-fade-in text-right">
+      <h2 class="text-base font-extrabold text-gray-800 mb-6" style="font-family: 'Cairo', var(--font-arabic);">📋 راجع بيانات طلبك قبل النشر</h2>
+      
+      <div class="review-details bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col gap-4 font-semibold text-sm">
+        <div class="flex justify-between border-b pb-2 border-gray-200/50">
+          <span class="text-gray-400">التخصص:</span>
+          <span class="font-extrabold text-primary">{{ getCategoryLabel(category) }}</span>
+        </div>
+        <div class="flex justify-between border-b pb-2 border-gray-200/50">
+          <span class="text-gray-400">عنوان الطلب:</span>
+          <span class="font-bold text-gray-800">{{ title }}</span>
+        </div>
+        <div class="flex flex-col gap-2 border-b pb-2 border-gray-200/50">
+          <span class="text-gray-400">شرح وتفاصيل المشكلة:</span>
+          <p class="text-gray-700 leading-relaxed bg-white p-3 rounded-xl border border-gray-100">{{ description }}</p>
+        </div>
+        <div class="flex justify-between border-b pb-2 border-gray-200/50">
+          <span class="text-gray-400">الموقع:</span>
+          <span class="font-bold text-gray-800">{{ address }}، {{ city }}</span>
+        </div>
+        <div class="flex justify-between pt-1">
+          <span class="text-gray-400">الميزانية المقدرة:</span>
+          <span class="font-extrabold text-green-700 text-base">{{ budget | currencyFormat }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Wizard Control Buttons -->
+  <div class="flex justify-between items-center gap-4">
+    <app-button 
+      *ngIf="currentStep > 0" 
+      variant="secondary" 
+      (click)="prevStep()"
+      [disabled]="submitting"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      السابق
+    </app-button>
+    <div *ngIf="currentStep === 0"></div> <!-- spacing helper -->
+
+    <app-button 
+      *ngIf="currentStep < steps.length - 1" 
+      variant="primary" 
+      (click)="nextStep()"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      التالي
+    </app-button>
+
+    <app-button 
+      *ngIf="currentStep === steps.length - 1" 
+      variant="primary" 
+      (click)="submitJob()"
+      [loading]="submitting"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      تأكيد ونشر الطلب 🚀
+    </app-button>
+  </div>
+</div>

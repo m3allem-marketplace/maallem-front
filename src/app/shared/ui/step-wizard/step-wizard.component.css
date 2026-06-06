@@ -1,0 +1,52 @@
+.step-wizard {
+  direction: rtl;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.step-wizard-item {
+  position: relative;
+}
+
+.step-line {
+  position: absolute;
+  top: 20px; /* half of 40px circle height */
+  left: -50%; /* Connects from current center to next center to the left in RTL */
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-neutral-200);
+  z-index: 1;
+  transform: translateY(-50%);
+  transition: background-color 300ms ease;
+}
+
+.step-line.active {
+  background-color: var(--color-primary-700);
+}
+
+.step-circle {
+  border-color: var(--color-neutral-300);
+  background-color: var(--color-neutral-0);
+  color: var(--text-secondary);
+}
+
+.step-circle.active {
+  border-color: var(--color-primary-700);
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-50);
+  box-shadow: 0 0 0 4px rgba(27, 43, 110, 0.1);
+}
+
+.step-circle.completed {
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+  color: var(--color-neutral-0);
+}
+
+.step-label {
+  color: var(--text-secondary);
+  transition: color 300ms ease;
+}
+
+.step-label.active {
+  color: var(--color-primary-900);
+}

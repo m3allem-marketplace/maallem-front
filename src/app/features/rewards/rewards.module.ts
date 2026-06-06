@@ -1,6 +1,19 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
-@NgModule({ imports: [CommonModule, RouterModule.forChild([])] })
+import { RewardsRoutingModule } from './rewards-routing.module';
+import { SharedModule } from '../../shared/shared.module';
+
+import { TierProgressComponent } from './tier-progress/tier-progress.component';
+
+@NgModule({
+  declarations: [
+    TierProgressComponent,
+  ],
+  imports: [
+    CommonModule,
+    RewardsRoutingModule,
+    SharedModule,
+  ]
+})
 export class RewardsModule {}

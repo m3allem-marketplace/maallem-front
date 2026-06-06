@@ -42,6 +42,14 @@
         <button class="btn btn-success" (click)="fetchProposals()">📨 GET /proposals/my (Worker Bids)</button>
         <button class="btn btn-info" (click)="fetchWorkers()">👷 GET /profiles/workers (Public Directory)</button>
       </div>
+
+      <h2 class="section-title">🌍 Feature 7 Booking Flow Pages</h2>
+      <p class="description">Test the confirmed, success, and cancel visual checkout workflows:</p>
+      <div class="button-group">
+        <a routerLink="/services/booking-confirm/mock-proposal-777" class="btn btn-gold no-underline text-center font-bold">➡️ Go to Booking Confirm Screen</a>
+        <a routerLink="/services/booking-success/mock-booking-888" class="btn btn-secondary no-underline text-center font-bold">➡️ Go to Booking Success Screen</a>
+        <a routerLink="/services/booking-cancel/mock-booking-999" class="btn btn-danger no-underline text-center font-bold" style="background: var(--color-error); color: white;">➡️ Go to Booking Cancel Screen</a>
+      </div>
     </div>
 
     <!-- COLUMN 3: Notifications Simulation -->
@@ -203,4 +211,103 @@
       </div>
     </div>
   </div>
+
+  <!-- 🎨 FEATURE 6: SHARED COMPONENTS INTERACTIVE SHOWCASE -->
+  <div class="card data-card mt-8" style="direction: rtl;">
+    <h2 class="text-right border-bottom pb-3 mb-6 font-bold" style="font-family: 'Cairo', var(--font-arabic); font-size: 1.6rem; color: var(--color-primary-dark);">
+      🎨 حزمة واجهة المستخدم المشتركة (Feature 6 UI Kit Showcase)
+    </h2>
+    <p class="text-right text-gray-500 mb-8" style="font-family: 'Cairo', var(--font-arabic);">
+      معاينة حية للمكونات المشتركة الـ 7 التي تم بناؤها لتسهيل تطوير لوحات التحكم وعمليات الحجز.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- 1. Status Chips -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-3">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">1. Status Chip Component (مكون رقاقات الحالة)</h3>
+        <div class="flex flex-wrap gap-3 justify-start" style="direction: rtl;">
+          <app-status-chip status="open" size="sm"></app-status-chip>
+          <app-status-chip status="pending" size="md"></app-status-chip>
+          <app-status-chip status="confirmed" size="md"></app-status-chip>
+          <app-status-chip status="in-progress" size="md"></app-status-chip>
+          <app-status-chip status="completed" size="lg"></app-status-chip>
+          <app-status-chip status="cancelled" size="md"></app-status-chip>
+          <app-status-chip status="rejected" size="sm"></app-status-chip>
+        </div>
+      </div>
+
+      <!-- 2. Step Wizard Stepper -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-4 text-right" style="font-family: 'Cairo', var(--font-arabic);">2. Step Wizard Component (مؤشر الخطوات)</h3>
+          <app-step-wizard [steps]="showcaseSteps" [currentStep]="showcaseCurrentStep"></app-step-wizard>
+        </div>
+        <div class="flex gap-2 justify-center mt-4">
+          <button class="btn btn-secondary py-1.5 px-4 text-xs font-semibold" (click)="prevShowcaseStep()" [disabled]="showcaseCurrentStep === 0" style="font-family: 'Cairo', var(--font-arabic);">الخطوة السابقة</button>
+          <button class="btn btn-primary py-1.5 px-4 text-xs font-semibold" (click)="nextShowcaseStep()" [disabled]="showcaseCurrentStep === showcaseSteps.length - 1" style="font-family: 'Cairo', var(--font-arabic);">الخطوة التالية</button>
+        </div>
+      </div>
+
+      <!-- 3. Booking Timeline -->
+      <div class="col-span-1 md:col-span-2 p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">3. Booking Timeline Component (تتبع حالة الحجز)</h3>
+        <app-booking-timeline [currentStatus]="showcaseTimelineStatus"></app-booking-timeline>
+        <div class="flex flex-wrap gap-2 justify-center mt-2">
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('pending')">Pending</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('confirmed')">Confirmed</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('in-progress')">In Progress</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('completed')">Completed</button>
+          <button class="btn btn-danger py-1 px-3 text-xs" (click)="setTimelineStatus('cancelled')">Cancelled / Rejected</button>
+        </div>
+      </div>
+
+      <!-- 4. Stats Cards -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">4. Stats Card Component (بطاقات الإحصائيات)</h3>
+        <div class="flex flex-col gap-3">
+          <app-stats-card icon="money" label="أرباح اليوم" value="EGP 2,450" [change]="12.5" changeType="increase"></app-stats-card>
+          <app-stats-card icon="briefcase" label="طلبات مكتملة" value="28 طلب" [change]="8.2" changeType="increase"></app-stats-card>
+          <app-stats-card icon="star" label="تقييم المنصة العام" value="4.85 / 5" [change]="1.5" changeType="increase"></app-stats-card>
+        </div>
+      </div>
+
+      <!-- 5. Price Summary Card -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">5. Price Summary Component (كشف الحساب)</h3>
+        <app-price-summary-card 
+          serviceName="تصليح وصيانة لوحة الكهرباء الرئيسية" 
+          [basePrice]="650" 
+          [extras]="showcaseExtras"
+          ctaText="تأكيد ودفع التكلفة"
+          (ctaClick)="openShowcaseConfirm()"
+        ></app-price-summary-card>
+      </div>
+
+      <!-- 6. Empty State Card -->
+      <div class="col-span-1 md:col-span-2 p-5 border border-gray-100 rounded-2xl bg-gray-50">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">6. Empty State Component (مكون الصفحة الفارغة)</h3>
+        <app-empty-state 
+          title="لا توجد عروض أسعار حتى الآن" 
+          description="بمجرد تقديم الحرفيين لعروض أسعار على طلبك، ستظهر العروض هنا لتتمكن من المقارنة والاختيار بينها."
+          icon="bid"
+          actionText="ابحث عن حرفيين مميزين"
+          (actionClick)="addLog('Empty State CTA clicked!')"
+        ></app-empty-state>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 7. Confirm Modal Component Integration -->
+  <app-confirm-modal 
+    [isOpen]="showcaseConfirmOpen" 
+    title="تأكيد الدفع وإنهاء الحجز" 
+    message="هل أنت متأكد من رغبتك في دفع التكلفة الكلية وإنهاء حجز الحرفي؟ سيتم تحويل المبلغ لحساب الحرفي فوراً."
+    confirmText="نعم، تأكيد ودفع" 
+    cancelText="إلغاء العملية" 
+    type="success"
+    (confirm)="triggerConfirmAction()"
+    (cancel)="closeShowcaseConfirm()"
+  ></app-confirm-modal>
 </div>

@@ -1,0 +1,59 @@
+/* Task Board Styling */
+.tasks-page-container {
+  max-width: 1280px;
+}
+
+.filter-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #f1f5f9);
+}
+
+.board-column {
+  background: rgba(248, 250, 252, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.column-count {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.empty-column-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  border: 2px dashed #e2e8f0;
+  border-radius: 1rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  background: #ffffff;
+}
+
+.task-card {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  will-change: transform, box-shadow;
+  outline: none;
+}
+
+.task-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05), 0 8px 8px -6px rgba(0, 0, 0, 0.05);
+}
+
+.budget-text {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.category-badge {
+  letter-spacing: -0.01em;
+}
+
+.spinner {
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}

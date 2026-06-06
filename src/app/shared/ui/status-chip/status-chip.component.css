@@ -1,0 +1,104 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: 'Cairo', var(--font-arabic);
+  font-weight: var(--font-bold);
+  border-radius: var(--radius-full);
+  direction: rtl;
+  border-width: 1px;
+  border-style: solid;
+  transition: all var(--transition-base);
+}
+
+.status-chip--sm {
+  padding: 2px var(--space-2.5);
+  font-size: var(--text-xs);
+}
+
+.status-chip--md {
+  padding: var(--space-1) var(--space-3.5);
+  font-size: var(--text-sm);
+}
+
+.status-chip--lg {
+  padding: var(--space-1.5) var(--space-4.5);
+  font-size: var(--text-base);
+}
+
+.status-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Info Variant (Open) */
+.variant-info {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent-900);
+  border-color: var(--color-accent-200);
+}
+.variant-info .status-chip-dot {
+  background-color: var(--color-accent-500);
+}
+
+/* Warning Variant (In Progress) */
+.variant-warning {
+  background-color: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+.variant-warning .status-chip-dot {
+  background-color: #f59e0b;
+}
+
+/* Neutral Variant (Closed, Withdrawn) */
+.variant-neutral {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  border-color: var(--color-neutral-300);
+}
+.variant-neutral .status-chip-dot {
+  background-color: var(--color-neutral-500);
+}
+
+/* Primary Variant (Pending) */
+.variant-primary {
+  background-color: rgba(27, 43, 110, 0.04);
+  color: var(--color-primary-800);
+  border-color: rgba(27, 43, 110, 0.12);
+}
+.variant-primary .status-chip-dot {
+  background-color: var(--color-primary-600);
+}
+
+/* Primary Solid Variant (Confirmed, Accepted) */
+.variant-primary-solid {
+  background-color: rgba(27, 43, 110, 0.1);
+  color: var(--color-primary-900);
+  border-color: rgba(27, 43, 110, 0.25);
+}
+.variant-primary-solid .status-chip-dot {
+  background-color: var(--color-primary-700);
+}
+
+/* Success Variant (Completed) */
+.variant-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.variant-success .status-chip-dot {
+  background-color: #22c55e;
+}
+
+/* Danger Variant (Rejected, Cancelled) */
+.variant-danger {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+.variant-danger .status-chip-dot {
+  background-color: #ef4444;
+}

@@ -1,0 +1,12 @@
+.customer-dashboard-container {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.card {
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(27, 43, 110, 0.05);
+}

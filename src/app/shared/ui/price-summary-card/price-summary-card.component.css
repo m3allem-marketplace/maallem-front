@@ -1,0 +1,9 @@
+.price-summary-card {
+  font-family: 'Cairo', var(--font-arabic);
+  transition: all var(--transition-base);
+}
+
+.price-summary-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(27, 43, 110, 0.05);
+}

@@ -1,0 +1,330 @@
+.worker-dashboard {
+  min-height: 100vh;
+  background: #f8f9fc;
+  padding: 0 0 3rem;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.dashboard-header {
+  background: linear-gradient(135deg, var(--color-primary-dark, #1b2b6e) 0%, #2a3f8f 100%);
+  padding: 2.5rem 2rem 2rem;
+  color: white;
+}
+
+.header-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-text h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.header-text p {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin: 0;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.btn-browse-jobs {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: white;
+  padding: 0.65rem 1.4rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Cairo', var(--font-arabic);
+  white-space: nowrap;
+}
+
+.btn-browse-jobs:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Stats Grid ──────────────────────────────────────────────── */
+.stats-grid {
+  max-width: 1100px;
+  margin: -1.5rem auto 0;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  border-top: 4px solid transparent;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-card.accent-blue  { border-top-color: #3b82f6; }
+.stat-card.accent-green { border-top-color: #22c55e; }
+.stat-card.accent-amber { border-top-color: #f59e0b; }
+.stat-card.accent-primary { border-top-color: var(--color-primary, #1b2b6e); }
+
+.stat-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111;
+  line-height: 1;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: #888;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+/* ── Loading ──────────────────────────────────────────────────── */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: #888;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+/* ── Body Layout ──────────────────────────────────────────────── */
+.dashboard-body {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Section Cards ─────────────────────────────────────────────── */
+.section-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.section-link {
+  background: none;
+  border: none;
+  color: var(--color-primary, #1b2b6e);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.section-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Bids List ────────────────────────────────────────────────── */
+.bids-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bid-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #f8f9fc;
+  border: 1px solid #eee;
+  transition: border-color 0.2s;
+}
+
+.bid-row:hover {
+  border-color: #c7d2fe;
+}
+
+.bid-icon {
+  font-size: 1.5rem;
+  width: 2.2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.bid-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bid-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.bid-meta {
+  font-size: 0.72rem;
+  color: #aaa;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.dot-sep {
+  margin: 0 0.3rem;
+}
+
+.bid-right {
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.bid-price {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.bid-status {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-top: 0.25rem;
+  display: inline-block;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.status-pending  { background: #fff7e6; color: #d97706; }
+.status-accepted { background: #f0fdf4; color: #16a34a; }
+.status-rejected { background: #fef2f2; color: #dc2626; }
+
+/* ── Jobs Grid ────────────────────────────────────────────────── */
+.jobs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.job-card {
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #f8f9fc;
+  border: 1px solid #eee;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+  border-color: var(--color-primary, #1b2b6e);
+  box-shadow: 0 2px 8px rgba(27, 43, 110, 0.08);
+}
+
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.job-cat-icon {
+  font-size: 1.3rem;
+}
+
+.job-location {
+  font-size: 0.7rem;
+  color: #888;
+  font-weight: 600;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.job-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.75rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-budget {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #16a34a;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.btn-bid {
+  background: var(--color-primary-dark, #1b2b6e);
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.btn-bid:hover {
+  opacity: 0.85;
+}

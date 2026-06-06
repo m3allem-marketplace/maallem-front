@@ -1,0 +1,125 @@
+<div class="submit-bid-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- Loading -->
+  <div class="loading-box" *ngIf="loading">
+    <app-spinner size="lg"></app-spinner>
+    <p>جاري تحميل تفاصيل الوظيفة...</p>
+  </div>
+
+  <div class="page-layout" *ngIf="!loading">
+
+    <!-- ── Right: Job Summary Card ─────────────────────── -->
+    <aside class="job-summary-card">
+      <div class="job-cat">
+        <span class="cat-icon">{{ getCategoryIcon(project?.category) }}</span>
+        <span class="cat-label">{{ project?.category }}</span>
+      </div>
+      <h2 class="job-title">{{ project?.title }}</h2>
+      <p class="job-desc">{{ project?.description }}</p>
+
+      <div class="job-detail-row">
+        <span class="detail-label">📍 الموقع</span>
+        <span class="detail-val">{{ project?.location?.city }}</span>
+      </div>
+      <div class="job-detail-row">
+        <span class="detail-label">💰 الميزانية التقديرية</span>
+        <span class="detail-val budget-val">{{ project?.budget | currencyFormat }}</span>
+      </div>
+      <div class="job-detail-row" *ngIf="project?.client">
+        <span class="detail-label">👤 العميل</span>
+        <div class="client-row">
+          <app-avatar [name]="project?.client?.name" size="sm"></app-avatar>
+          <span class="detail-val">{{ project?.client?.name }}</span>
+        </div>
+      </div>
+      <div class="job-detail-row">
+        <span class="detail-label">🕐 نُشر</span>
+        <span class="detail-val">{{ project?.createdAt | timeAgo }}</span>
+      </div>
+
+      <button class="btn-back" (click)="goBack()">← العودة للوظائف</button>
+    </aside>
+
+    <!-- ── Left: Bid Form ──────────────────────────────── -->
+    <main class="bid-form-card">
+      <h1 class="form-title">🚀 تقديم عرض سعر</h1>
+      <p class="form-subtitle">أدخل تفاصيل عرضك بدقة لزيادة فرص قبوله من العميل</p>
+
+      <div class="form-body">
+
+        <!-- Price Field -->
+        <div class="field-group">
+          <label class="field-label">سعر العرض (EGP) <span class="required">*</span></label>
+          <input
+            type="number"
+            class="field-input"
+            placeholder="مثال: 650"
+            [(ngModel)]="price"
+            min="1"
+          />
+          <p class="field-hint">
+            ميزانية العميل التقديرية: <strong>{{ project?.budget | currencyFormat }}</strong>
+          </p>
+        </div>
+
+        <!-- Estimated Days -->
+        <div class="field-group">
+          <label class="field-label">المدة التقديرية للإنجاز (أيام) <span class="required">*</span></label>
+          <input
+            type="number"
+            class="field-input"
+            placeholder="مثال: 3"
+            [(ngModel)]="estimatedDays"
+            min="1"
+          />
+        </div>
+
+        <!-- Message / Cover Letter -->
+        <div class="field-group">
+          <label class="field-label">رسالتك للعميل <span class="required">*</span></label>
+          <textarea
+            rows="6"
+            class="field-textarea"
+            placeholder="اشرح للعميل خبرتك في هذا النوع من الأعمال، والمواد التي ستستخدمها، وما يميز أسلوب عملك..."
+            [(ngModel)]="message"
+          ></textarea>
+          <p class="field-hint">
+            {{ message.length }} / 20 حرف حد أدنى مطلوب
+          </p>
+        </div>
+
+        <!-- Tips Box -->
+        <div class="tips-box">
+          <div class="tips-title">💡 نصائح لتحسين فرص قبول عرضك</div>
+          <ul class="tips-list">
+            <li>كن دقيقاً في الوصف وذكر خبرتك السابقة في نفس المجال</li>
+            <li>اقترح سعراً منطقياً وتنافسياً وفق ميزانية العميل</li>
+            <li>حدد مدة إنجاز واقعية وأضف تفاصيل خطة عملك</li>
+          </ul>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-actions">
+          <app-button
+            variant="secondary"
+            (click)="goBack()"
+            [disabled]="submitting"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            إلغاء
+          </app-button>
+          <app-button
+            variant="primary"
+            (click)="submitBid()"
+            [loading]="submitting"
+            [disabled]="!isFormValid"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            تأكيد وإرسال العرض 🚀
+          </app-button>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>

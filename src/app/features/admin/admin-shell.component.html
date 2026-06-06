@@ -1,0 +1,56 @@
+<div class="admin-shell" dir="rtl" style="font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🛡️</span>
+      <span class="brand-text">لوحة الإدارة</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activeTab === 'dashboard'" (click)="setTab('dashboard')">
+        <span class="nav-icon">📊</span> لوحة التحكم
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'users'" (click)="setTab('users')">
+        <span class="nav-icon">👥</span> المستخدمون
+        <span class="nav-badge">{{ usersCount }}</span>
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'bookings'" (click)="setTab('bookings')">
+        <span class="nav-icon">📋</span> الحجوزات
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'categories'" (click)="setTab('categories')">
+        <span class="nav-icon">🗂️</span> الفئات
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'disputes'" (click)="setTab('disputes')">
+        <span class="nav-icon">⚠️</span> النزاعات
+        <span class="nav-badge danger" *ngIf="openDisputeCount > 0">{{ openDisputeCount }}</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="back-btn" (click)="router.navigate(['/'])">
+        ← العودة للرئيسية
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+
+    <!-- Dashboard Tab -->
+    <app-admin-dashboard *ngIf="activeTab === 'dashboard'"></app-admin-dashboard>
+
+    <!-- Users Tab -->
+    <app-admin-users *ngIf="activeTab === 'users'"></app-admin-users>
+
+    <!-- Bookings Tab -->
+    <app-admin-bookings *ngIf="activeTab === 'bookings'"></app-admin-bookings>
+
+    <!-- Categories Tab -->
+    <app-admin-categories *ngIf="activeTab === 'categories'"></app-admin-categories>
+
+    <!-- Disputes Tab -->
+    <app-admin-disputes *ngIf="activeTab === 'disputes'"></app-admin-disputes>
+
+  </main>
+</div>

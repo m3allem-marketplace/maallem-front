@@ -1,0 +1,220 @@
+<div class="rewards-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- ── Page Header ─────────────────────────────────────────── -->
+  <div class="page-header" [style.background]="'linear-gradient(135deg, ' + currentMeta.color + ' 0%, #1b2b6e 100%)'">
+    <div class="header-inner">
+      <div>
+        <h1 class="page-title">{{ currentMeta.icon }} نظام المكافآت والمستويات</h1>
+        <p class="page-subtitle">اكسب نقاطاً مع كل طلب واصعد في المستويات للحصول على مزايا حصرية</p>
+      </div>
+      <div class="tier-pill">
+        <span class="tier-pill-icon">{{ currentMeta.icon }}</span>
+        <span class="tier-pill-label">{{ currentMeta.label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab Bar ──────────────────────────────────────────────── -->
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'progress'" (click)="setTab('progress')">
+      📊 مستواي الحالي
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="setTab('history')">
+      📅 سجل المستويات
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'master'" (click)="setTab('master')">
+      ⭐ مزايا الماستر
+    </button>
+  </div>
+
+  <div class="page-body">
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB 1: TIER PROGRESS
+    ═══════════════════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'progress' && reward">
+
+      <!-- Hero: Ring + Points -->
+      <div class="hero-card">
+        <div class="ring-wrap">
+          <svg class="ring-svg" viewBox="0 0 120 120">
+            <!-- Background track -->
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#f0f0f0" stroke-width="10"/>
+            <!-- Progress arc -->
+            <circle
+              cx="60" cy="60" r="54"
+              fill="none"
+              [attr.stroke]="currentMeta.color"
+              stroke-width="10"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="circumference"
+              [attr.stroke-dashoffset]="strokeDashoffset"
+              class="progress-arc"
+              transform="rotate(-90 60 60)"
+            />
+            <!-- Center text: percent -->
+            <text x="60" y="55" text-anchor="middle" class="ring-pct" [attr.fill]="currentMeta.color">
+              {{ progressPercent }}%
+            </text>
+            <text x="60" y="72" text-anchor="middle" class="ring-label" fill="#aaa">اكتمال</text>
+          </svg>
+          <!-- Glow pulse -->
+          <div class="ring-glow" [style.box-shadow]="'0 0 0 0 ' + currentMeta.glow"></div>
+        </div>
+
+        <div class="hero-info">
+          <div class="points-display">
+            <span class="points-value">{{ reward.currentPoints }}</span>
+            <span class="points-label">نقطة</span>
+          </div>
+
+          <div class="tier-badges-row">
+            <div *ngFor="let t of tierOrder; let i = index" class="tier-step"
+              [class.reached]="tierOrder.indexOf(reward.currentTier) >= i"
+              [class.current-tier]="reward.currentTier === t"
+            >
+              <div class="tier-step-icon" [style.color]="tierMeta[t].color">
+                {{ tierMeta[t].icon }}
+              </div>
+              <div class="tier-step-label">{{ tierMeta[t].label }}</div>
+            </div>
+          </div>
+
+          <div class="points-to-next" *ngIf="!isMaster">
+            <span class="ptn-val">{{ reward.pointsToNextTier }}</span>
+            <span class="ptn-text">نقطة إضافية للوصول إلى مستوى</span>
+            <span class="ptn-next" [style.color]="nextMeta?.color">{{ nextMeta?.icon }} {{ nextMeta?.label }}</span>
+          </div>
+
+          <div class="master-badge" *ngIf="isMaster">
+            ⭐ أنت في القمة — مستوى الماستر
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier Roadmap -->
+      <div class="section-card">
+        <h2 class="section-title">🗺️ خريطة المستويات</h2>
+        <div class="tier-roadmap">
+          <div *ngFor="let cfg of tiers; let i = index" class="roadmap-item"
+            [class.reached]="tierOrder.indexOf(reward.currentTier) >= i"
+            [class.is-current]="reward.currentTier === cfg.tier"
+          >
+            <div class="roadmap-icon" [style.color]="tierMeta[cfg.tier].color"
+              [style.background]="tierMeta[cfg.tier].bg">
+              {{ tierMeta[cfg.tier].icon }}
+            </div>
+            <div class="roadmap-info">
+              <div class="roadmap-label">{{ tierMeta[cfg.tier].label }}</div>
+              <div class="roadmap-points">من {{ cfg.minPoints }} نقطة</div>
+            </div>
+            <div class="roadmap-status" *ngIf="reward.currentTier === cfg.tier">الحالي</div>
+            <div class="roadmap-check" *ngIf="tierOrder.indexOf(reward.currentTier) > i">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Benefits -->
+      <div class="section-card">
+        <h2 class="section-title">🎁 مزاياك الحالية</h2>
+        <ul class="benefits-list">
+          <li *ngFor="let benefit of getBenefits()" class="benefit-item">
+            <span class="benefit-check" [style.color]="currentMeta.color">✓</span>
+            {{ benefit }}
+          </li>
+        </ul>
+      </div>
+
+    </ng-container>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB 2: TIER HISTORY
+    ═══════════════════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'history' && reward">
+      <div class="section-card">
+        <h2 class="section-title">📅 رحلتك عبر المستويات</h2>
+
+        <div class="history-timeline" *ngIf="reward.tierHistory.length > 0">
+          <div *ngFor="let entry of reward.tierHistory; let i = index; let last = last"
+            class="history-item">
+            <!-- Connector -->
+            <div class="history-line" *ngIf="!last"></div>
+            <!-- Icon -->
+            <div class="history-icon"
+              [style.background]="tierMeta[entry.tier].bg"
+              [style.color]="tierMeta[entry.tier].color"
+              [style.box-shadow]="'0 0 0 4px ' + tierMeta[entry.tier].glow">
+              {{ tierMeta[entry.tier].icon }}
+            </div>
+            <!-- Content -->
+            <div class="history-content">
+              <div class="history-tier-label" [style.color]="tierMeta[entry.tier].color">
+                مستوى {{ tierMeta[entry.tier].label }}
+              </div>
+              <div class="history-meta">
+                <span>🏆 {{ entry.pointsAtTime }} نقطة</span>
+                <span class="dot-sep">•</span>
+                <span>{{ formatDate(entry.achievedAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <app-empty-state *ngIf="reward.tierHistory.length === 0"
+          icon="📅"
+          title="لا يوجد سجل بعد"
+          subtitle="ابدأ باستكمال طلبات لتبدأ رحلتك وتصعد في المستويات"
+        ></app-empty-state>
+      </div>
+    </ng-container>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB 3: MASTER UNLOCK
+    ═══════════════════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'master'">
+      <div class="master-hero-card">
+        <div class="master-glow-ring">⭐</div>
+        <h2 class="master-title">مستوى الماستر</h2>
+        <p class="master-subtitle">الطبقة الأعلى حصراً للمعلمين الأكثر احترافية وتميزاً على المنصة</p>
+        <div class="master-requirement">
+          <span class="req-icon">🎯</span>
+          <span>يتطلب <strong>2500 نقطة</strong> للوصول</span>
+        </div>
+      </div>
+
+      <div class="master-benefits-grid">
+        <div class="master-benefit-card" *ngFor="let benefit of tiers[3]?.benefits ?? []">
+          <div class="mbcard-icon">⭐</div>
+          <div class="mbcard-text">{{ benefit }}</div>
+        </div>
+      </div>
+
+      <!-- Progress toward Master -->
+      <div class="section-card" *ngIf="reward && !isMaster">
+        <h2 class="section-title">🚀 تقدمك نحو الماستر</h2>
+        <div class="master-progress-row">
+          <span class="mp-current">{{ reward.currentPoints }} نقطة</span>
+          <div class="mp-bar-wrap">
+            <div class="mp-bar">
+              <div class="mp-fill"
+                [style.width.%]="(reward.currentPoints / 2500) * 100"
+                style="background: linear-gradient(90deg, #cd7f32, #FFB400, #7c3aed);">
+              </div>
+            </div>
+          </div>
+          <span class="mp-target">2500 نقطة</span>
+        </div>
+        <p class="mp-hint">
+          تحتاج إلى <strong>{{ 2500 - reward.currentPoints }}</strong> نقطة إضافية للوصول إلى مستوى الماستر
+        </p>
+      </div>
+    </ng-container>
+
+    <!-- Loading -->
+    <div class="loading-box" *ngIf="loading">
+      <app-spinner size="lg"></app-spinner>
+      <p>جاري تحميل بيانات مستواك...</p>
+    </div>
+
+  </div>
+</div>

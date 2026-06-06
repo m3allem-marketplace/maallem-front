@@ -1,0 +1,77 @@
+<div class="bid-requests-container max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+  <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 text-right">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">📨 طلبات الصيانة والوظائف المنشورة</h1>
+      <p class="text-sm text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">تابع طلباتك التي نشرتها واستعرض عروض الأسعار المقدمة من الحرفيين.</p>
+    </div>
+    <app-button variant="primary" (click)="postNewJob()" style="font-family: 'Cairo', var(--font-arabic);">
+      انشر طلب خدمة جديد ➕
+    </app-button>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل طلباتك...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading">
+    <div *ngIf="projects.length === 0">
+      <app-empty-state
+        title="لا توجد طلبات خدمة منشورة بعد"
+        description="عندما تحتاج لأي خدمة صيانة، انشر طلباً هنا ليتلقى الحرفيون التفاصيل ويقدموا عروض أسعارهم."
+        icon="bid"
+        actionText="انشر طلبك الأول الآن"
+        (actionClick)="postNewJob()"
+      ></app-empty-state>
+    </div>
+
+    <div *ngIf="projects.length > 0" class="flex flex-col gap-5">
+      <div 
+        *ngFor="let proj of projects" 
+        class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-gray-200 transition-all text-right flex flex-col md:flex-row justify-between gap-6 items-start md:items-center"
+      >
+        <div class="flex items-start gap-4">
+          <div class="flex items-center justify-center w-12 h-12 rounded-xl text-primary bg-primary-subtle text-xl shrink-0 mt-1">
+            🔧
+          </div>
+          <div class="flex flex-col">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <h3 class="text-sm font-extrabold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ proj.title }}</h3>
+              <app-status-chip [status]="proj.status" size="sm"></app-status-chip>
+            </div>
+            <p class="text-xs text-gray-500 mt-2 line-clamp-2 max-w-2xl font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ proj.description }}</p>
+            <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-gray-400 text-[11px] font-bold">
+              <span>📍 {{ proj.location?.address }}، {{ proj.location?.city }}</span>
+              <span>•</span>
+              <span>تاريخ النشر: {{ proj.createdAt | date:'shortDate' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex md:flex-col items-stretch md:items-end justify-between w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-gray-50 gap-4">
+          <div class="flex flex-col text-right">
+            <span class="text-xs text-gray-400" style="font-family: 'Cairo', var(--font-arabic);">الميزانية القصوى</span>
+            <span class="text-sm font-extrabold" style="color: var(--color-primary-700);">{{ (proj.budget ?? 0) | currencyFormat }}</span>
+          </div>
+          <button 
+            *ngIf="proj.status === 'open'" 
+            class="py-2 px-4 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+            (click)="viewOffers(proj._id)"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            📨 عرض عروض الحرفيين
+          </button>
+          <span 
+            *ngIf="proj.status !== 'open'" 
+            class="text-xs font-semibold text-gray-400"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            الطلب مكتمل أو مغلق
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

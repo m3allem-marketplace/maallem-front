@@ -39,3 +39,10 @@ export interface PointTransaction {
   referenceId: string | null;    // bookingId that triggered points
   createdAt:   string;
 }
+
+export interface TierConfig {
+  tier:      RewardTier;
+  minPoints: number;
+  benefits:  string[];
+}
+

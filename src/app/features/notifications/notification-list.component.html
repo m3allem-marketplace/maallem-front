@@ -1,0 +1,71 @@
+<div class="notif-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- ── Page Header ─────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-inner">
+      <div>
+        <h1 class="page-title">🔔 الإشعارات</h1>
+        <p class="page-subtitle">
+          <span *ngIf="unreadCount > 0">لديك <strong>{{ unreadCount }}</strong> إشعارات غير مقروءة</span>
+          <span *ngIf="unreadCount === 0">جميع إشعاراتك مقروءة</span>
+        </p>
+      </div>
+      <button
+        class="btn-mark-all"
+        (click)="markAllRead()"
+        *ngIf="unreadCount > 0"
+      >
+        ✔ تحديد الكل كمقروء
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Loading ──────────────────────────────────────────────── -->
+  <div class="loading-box" *ngIf="loading">
+    <app-spinner size="lg"></app-spinner>
+    <p>جاري تحميل الإشعارات...</p>
+  </div>
+
+  <!-- ── Empty State ──────────────────────────────────────────── -->
+  <div class="empty-box" *ngIf="!loading && totalCount === 0">
+    <div class="empty-icon">🔔</div>
+    <div class="empty-title">لا توجد إشعارات</div>
+    <div class="empty-sub">ستظهر هنا جميع إشعاراتك من الحجوزات والعروض والتقييمات</div>
+    <button class="btn-home" (click)="router.navigate(['/'])">العودة للرئيسية</button>
+  </div>
+
+  <!-- ── Notification Groups ──────────────────────────────────── -->
+  <div class="notif-body" *ngIf="!loading && totalCount > 0">
+    <div class="group" *ngFor="let group of groups">
+
+      <!-- Group Label -->
+      <div class="group-label">{{ group.label }}</div>
+
+      <!-- Items -->
+      <div class="notif-card" *ngFor="let notif of group.items"
+        [class.unread]="!notif.isRead"
+        (click)="markRead(notif.id)"
+      >
+        <!-- Icon -->
+        <div class="notif-icon-wrap" [class.icon-unread]="!notif.isRead">
+          <span class="notif-icon">{{ getIcon(notif.type) }}</span>
+        </div>
+
+        <!-- Content -->
+        <div class="notif-content">
+          <div class="notif-top">
+            <span class="notif-type-badge">{{ getTypeLabel(notif.type) }}</span>
+            <span class="notif-time">{{ formatTime(notif.createdAt) }}</span>
+          </div>
+          <div class="notif-title" [class.font-extrabold]="!notif.isRead">{{ notif.title }}</div>
+          <div class="notif-body-text">{{ notif.body }}</div>
+        </div>
+
+        <!-- Unread dot -->
+        <div class="unread-dot" *ngIf="!notif.isRead"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,18 @@
+.login-page-wrapper {
+  background: radial-gradient(circle at 10% 20%, rgba(27, 43, 110, 0.03) 0%, rgba(255, 180, 0, 0.02) 90%);
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.login-card {
+  transition: all var(--transition-base, 0.25s ease);
+}
+
+.login-card:hover {
+  box-shadow: 0 20px 40px -15px rgba(27, 43, 110, 0.1);
+  border-color: rgba(27, 43, 110, 0.05);
+}
+
+.logo-icon {
+  background: var(--color-primary-dark);
+  box-shadow: 0 4px 14px rgba(255, 180, 0, 0.25);
+}

@@ -18,6 +18,17 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
 import { TierBadgeComponent } from './components/tier-badge/tier-badge.component';
 import { WorkerCardComponent } from './components/worker-card/worker-card.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+
+// ── Shared UI Components ──────────────────────────────────────────────────────
+import { StatusChipComponent } from './ui/status-chip/status-chip.component';
+import { BookingTimelineComponent } from './ui/booking-timeline/booking-timeline.component';
+import { ConfirmModalComponent } from './ui/confirm-modal/confirm-modal.component';
+import { EmptyStateComponent } from './components/empty-state/empty-state.component';
+import { PriceSummaryCardComponent } from './ui/price-summary-card/price-summary-card.component';
+import { StepWizardComponent } from './ui/step-wizard/step-wizard.component';
+import { StatsCardComponent } from './ui/stats-card/stats-card.component';
 
 // ── UI Kit ────────────────────────────────────────────────────────────────────
 import {
@@ -35,7 +46,9 @@ const DIRECTIVES = [ClickOutsideDirective, HasRoleDirective];
 const PIPES = [TimeAgoPipe, CurrencyFormatPipe, TruncatePipe];
 const COMPONENTS = [
   AvatarComponent, SearchBarComponent, StarRatingComponent,
-  TierBadgeComponent, WorkerCardComponent,
+  TierBadgeComponent, WorkerCardComponent, NavbarComponent, FooterComponent,
+  StatusChipComponent, BookingTimelineComponent, ConfirmModalComponent,
+  EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent
 ];
 const UI_KIT = [
   ButtonComponent, InputComponent, ModalComponent,

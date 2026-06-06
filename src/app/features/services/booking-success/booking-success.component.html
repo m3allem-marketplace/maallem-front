@@ -1,0 +1,43 @@
+<div class="booking-success-container max-w-2xl mx-auto my-12 px-4 text-center" style="direction: rtl;">
+  
+  <!-- Success Icon with Pulse Effect -->
+  <div class="success-icon-wrap flex items-center justify-center w-20 h-20 rounded-full bg-emerald-50 text-emerald-500 mx-auto mb-6 border border-emerald-100 shadow-sm animate-pulse-once">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  </div>
+
+  <h2 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">تم تأكيد حجزك بنجاح! 🎉</h2>
+  <p class="text-sm text-gray-500 max-w-md mx-auto mb-8 leading-relaxed" style="font-family: 'Cairo', var(--font-arabic);">
+    لقد تم إسناد المهمة للحرفي بنجاح. يمكنك الآن متابعة مراحل تنفيذ الحجز مباشرة من خلال شريط التتبع أدناه.
+  </p>
+
+  <!-- Interactive Timeline Progress -->
+  <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm mb-8 text-right">
+    <h4 class="text-xs font-bold text-gray-400 uppercase mb-4" style="font-family: 'Cairo', var(--font-arabic);">📍 حالة تنفيذ الحجز الحالية</h4>
+    <app-booking-timeline currentStatus="confirmed"></app-booking-timeline>
+  </div>
+
+  <!-- Summary Info Box -->
+  <div class="p-5 bg-gray-50 border border-gray-100 rounded-xl mb-8 flex flex-col gap-3 text-right">
+    <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+      <span class="text-gray-500 font-medium" style="font-family: 'Cairo', var(--font-arabic);">رقم مرجع الحجز:</span>
+      <code class="text-xs font-bold text-gray-700 bg-white px-2 py-0.5 rounded border">{{ bookingId }}</code>
+    </div>
+    <div class="flex justify-between items-center text-sm">
+      <span class="text-gray-500 font-medium" style="font-family: 'Cairo', var(--font-arabic);">تأمين وحماية المعلم:</span>
+      <span class="text-xs font-bold text-emerald-600" style="font-family: 'Cairo', var(--font-arabic);">🛡️ مفعل (حساب وسيط آمن)</span>
+    </div>
+  </div>
+
+  <!-- Action CTA Buttons -->
+  <div class="flex flex-col sm:flex-row gap-3 justify-center">
+    <app-button variant="primary" (click)="goToBookings()" class="px-8 font-bold" style="font-family: 'Cairo', var(--font-arabic);">
+      الذهاب إلى حجوزاتي
+    </app-button>
+    <app-button variant="ghost" (click)="goToHome()" class="px-8 font-semibold" style="font-family: 'Cairo', var(--font-arabic);">
+      الرجوع إلى الرئيسية
+    </app-button>
+  </div>
+
+</div>

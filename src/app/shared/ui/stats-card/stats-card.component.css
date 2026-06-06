@@ -1,0 +1,53 @@
+.stats-card {
+  font-family: 'Cairo', var(--font-arabic);
+  transition: all var(--transition-base);
+  width: 100%;
+}
+
+.stats-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(27, 43, 110, 0.05);
+}
+
+.stats-card-icon-wrap {
+  transition: all var(--transition-base);
+}
+
+.stats-card:hover .stats-card-icon-wrap {
+  transform: scale(1.05);
+}
+
+/* Icon Wrap Color Variations */
+.icon-wrap--increase {
+  background-color: rgba(34, 197, 94, 0.08);
+  color: #166534;
+}
+
+.icon-wrap--decrease {
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #991b1b;
+}
+
+.icon-wrap--neutral {
+  background-color: rgba(27, 43, 110, 0.05);
+  color: var(--color-primary-700);
+}
+
+/* Delta Badge Color Variations */
+.delta--increase {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.delta--decrease {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.delta--neutral {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+  border: 1px solid var(--color-neutral-200);
+}

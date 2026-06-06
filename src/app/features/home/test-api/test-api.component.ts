@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/auth/auth.service';
 import { WorkerProfileService } from '../../../core/services/worker-profile.service';
 import { UserContextService } from '../../../core/services/user-context.service';
+import { UserRole } from '../../../core/models/user.model';
 import { ToastService } from '@m3allem/ui-kit';
 import { ProjectsActions } from '../../../store/projects/projects.actions';
 import { selectAllProjects, selectProjectsLoading, selectProjectsError } from '../../../store/projects/projects.selectors';
@@ -10,6 +11,7 @@ import { ProposalsActions } from '../../../store/proposals/proposals.actions';
 import { selectAllProposals, selectProposalsLoading, selectProposalsError } from '../../../store/proposals/proposals.selectors';
 import { NotificationsActions } from '../../../store/notifications/notifications.actions';
 import { selectAllNotifications, selectUnreadCount, selectNotificationsLoading, selectNotificationsError } from '../../../store/notifications/notifications.selectors';
+import * as AuthActions from '../../../../store/auth/auth.actions';
 
 @Component({
   selector: 'app-test-api',
@@ -17,7 +19,7 @@ import { selectAllNotifications, selectUnreadCount, selectNotificationsLoading, 
   styleUrls: ['./test-api.component.css']
 })
 export class TestApiComponent implements OnInit {
-  currentUser$ = this.userContext.user$;
+  currentUser$ = this.userContext.currentUser$;
   isLoggedIn$ = this.userContext.isLoggedIn$;
   role$ = this.userContext.role$;
 
@@ -58,6 +60,14 @@ export class TestApiComponent implements OnInit {
     this.unreadCount$.subscribe(count => {
       this.addLog(`[NgRx Selector] Unread notifications count updated: ${count}`);
     });
+
+    this.currentUser$.subscribe(user => {
+      if (user) {
+        this.addLog(`[Session State] User updated: ${user.name} (${user.role})`);
+      } else {
+        this.addLog(`[Session State] User cleared (logged out).`);
+      }
+    });
   }
 
   addLog(message: string): void {
@@ -72,20 +82,12 @@ export class TestApiComponent implements OnInit {
       phone: '01012345678',
       password: 'password123',
       confirmPassword: 'password123',
-      role: 'worker'
+      role: 'worker' as UserRole
     };
 
-    this.addLog(`Registering worker: ${payload.email}...`);
-    this.authService.register(payload).subscribe({
-      next: (res) => {
-        this.addLog(`Registration Success: ${res.message}`);
-        this.toast.success('Registered successfully! 🎉');
-      },
-      error: (err) => {
-        this.addLog(`Registration Error: ${err.message || JSON.stringify(err)}`);
-        this.toast.error('Registration failed.');
-      }
-    });
+    this.addLog(`[NgRx Dispatch] Registering worker: ${payload.email}...`);
+    this.store.dispatch(AuthActions.register({ payload }));
+    this.toast.success('Registration action dispatched! Check console.');
   }
 
   testLoginClient(): void {
@@ -94,17 +96,9 @@ export class TestApiComponent implements OnInit {
       password: 'password123'
     };
 
-    this.addLog(`Logging in as client...`);
-    this.authService.login(payload).subscribe({
-      next: (res) => {
-        this.addLog(`Login Success: Welcome ${res.data?.user?.name}`);
-        this.toast.success('Logged in as Client!');
-      },
-      error: (err) => {
-        this.addLog(`Login Error: Please check credentials or register first.`);
-        this.toast.error('Login failed.');
-      }
-    });
+    this.addLog(`[NgRx Dispatch] Logging in as client...`);
+    this.store.dispatch(AuthActions.login({ credentials: payload }));
+    this.toast.success('Login action dispatched!');
   }
 
   testLoginWorker(): void {
@@ -113,30 +107,15 @@ export class TestApiComponent implements OnInit {
       password: 'password123'
     };
 
-    this.addLog(`Logging in as worker...`);
-    this.authService.login(payload).subscribe({
-      next: (res) => {
-        this.addLog(`Login Success: Welcome ${res.data?.user?.name}`);
-        this.toast.success('Logged in as Worker!');
-      },
-      error: (err) => {
-        this.addLog(`Login Error: Please check credentials or register first.`);
-        this.toast.error('Login failed.');
-      }
-    });
+    this.addLog(`[NgRx Dispatch] Logging in as worker...`);
+    this.store.dispatch(AuthActions.login({ credentials: payload }));
+    this.toast.success('Login action dispatched!');
   }
 
   testLogout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.addLog('Logged out successfully.');
-        this.toast.success('Session cleared.');
-      },
-      error: () => {
-        this.addLog('Local session cleared.');
-        this.toast.success('Session cleared.');
-      }
-    });
+    this.addLog(`[NgRx Dispatch] Terminating session (logout)...`);
+    this.store.dispatch(AuthActions.logout());
+    this.toast.success('Logout action dispatched!');
   }
 
   fetchProjects(): void {
@@ -199,5 +178,44 @@ export class TestApiComponent implements OnInit {
     this.addLog('[NgRx Dispatch] Simulated Push: Triggering NotificationsActions.receiveNotification()');
     this.store.dispatch(NotificationsActions.receiveNotification({ notification: mockNotif }));
     this.toast.success('New system notification simulated! 🔔');
+  }
+
+  // ── UI Kit Showcase State ───────────────────────────────────────────────────
+  showcaseSteps = ['بيانات الطلب', 'العروض المتاحة', 'تفاصيل الحجز', 'تأكيد العملية'];
+  showcaseCurrentStep = 1;
+  showcaseTimelineStatus = 'in-progress';
+  showcaseExtras = [
+    { label: 'قطع غيار مستوردة', price: 350 },
+    { label: 'انتقال عاجل للموقع', price: 100 }
+  ];
+  showcaseConfirmOpen = false;
+
+  prevShowcaseStep(): void {
+    if (this.showcaseCurrentStep > 0) {
+      this.showcaseCurrentStep--;
+    }
+  }
+
+  nextShowcaseStep(): void {
+    if (this.showcaseCurrentStep < this.showcaseSteps.length - 1) {
+      this.showcaseCurrentStep++;
+    }
+  }
+
+  setTimelineStatus(status: string): void {
+    this.showcaseTimelineStatus = status;
+  }
+
+  openShowcaseConfirm(): void {
+    this.showcaseConfirmOpen = true;
+  }
+
+  closeShowcaseConfirm(): void {
+    this.showcaseConfirmOpen = false;
+  }
+
+  triggerConfirmAction(): void {
+    this.toast.success('تم تأكيد العملية بنجاح! 🎉');
+    this.showcaseConfirmOpen = false;
   }
 }

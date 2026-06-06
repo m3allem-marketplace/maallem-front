@@ -1,0 +1,120 @@
+<div class="booking-detail-container max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <!-- Back navigation link -->
+  <div class="mb-6 text-right">
+    <a routerLink="/customer/bookings" class="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-primary no-underline" style="font-family: 'Cairo', var(--font-arabic);">
+      ← العودة للحجوزات
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل تفاصيل الحجز...</p>
+  </div>
+
+  <div *ngIf="!loading && booking" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left/Main Column: Status Tracker & Description (Span 2) -->
+    <div class="lg:col-span-2 flex flex-col gap-6">
+      
+      <!-- Timeline Header -->
+      <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
+        <h2 class="text-base font-extrabold text-gray-800 border-b pb-4 mb-6" style="font-family: 'Cairo', var(--font-arabic);">📍 تتبع حالة الحجز</h2>
+        <app-booking-timeline [currentStatus]="booking.status"></app-booking-timeline>
+      </div>
+
+      <!-- Job details card -->
+      <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
+        <div class="flex justify-between items-start border-b pb-4 mb-4">
+          <div class="flex flex-col">
+            <h1 class="text-lg font-extrabold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">{{ booking.title }}</h1>
+            <span class="text-xs text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">نشر في: {{ booking.createdAt | date:'medium' }}</span>
+          </div>
+          <app-status-chip [status]="booking.status" size="md"></app-status-chip>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1" style="font-family: 'Cairo', var(--font-arabic);">تفاصيل الخدمة المطلوبة</h4>
+            <p class="text-sm text-gray-700 leading-relaxed font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ booking.description }}</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t pt-4 border-gray-50">
+            <div>
+              <h4 class="text-xs font-bold text-gray-400 mb-1" style="font-family: 'Cairo', var(--font-arabic);">العنوان وموقع العمل</h4>
+              <p class="text-sm font-semibold text-gray-800" *ngIf="booking.location" style="font-family: 'Cairo', var(--font-arabic);">
+                📍 {{ booking.location.address }}، {{ booking.location.city }}
+              </p>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-gray-400 mb-1" style="font-family: 'Cairo', var(--font-arabic);">الميزانية المقدرة</h4>
+              <p class="text-sm font-extrabold text-primary" style="color: var(--color-primary-700);">
+                {{ booking.budget | currencyFormat }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div *ngIf="booking.status === 'in-progress' || booking.status === 'confirmed'" class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <p class="text-xs font-semibold text-gray-500 max-w-md" style="font-family: 'Cairo', var(--font-arabic);">
+          عند تأكيد اكتمال الخدمة، سنقوم بتحرير المستحقات فوراً لحساب الحرفي. يرجى التأكد من معاينة العمل وجودته قبل التأكيد.
+        </p>
+        <div class="flex gap-3 shrink-0">
+          <app-button variant="danger" (click)="cancelBooking()" style="font-family: 'Cairo', var(--font-arabic);">
+            طلب إلغاء الحجز ❌
+          </app-button>
+          <app-button variant="primary" (click)="completeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
+            تأكيد اكتمال الخدمة ✅
+          </app-button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Worker Profile & Help Center (Span 1) -->
+    <div class="flex flex-col gap-6">
+      
+      <!-- Worker details -->
+      <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-center" *ngIf="booking.worker">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-4 mb-4 text-right" style="font-family: 'Cairo', var(--font-arabic);">👷 الحرفي المعين</h3>
+        
+        <div class="flex flex-col items-center gap-3 py-4">
+          <app-avatar [imageUrl]="booking.worker.avatar" [name]="booking.worker.name" size="lg"></app-avatar>
+          <div class="flex flex-col">
+            <h4 class="text-base font-extrabold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">{{ booking.worker.name }}</h4>
+            <span class="text-xs text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">معلم سباكة معتمد</span>
+          </div>
+          
+          <div class="flex items-center gap-2 bg-yellow-50 px-3 py-1 rounded-full text-xs font-extrabold text-yellow-700">
+            ⭐ {{ booking.worker.rating }} التقييم
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2.5 mt-4 border-t pt-4 border-gray-50">
+          <a [href]="'tel:' + booking.worker.phone" class="w-full no-underline py-2.5 px-4 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary-dark transition-all flex items-center justify-center gap-2" style="font-family: 'Cairo', var(--font-arabic);">
+            📞 اتصل بالحرفي: {{ booking.worker.phone }}
+          </a>
+          <button class="w-full py-2.5 px-4 border border-gray-100 bg-transparent text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2" style="font-family: 'Cairo', var(--font-arabic);" (click)="toast.success('ميزة المحادثة الفورية ستتوفر قريباً!')">
+            💬 بدء محادثة فورية
+          </button>
+        </div>
+      </div>
+
+      <!-- Support Card -->
+      <div class="p-6 bg-gradient-to-br from-blue-900 to-indigo-950 text-white rounded-2xl shadow-md text-right">
+        <h4 class="text-base font-bold mb-2" style="font-family: 'Cairo', var(--font-arabic);">تحتاج لمساعدة؟</h4>
+        <p class="text-xs text-blue-200 leading-relaxed mb-4" style="font-family: 'Cairo', var(--font-arabic);">
+          في حال نشوب خلاف أو عدم التزام الحرفي بالموعد أو الجودة، اتصل بنا لمراجعة التفاصيل.
+        </p>
+        <a href="tel:199916" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs no-underline shadow-sm transition-all" style="font-family: 'Cairo', var(--font-arabic);">
+          📞 الدعم الفني: 199916
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
 import { TestApiComponent } from './test-api/test-api.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -11,6 +12,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [HomePageComponent, TestApiComponent],
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
 })
 export class HomeModule {}

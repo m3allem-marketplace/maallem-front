@@ -1,0 +1,41 @@
+<div class="tab-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+  <div class="tab-header-row">
+    <div>
+      <h2 class="tab-title">🗂️ الفئات المهنية</h2>
+      <p class="tab-sub">{{ categories.length }} فئة مسجلة</p>
+    </div>
+    <button class="add-btn" (click)="addingNew = !addingNew">
+      + إضافة فئة
+    </button>
+  </div>
+
+  <!-- Add Form -->
+  <div class="add-form" *ngIf="addingNew">
+    <input class="search-input" [(ngModel)]="newCategoryName" placeholder="اسم الفئة بالعربية..." />
+    <div class="icon-picker">
+      <button *ngFor="let ic of iconOptions" class="icon-opt"
+        [class.selected]="newCategoryIcon === ic"
+        (click)="newCategoryIcon = ic">{{ ic }}</button>
+    </div>
+    <div class="add-form-actions">
+      <button class="confirm-btn" (click)="addCategory()">حفظ</button>
+      <button class="cancel-btn" (click)="addingNew = false">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="cat-grid">
+    <div *ngFor="let cat of categories" class="cat-card" [class.inactive]="!cat.isActive">
+      <div class="cat-icon">{{ cat.icon }}</div>
+      <div class="cat-info">
+        <div class="cat-name">{{ cat.name }}</div>
+        <div class="cat-workers">{{ cat.workerCount }} معلم</div>
+      </div>
+      <div class="cat-status">
+        <button class="toggle-btn" [class.on]="cat.isActive" (click)="toggleStatus(cat)">
+          {{ cat.isActive ? 'نشط' : 'موقوف' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

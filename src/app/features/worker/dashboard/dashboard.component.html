@@ -1,0 +1,127 @@
+<div class="worker-dashboard" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>🔧 لوحة تحكم الحرفي</h1>
+        <p>مرحباً بك — إليك ملخص نشاطك الأخير وأحدث الفرص المتاحة</p>
+      </div>
+      <button class="btn-browse-jobs" (click)="browsAllJobs()">
+        🔍 استعراض الوظائف المتاحة
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI Stats Row ───────────────────────────────────────────── -->
+  <div class="stats-grid" *ngIf="!loading">
+    <div class="stat-card accent-blue">
+      <div class="stat-icon">📋</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ totalBids }}</div>
+        <div class="stat-label">إجمالي العروض المقدمة</div>
+      </div>
+    </div>
+    <div class="stat-card accent-green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ acceptedBids }}</div>
+        <div class="stat-label">عروض مقبولة</div>
+      </div>
+    </div>
+    <div class="stat-card accent-amber">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ pendingBids }}</div>
+        <div class="stat-label">عروض قيد المراجعة</div>
+      </div>
+    </div>
+    <div class="stat-card accent-primary">
+      <div class="stat-icon">💰</div>
+      <div class="stat-body">
+        <div class="stat-value">{{ totalEarnings | currencyFormat }}</div>
+        <div class="stat-label">إجمالي الأرباح المحققة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <app-spinner size="lg"></app-spinner>
+    <p>جاري تحميل البيانات...</p>
+  </div>
+
+  <div class="dashboard-body" *ngIf="!loading">
+    <!-- ── Recent Bids ───────────────────────────────────────────── -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2 class="section-title">📝 عروضي الأخيرة</h2>
+        <button class="section-link" (click)="viewMyBids()">عرض الكل</button>
+      </div>
+
+      <div class="bids-list" *ngIf="myBids.length > 0">
+        <div class="bid-row" *ngFor="let bid of myBids">
+          <div class="bid-icon">{{ getCategoryIcon(bid.category) }}</div>
+          <div class="bid-info">
+            <div class="bid-title">{{ bid.projectTitle }}</div>
+            <div class="bid-meta">
+              <span>{{ bid.client?.name }}</span>
+              <span class="dot-sep">•</span>
+              <span>{{ bid.createdAt | timeAgo }}</span>
+            </div>
+          </div>
+          <div class="bid-right">
+            <div class="bid-price">{{ bid.price | currencyFormat }}</div>
+            <div class="bid-status" [class]="'status-' + bid.status">
+              {{ getBidStatusLabel(bid.status) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <app-empty-state
+        *ngIf="myBids.length === 0"
+        icon="📋"
+        title="لا توجد عروض بعد"
+        subtitle="ابدأ بتقديم عرضك على أول وظيفة مناسبة لك"
+        actionLabel="استعراض الوظائف"
+        (actionClick)="browsAllJobs()"
+      ></app-empty-state>
+    </section>
+
+    <!-- ── Open Jobs Preview ────────────────────────────────────── -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2 class="section-title">💼 وظائف جديدة متاحة</h2>
+        <button class="section-link" (click)="browsAllJobs()">استعراض الكل</button>
+      </div>
+
+      <div class="jobs-grid" *ngIf="openJobs.length > 0">
+        <div class="job-card" *ngFor="let job of openJobs">
+          <div class="job-card-header">
+            <span class="job-cat-icon">{{ getCategoryIcon(job.category) }}</span>
+            <span class="job-location">📍 {{ job.location?.city }}</span>
+          </div>
+          <div class="job-title">{{ job.title }}</div>
+          <div class="job-footer">
+            <span class="job-budget">{{ job.budget | currencyFormat }}</span>
+            <button
+              class="btn-bid"
+              (click)="router.navigate(['/worker/open-jobs', job._id, 'bid'])"
+            >
+              قدم عرضًا
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <app-empty-state
+        *ngIf="openJobs.length === 0"
+        icon="💼"
+        title="لا توجد وظائف جديدة الآن"
+        subtitle="سيتم إخطارك فور نشر وظائف جديدة تتناسب مع تخصصك"
+      ></app-empty-state>
+    </section>
+  </div>
+
+</div>

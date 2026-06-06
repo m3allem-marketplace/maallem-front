@@ -1,0 +1,64 @@
+<div class="tab-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+  <div class="tab-header">
+    <h2 class="tab-title">📊 لوحة التحكم</h2>
+    <p class="tab-sub">نظرة عامة على أداء المنصة</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">👤</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ stats.totalUsers | number }}</div>
+        <div class="stat-label">إجمالي المستخدمين</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🔧</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ stats.totalWorkers | number }}</div>
+        <div class="stat-label">المعلمون المسجلون</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber">📋</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ stats.totalBookings | number }}</div>
+        <div class="stat-label">إجمالي الحجوزات</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple">💰</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ formatCurrency(stats.totalRevenue) }}</div>
+        <div class="stat-label">إجمالي الإيرادات</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">⚠️</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ stats.openDisputes }}</div>
+        <div class="stat-label">نزاعات مفتوحة</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon teal">🛠️</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ stats.activeJobs }}</div>
+        <div class="stat-label">طلبات نشطة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="section-card">
+    <h3 class="section-title">📡 النشاط الأخير</h3>
+    <div class="activity-list">
+      <div *ngFor="let a of recentActivity" class="activity-row" [class]="a.type">
+        <span class="activity-icon">{{ a.icon }}</span>
+        <span class="activity-text">{{ a.text }}</span>
+        <span class="activity-time">{{ a.time }}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -65,6 +65,22 @@ export class ToastService {
       )
     );
   }
+
+  success(message: string, duration?: number): void {
+    this.show(message, 'success', duration);
+  }
+
+  error(message: string, duration?: number): void {
+    this.show(message, 'error', duration);
+  }
+
+  info(message: string, duration?: number): void {
+    this.show(message, 'info', duration);
+  }
+
+  warning(message: string, duration?: number): void {
+    this.show(message, 'warning', duration);
+  }
 }
 
 @Component({

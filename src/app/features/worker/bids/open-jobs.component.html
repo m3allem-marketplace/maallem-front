@@ -1,0 +1,97 @@
+<div class="open-jobs-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+
+  <!-- ── Page Header ──────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-inner">
+      <div>
+        <h1 class="page-title">💼 الوظائف المتاحة</h1>
+        <p class="page-subtitle">اعرض الطلبات المفتوحة وقدم عروض أسعارك التنافسية الآن</p>
+      </div>
+      <div class="results-badge" *ngIf="!loading">{{ filteredJobs.length }} وظيفة متاحة</div>
+    </div>
+  </div>
+
+  <!-- ── Filters Bar ──────────────────────────────────────────── -->
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="filter-group">
+        <label class="filter-label">التخصص</label>
+        <select class="filter-select"
+          [value]="selectedCategory"
+          (change)="onCategoryChange($any($event.target).value)"
+        >
+          <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">المحافظة</label>
+        <select class="filter-select"
+          [value]="selectedCity"
+          (change)="onCityChange($any($event.target).value)"
+        >
+          <option value="">كل المحافظات</option>
+          <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loading ──────────────────────────────────────────────── -->
+  <div class="loading-box" *ngIf="loading">
+    <app-spinner size="lg"></app-spinner>
+    <p>جاري تحميل الوظائف...</p>
+  </div>
+
+  <!-- ── Jobs Grid ────────────────────────────────────────────── -->
+  <div class="jobs-container" *ngIf="!loading">
+    <div class="jobs-grid" *ngIf="filteredJobs.length > 0">
+      <div class="job-card" *ngFor="let job of filteredJobs">
+
+        <!-- Job Card Header -->
+        <div class="jc-header">
+          <span class="jc-cat-icon">{{ getCategoryIcon(job.category) }}</span>
+          <span class="jc-cat-label">{{ getCategoryLabel(job.category) }}</span>
+          <span class="jc-time">{{ job.createdAt | timeAgo }}</span>
+        </div>
+
+        <!-- Job Title & Description -->
+        <h3 class="jc-title">{{ job.title }}</h3>
+        <p class="jc-desc">{{ job.description | truncate:120 }}</p>
+
+        <!-- Location & Budget -->
+        <div class="jc-meta">
+          <span class="jc-location" *ngIf="job.location?.city">
+            📍 {{ job.location?.address ? job.location.address + '، ' : '' }}{{ job.location?.city }}
+          </span>
+          <span class="jc-budget">{{ job.budget | currencyFormat }}</span>
+        </div>
+
+        <!-- Client Row -->
+        <div class="jc-client" *ngIf="job.client">
+          <app-avatar [name]="job.client.name" size="sm"></app-avatar>
+          <span class="jc-client-name">{{ job.client.name }}</span>
+        </div>
+
+        <!-- Submit Bid CTA -->
+        <div class="jc-actions">
+          <app-button
+            variant="primary"
+            (click)="submitBid(job._id)"
+            style="width: 100%; font-family: 'Cairo', var(--font-arabic);"
+          >
+            🚀 تقديم عرض سعر
+          </app-button>
+        </div>
+
+      </div>
+    </div>
+
+    <app-empty-state
+      *ngIf="filteredJobs.length === 0"
+      icon="🔍"
+      title="لا توجد وظائف مطابقة"
+      subtitle="جرب تغيير فلتر التخصص أو المحافظة للبحث في نطاق أوسع"
+    ></app-empty-state>
+  </div>
+
+</div>
