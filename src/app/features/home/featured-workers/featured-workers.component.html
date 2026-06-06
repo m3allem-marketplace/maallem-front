@@ -1,0 +1,138 @@
+<section class="workers-section">
+  <div class="container">
+
+    <!-- Section Header -->
+    <div class="workers-header">
+      <div class="workers-header__text">
+        <div class="section-header__label">
+          صنايعية مميزين
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFB300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-star-icon lucide-user-star" aria-hidden="true" focusable="false">
+            <path d="M16.051 12.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.866l-1.156-1.153a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/>
+            <path d="M8 15H7a4 4 0 0 0-4 4v2"/>
+            <circle cx="10" cy="7" r="4"/>
+          </svg>
+        </div>
+        <h2 class="section-header__title">
+          أفضل <span class="section-header__accent">المعلمين</span> عندنا
+        </h2>
+        <p class="section-header__sub">
+          حرفيين Gold-tier — تقييمات عالية وخبرة مثبتة
+        </p>
+      </div>
+      <a routerLink="/workers" class="workers-header__cta">
+        عرض الكل
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+ <!-- Scrollable Row -->
+<div class="workers-scroll-wrapper">
+
+  <div class="workers-track" *ngIf="displayWorkers.length; else workersEmpty">
+
+    <app-worker-card
+      *ngFor="let worker of displayWorkers"
+      [worker]="worker">
+    </app-worker-card>
+
+  </div>
+
+  <ng-template #workersEmpty>
+    <p>لا يوجد عمال متاحون حالياً</p>
+  </ng-template>
+
+</div>
+</div>
+</section>
+
+<style>
+/* ================================================================
+   FEATURED WORKERS
+   ================================================================ */
+.workers-section {
+
+  background:  var(--color-primary-50);
+  overflow: hidden;
+}
+
+/* Header */
+.workers-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  margin-bottom: var(--space-10);
+  direction: rtl;
+}
+.workers-header__text { display: flex; flex-direction: column; gap: var(--space-2); text-align: center; align-items: center; }
+.workers-header__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-full);
+  transition: var(--transition-all);
+  white-space: nowrap;
+  margin-top: var(--space-4);
+  align-self: flex-end; /* in RTL, flex-end aligns to the left */
+}
+.workers-header__cta:hover {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  border-color: var(--color-primary);
+}
+
+/* Re-use section-header styles (defined in category-grid) */
+.section-header__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-accent);
+  letter-spacing: var(--tracking-widest);
+}
+.section-header__label svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-inline-start: 8px;
+}
+.section-header__title {
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: var(--font-extrabold);
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+}
+.section-header__accent { color: var(--color-primary); }
+.section-header__sub { font-size: var(--text-base); color: var(--text-secondary); }
+
+/* Scroll Container */
+.workers-scroll-wrapper {
+  overflow-x: auto;
+  padding-bottom: var(--space-4);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-300) transparent;
+  direction: rtl;
+}
+.workers-scroll-wrapper::-webkit-scrollbar { height: 4px; }
+.workers-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+}
+
+.workers-track {
+  display: flex;
+  gap: var(--space-5);
+  width: max-content;
+  padding: var(--space-3) var(--space-2);
+}
+
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+</style>

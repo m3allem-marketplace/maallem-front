@@ -61,7 +61,7 @@ export class StarRatingComponent {
       percent = 50;
     }
 
-    return `inset(0 ${100 - percent}% 0 0)`;
+    return `inset(0 0 0 ${100 - percent}%)`;
   }
 
   onHover(star: number): void {

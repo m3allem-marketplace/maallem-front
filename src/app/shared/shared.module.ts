@@ -82,3 +82,8 @@ export class SharedModule { }
 export { WorkerSummary } from './models/worker-summary.model';
 export { Category } from './models/category.model';
 export { PaginationMeta, PaginatedResponse, PaginationParams } from './models/pagination.model';
+export { HasRoleDirective } from './directives/has-role.directive';
+export { ClickOutsideDirective } from './directives/click-outside.directive';
+export { TimeAgoPipe } from './pipes/time-ago.pipe';
+export { CurrencyFormatPipe } from './pipes/currency-format.pipe';
+export { TruncatePipe } from './pipes/truncate.pipe';
