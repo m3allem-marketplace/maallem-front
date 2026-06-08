@@ -6,6 +6,7 @@ import { BookingCancelComponent } from './booking-cancel/booking-cancel.componen
 
 const routes: Routes = [
   { path: 'booking-confirm/:proposalId', component: BookingConfirmComponent },
+  { path: 'booking-confirm/:projectId/:proposalId', component: BookingConfirmComponent },
   { path: 'booking-success/:bookingId', component: BookingSuccessComponent },
   { path: 'booking-cancel/:bookingId', component: BookingCancelComponent },
 ];

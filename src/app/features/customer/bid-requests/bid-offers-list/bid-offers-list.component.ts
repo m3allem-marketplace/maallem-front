@@ -59,7 +59,7 @@ export class BidOffersListComponent implements OnInit {
   }
 
   acceptOffer(offerId: string): void {
-    this.router.navigate(['/services/booking-confirm', offerId]);
+    this.router.navigate(['/services/booking-confirm', this.projectId, offerId]);
   }
 
   private seedMockProject(): void {

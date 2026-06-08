@@ -21,6 +21,10 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'workers',
+    loadChildren: () => import('./features/workers/workers.module').then(m => m.WorkersModule)
+  },
+  {
     path: 'customer',
     loadChildren: () => import('./features/customer/customer.module').then(m => m.CustomerModule),
     canActivate: [AuthGuard, CustomerGuard]
@@ -59,6 +63,15 @@ const routes: Routes = [
     path: 'master',
     loadChildren: () => import('./features/master/master.module').then(m => m.MasterModule),
     canActivate: [AuthGuard, MasterGuard]
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'settings',
+    redirectTo: 'profile'
   },
   {
     path: '**',

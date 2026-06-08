@@ -61,7 +61,7 @@ export class BookingCancelComponent implements OnInit {
     if (this.bookingId.startsWith('mock-')) {
       setTimeout(() => {
         this.toast.success('تم إلغاء الحجز بنجاح ✕');
-        this.router.navigate(['/bookings']);
+        this.router.navigate(['/customer/bookings']);
         this.submitting = false;
       }, 1000);
       return;
@@ -70,18 +70,18 @@ export class BookingCancelComponent implements OnInit {
     this.bookingService.cancelBooking(this.bookingId).subscribe({
       next: () => {
         this.toast.success('تم إلغاء الحجز بنجاح ✕');
-        this.router.navigate(['/bookings']);
+        this.router.navigate(['/customer/bookings']);
         this.submitting = false;
       },
       error: (err) => {
         this.toast.info('تم محاكاة إلغاء الحجز بنجاح (وضع التطوير)');
-        this.router.navigate(['/bookings']);
+        this.router.navigate(['/customer/bookings']);
         this.submitting = false;
       }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/bookings']);
+    this.router.navigate(['/customer/bookings']);
   }
 }

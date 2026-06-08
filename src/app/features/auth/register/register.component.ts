@@ -18,66 +18,87 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        background-color: #f7f6f0; 
+        background-image: linear-gradient(135deg, rgba(13, 21, 58, 0.94) 0%, rgba(27, 43, 110, 0.88) 100%), url('/assets/hero-handyman.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         padding: 24px;
         box-sizing: border-box;
     }
 
     .auth-card {
         width: 100%;
-        max-width: 460px;
-        background: #ffffff;
+        max-width: 450px;
+        background: rgba(255, 255, 255, 0.93);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
         padding: 40px;
         border-radius: 24px; 
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03); 
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
         display: flex;
         flex-direction: column;
         align-items: center;
         box-sizing: border-box;
+        border-top: 4px solid #DFBA6B;
     }
 
     .logo-container {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 20px;
+        gap: 12px;
+        margin-bottom: 24px;
+        direction: rtl;
     }
 
     .logo-icon-box {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--color-accent, #FFB400), #e09e00);
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #1B2B6E;
+        box-shadow: 0 4px 12px rgba(27, 43, 110, 0.2);
     }
 
-    .logo-text {
-        font-size: 22px;
+    .logo-text-stack {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+    }
+
+    .logo-title {
+        font-size: 20px;
         font-weight: 800;
-        color: var(--color-primary-dark, #1B2B6E);
-        letter-spacing: -0.02em;
+        color: #1B2B6E;
+        line-height: 1.1;
+        font-family: 'Cairo', sans-serif;
     }
 
-    .logo-accent {
-        color: var(--color-accent, #FFB400);
+    .logo-subtitle {
+        font-size: 10px;
+        font-weight: 700;
+        color: #B99343;
+        margin-top: 2px;
+        font-family: 'Cairo', sans-serif;
     }
 
     .auth-title {
-        font-size: 26px;
-        font-weight: 700;
-        color: var(--color-primary-dark, #1B2B6E);
-        margin: 0 0 6px 0;
+        font-size: 24px;
+        font-weight: 800;
+        color: #1B2B6E;
+        margin: 0 0 8px 0;
         text-align: center;
+        font-family: 'Cairo', sans-serif;
     }
 
     .auth-subtitle {
-        font-size: 14px;
+        font-size: 13px;
         color: #6c757d;
-        margin: 0 0 32px 0;
+        margin: 0 0 28px 0;
         text-align: center;
         line-height: 1.6;
+        font-family: 'Cairo', sans-serif;
     }
 
     .auth-form {
@@ -103,23 +124,26 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
     }
 
     .form-label {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--color-primary-dark, #1B2B6E);
+        font-size: 13px;
+        font-weight: 700;
+        color: #1B2B6E;
         text-align: right;
+        font-family: 'Cairo', sans-serif;
     }
 
     .toggle-password-btn {
         background: none;
         border: none;
-        color: var(--color-primary, #1B2B6E);
-        font-size: 13px;
-        font-weight: 500;
+        color: #B99343;
+        font-size: 12px;
+        font-weight: 700;
         cursor: pointer;
         padding: 0;
+        font-family: 'Cairo', sans-serif;
     }
 
     .toggle-password-btn:hover {
+        color: #DFBA6B;
         text-decoration: underline;
     }
 
@@ -128,10 +152,12 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
         font-size: 13px;
         text-align: right;
         direction: rtl;
+        font-family: 'Cairo', sans-serif;
+        font-weight: 600;
     }
 
     .submit-wrap {
-        margin-top: 8px;
+        margin-top: 12px;
         width: 100%;
         display: flex;
         gap: 12px;
@@ -142,16 +168,46 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
     }
 
     .submit-wrap ::ng-deep app-button button {
-        height: 48px;
+        height: 50px;
         border-radius: 12px;
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        cursor: pointer;
         width: 100%;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .submit-wrap ::ng-deep app-button[variant="primary"] button {
+        background: linear-gradient(135deg, #1B2B6E 0%, #0d153a 100%) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(27, 43, 110, 0.2);
+    }
+
+    .submit-wrap ::ng-deep app-button[variant="primary"] button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #2b41af 0%, #1B2B6E 100%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(27, 43, 110, 0.3);
+    }
+
+    .submit-wrap ::ng-deep app-button[variant="secondary"] button {
+        background: #ffffff !important;
+        color: #1B2B6E !important;
+        border: 2px solid #1B2B6E !important;
+    }
+
+    .submit-wrap ::ng-deep app-button[variant="secondary"] button:hover:not(:disabled) {
+        background: rgba(27, 43, 110, 0.04) !important;
+        transform: translateY(-2px);
     }
 
     .submit-wrap ::ng-deep app-button button:disabled {
-        background-color: #ced4da !important;
+        background: #ced4da !important;
         color: #6c757d !important;
+        border: none !important;
+        cursor: not-allowed;
+        box-shadow: none;
     }
 
     .register-prompt {
@@ -160,95 +216,122 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
         gap: 6px;
         direction: rtl;
         font-size: 14px;
-        color: #495057;
+        color: #6c757d;
+        font-family: 'Cairo', sans-serif;
     }
 
     .register-link {
-        color: var(--color-accent, #FFB400);
+        color: #B99343;
         text-decoration: none;
         font-weight: 700;
+        font-family: 'Cairo', sans-serif;
     }
 
     .register-link:hover {
+        color: #DFBA6B;
         text-decoration: underline;
     }
 
     .role-cards {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
         width: 100%;
     }
 
-    /* Role Card - Icon Support */
     .role-card {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 16px;
+        border: 2px solid rgba(27, 43, 110, 0.08);
+        border-radius: 16px;
+        padding: 20px;
         text-align: center;
         cursor: pointer;
-        transition: all 0.2s ease;
-        background: #f8f9fa;
-        font-weight: 600;
-        color: #495057;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #ffffff;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 8px;
         outline: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
     }
 
     .role-card:hover {
-        border-color: #ced4da;
-        background: #ffffff;
+        border-color: #B99343;
+        background: rgba(185, 147, 67, 0.03);
+        transform: translateY(-2px);
     }
 
+    .role-card.active {
+        border-color: #1B2B6E !important;
+        background: rgba(27, 43, 110, 0.03) !important;
+        box-shadow: 0 8px 24px rgba(27, 43, 110, 0.1) !important;
+        transform: translateY(-2px) scale(1.01);
+    }
 
-    /*  Role Card Icon */
     .role-icon {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         color: #6c757d;
-        transition: color 0.2s ease;
+        transition: color 0.3s ease;
     }
 
-    .role-card:hover .role-icon {
-        color: var(--color-primary, #1B2B6E);
+    .role-card.active .role-icon {
+        color: #1B2B6E !important;
     }
 
-.role-card.active {
-  border: 2px solid var(--color-primary) !important;
-  background: var(--color-primary-subtle, #eef0f9);  
-  color: var(--color-primary-dark, #1B2B6E);
-  box-shadow: 0 0 0 3px rgba(27, 43, 110, 0.2),
-              0 8px 24px rgba(27, 43, 110, 0.2);  
-  transform: scale(1.02);  
-}
+    .role-title-text {
+        font-size: 15px;
+        font-weight: 800;
+        color: #1B2B6E;
+        font-family: 'Cairo', sans-serif;
+    }
 
-.role-card.active .role-icon {
-  color: var(--color-primary) !important;
-  width: 40px; 
-  height: 40px;
-}
-
-    .role-card span {
-        font-size: 14px;
-        font-weight: 600;
+    .role-desc {
+        font-size: 11px;
+        color: #6c757d;
+        line-height: 1.4;
+        font-family: 'Cairo', sans-serif;
     }
 
     .summary-box {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
+        background: rgba(27, 43, 110, 0.03);
+        border: 1px solid rgba(27, 43, 110, 0.08);
+        border-radius: 16px;
+        padding: 24px;
         width: 100%;
         direction: rtl;
         text-align: right;
-        outline: none;
+        box-sizing: border-box;
+    }
+
+    .summary-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #1B2B6E;
+        margin-bottom: 12px;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .summary-header-icon {
+        color: #B99343;
+    }
+
+    .summary-divider {
+        height: 1px;
+        background: rgba(27, 43, 110, 0.08);
+        margin-bottom: 16px;
+        width: 100%;
     }
 
     .summary-item {
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 12px;
-        font-size: 14px;
+        font-size: 13px;
+        font-family: 'Cairo', sans-serif;
     }
 
     .summary-item:last-child {
@@ -257,13 +340,17 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
 
     .summary-label {
         color: #6c757d;
-        font-weight: 500;
-        margin-left: 8px;
+        font-weight: 700;
     }
 
     .summary-value {
-        color: var(--color-primary-dark, #1B2B6E);
-        font-weight: 600;
+        color: #1B2B6E;
+        font-weight: 800;
+    }
+
+    .highlight-role {
+        color: #B99343;
+        font-weight: 800;
     }
 
     .step-indicator {
@@ -278,14 +365,33 @@ import { egyptianPhone, passwordStrength, passwordConfirmMatch } from '../servic
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: #e9ecef;
-        transition: all 0.3s;
+        background-color: #ced4da;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .step-dot.active {
-        background-color: var(--color-primary, #1B2B6E);
-        width: 24px;
+        background-color: #B99343;
+        width: 28px;
         border-radius: 4px;
+    }
+
+    .font-arabic {
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
   `]
 })
@@ -363,6 +469,50 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return roles[role] || role;
   }
 
+  getNameError(): string {
+    const control = this.registerForm.get('name');
+    if (control?.touched && control?.invalid) {
+      if (control.hasError('required')) return 'الاسم الكامل مطلوب';
+    }
+    return '';
+  }
+
+  getEmailError(): string {
+    const control = this.registerForm.get('email');
+    if (control?.touched && control?.invalid) {
+      if (control.hasError('required')) return 'البريد الإلكتروني مطلوب';
+      if (control.hasError('email')) return 'صيغة البريد الإلكتروني غير صحيحة';
+    }
+    return '';
+  }
+
+  getPhoneError(): string {
+    const control = this.registerForm.get('phone');
+    if (control?.touched && control?.invalid) {
+      if (control.hasError('required')) return 'رقم الهاتف مطلوب';
+      if (control.hasError('egyptianPhone')) return 'يجب أن يكون رقم هاتف مصري صحيح (مثال: 01012345678)';
+    }
+    return '';
+  }
+
+  getPasswordError(): string {
+    const control = this.registerForm.get('password');
+    if (control?.touched && control?.invalid) {
+      if (control.hasError('required')) return 'كلمة المرور مطلوبة';
+      if (control.hasError('passwordStrength')) return 'يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير ورقم';
+    }
+    return '';
+  }
+
+  getConfirmPasswordError(): string {
+    const control = this.registerForm.get('confirmPassword');
+    if (control?.touched) {
+      if (control.hasError('required')) return 'تأكيد كلمة المرور مطلوب';
+      if (this.registerForm.hasError('passwordMismatch')) return 'كلمتا المرور غير متطابقتين';
+    }
+    return '';
+  }
+
   isStep1Valid(): boolean {
     const fields = ['name', 'email', 'phone', 'password', 'confirmPassword'];
     const fieldsValid = fields.every(f => this.registerForm.get(f)?.valid);
@@ -413,10 +563,33 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.registerForm.get('role')?.setValue(role);
   }
 
+  getFormErrors(): any {
+    const errors: any = {};
+    Object.keys(this.registerForm.controls).forEach(key => {
+      const controlErrors = this.registerForm.get(key)?.errors;
+      if (controlErrors != null) {
+        errors[key] = controlErrors;
+      }
+    });
+    const groupErrors = this.registerForm.errors;
+    if (groupErrors) {
+      errors['group'] = groupErrors;
+    }
+    return errors;
+  }
+
   onSubmit(): void {
+    console.log('Register Form Submitted!', {
+      value: this.registerForm.value,
+      valid: this.registerForm.valid,
+      errors: this.getFormErrors()
+    });
+
     if (this.registerForm.valid) {
       this.displayError = null;
       this.store.dispatch(register({ payload: this.registerForm.value as any }));
+    } else {
+      this.registerForm.markAllAsTouched();
     }
   }
 }

@@ -1,28 +1,33 @@
-<div class="auth-wrapper">
-  <div class="auth-card">
+<div class="auth-wrapper" dir="rtl">
+  <div class="auth-card animate-fade-in">
 
     <div class="logo-container">
-      <span class="logo-text">
-        M<span class="logo-accent">3</span>allem
-      </span>
-
       <div class="logo-icon-box">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
+        <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#1B2B6E" stroke="url(#loginLogoGoldGrad)" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M30 68V32L50 51L70 32V68" stroke="url(#loginLogoGoldGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="loginLogoGoldGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#DFBA6B" />
+              <stop offset="100%" stop-color="#B99343" />
+            </linearGradient>
+          </defs>
         </svg>
+      </div>
+      <div class="logo-text-stack font-arabic">
+        <span class="logo-title">مَعْلَم</span>
+        <span class="logo-subtitle">منصة الحرفيين</span>
       </div>
     </div>
 
-    <h1 class="auth-title">تسجيل الدخول</h1>
-    <p class="auth-subtitle">الرجاء إدخال البيانات الخاصة بك للوصول إلى حسابك</p>
+    <h1 class="auth-title font-arabic">تسجيل الدخول</h1>
+    <p class="auth-subtitle font-arabic">الرجاء إدخال البيانات الخاصة بك للوصول إلى حسابك</p>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
 
       <div class="form-group">
         <label class="form-label">البريد الإلكتروني *</label>
-        <app-input type="email" formControlName="email" placeholder="username@mail.com">
+        <app-input type="email" formControlName="email" placeholder="username@mail.com" [errorMessage]="getEmailError()">
         </app-input>
       </div>
 
@@ -33,15 +38,15 @@
             {{ passwordType === 'password' ? 'عرض' : 'إخفاء' }}
           </button>
         </div>
-        <app-input [type]="passwordType" formControlName="password" placeholder="••••••••">
+        <app-input [type]="passwordType" formControlName="password" placeholder="••••••••" [errorMessage]="getPasswordError()">
         </app-input>
       </div>
 
       <div class="actions-row">
-        <a routerLink="/auth/forgot-password" class="forgot-link">هل نسيت كلمة المرور؟</a>
+        <a routerLink="/auth/forgot-password" class="forgot-link font-arabic">هل نسيت كلمة المرور؟</a>
       </div>
 
-      <div *ngIf="authError$ | async as error" class="store-error-msg">
+      <div *ngIf="authError$ | async as error" class="store-error-msg font-arabic">
         البريد الإلكتروني أو كلمة المرور غير صحيحة
       </div>
 
@@ -52,10 +57,9 @@
         </app-button>
       </div>
 
-
     </form>
 
-    <div class="register-prompt">
+    <div class="register-prompt font-arabic">
       <span>ليس لديك حساب؟</span>
       <a routerLink="/auth/register" class="register-link">سجل الآن</a>
     </div>

@@ -1,2 +1,24 @@
-// WorkersModule placeholder
-// Purpose: Feature module for workers (lazy-loaded)
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { WorkersRoutingModule } from './workers-routing.module';
+import { WorkersListComponent } from './workers-list/workers-list.component';
+import { WorkerDetailComponent } from './worker-detail/worker-detail.component';
+import { WorkerCardComponent } from '../../shared/components/worker-card/worker-card.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+
+@NgModule({
+  declarations: [
+    WorkersListComponent,
+    WorkerDetailComponent
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    WorkersRoutingModule,
+    WorkerCardComponent,
+    AvatarComponent
+  ]
+})
+export class WorkersModule {}

@@ -38,7 +38,7 @@ export class SubmitBidFormComponent implements OnInit {
     this.loading = true;
     this.projectService.getProjectById(this.projectId).subscribe({
       next: (res) => {
-        this.project = res.data || res;
+        this.project = res.data?.project || res.data || res;
         this.loading = false;
       },
       error: () => {
@@ -67,7 +67,7 @@ export class SubmitBidFormComponent implements OnInit {
     this.submitting = true;
     const payload = {
       price: this.price,
-      estimatedDays: this.estimatedDays,
+      estimatedDuration: String(this.estimatedDays),
       message: this.message
     };
 

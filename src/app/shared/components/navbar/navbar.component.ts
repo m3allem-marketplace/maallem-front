@@ -14,34 +14,29 @@ import * as AuthActions from '../../../../store/auth/auth.actions';
   imports: [CommonModule, RouterModule, AvatarComponent,NotificationComponent, ClickOutsideDirective],
   templateUrl: './navbar.component.html',
   styles: [`
-  
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Onest:wght@400;500;600;700&family=Rethink+Sans:wght@400;600;700;800&display=swap');
 
+    .font-arabic {
+      font-family: 'Cairo', sans-serif !important;
+    }
+
     .navbar-main {
-  font-family: 'Onest', var(--font-sans);
+      font-family: 'Onest', var(--font-sans);
+      background: var(--color-neutral-0);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  backdrop-filter 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  position: relative;
-  z-index: 50;
-
-  width: calc(100% - 16px);
-
-  margin: 0 auto;
-
-  border-radius: 24px;
-background: transparent;
-box-shadow: none;
-
-  border: none;
-
-
-
-
-  transition:
-    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    backdrop-filter 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
-}
+    .navbar-main.scrolled {
+      background: rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-color: rgba(27, 43, 110, 0.05) !important;
+      box-shadow: 0 10px 30px -10px rgba(27, 43, 110, 0.08);
+    }
 
     /* Support Arabic language elements */
     [style*="direction: rtl"], .arabic-text {
@@ -344,7 +339,6 @@ box-shadow: none;
                   background-color 300ms ease;
     }
 
-    /* ── Global Page Curved Canvas Layout (Crest-inspired Nesting) ── */
     ::ng-deep body {
       background-color: var(--bg-page) !important;
     }
@@ -352,6 +346,7 @@ box-shadow: none;
     ::ng-deep .main-content {
       background-color: var(--bg-page) !important;
       border-radius: 24px 24px 0 0 !important;
+      margin: 0 16px 0 16px !important;
       box-shadow: 0 15px 40px rgba(27, 43, 110, 0.08) !important;
       overflow: hidden !important;
       position: relative;

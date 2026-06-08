@@ -1,0 +1,31 @@
+.hero-banner {
+  background: linear-gradient(135deg, var(--color-primary-800), var(--color-primary-950));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.hero-overlay {
+  background: radial-gradient(circle at 10% 20%, rgba(223, 186, 107, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(27, 43, 110, 0.3) 0%, transparent 50%);
+}
+
+.filter-card {
+  border-radius: var(--radius-2xl, 16px);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.filter-select {
+  border-color: var(--color-neutral-200, #e5e7eb);
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 16px;
+  padding-left: 36px;
+}
+
+.filter-select:focus {
+  border-color: var(--color-primary);
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(27, 43, 110, 0.06);
+}

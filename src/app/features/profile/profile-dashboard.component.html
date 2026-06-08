@@ -1,0 +1,209 @@
+<div class="profile-dashboard-container max-w-6xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <header class="mb-8 text-right font-arabic">
+    <h1 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">⚙️ إعدادات الحساب والملف الشخصي</h1>
+    <p class="text-sm text-gray-500">قم بتحديث معلوماتك الشخصية، وإدارة تفاصيل تخصصك الحرفي ومعرض أعمالك.</p>
+  </header>
+
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل معلومات الحساب...</p>
+  </div>
+
+  <div *ngIf="!loading" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Avatar & Quick Info -->
+    <div class="flex flex-col gap-6 font-arabic text-center">
+      
+      <div class="profile-summary-card p-6 bg-white border border-gray-100 rounded-3xl shadow-sm flex flex-col items-center">
+        <app-avatar [name]="name" size="lg" class="border-4 border-amber-50 mb-4"></app-avatar>
+        <h3 class="text-lg font-black text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ name }}</h3>
+        <span class="text-xs font-bold px-3 py-1 rounded-full mt-2"
+              [class.bg-amber-50]="role === 'worker' || role === 'company'"
+              [class.text-amber-600]="role === 'worker' || role === 'company'"
+              [class.bg-blue-50]="role === 'user'"
+              [class.text-blue-600]="role === 'user'">
+          {{ role === 'worker' ? 'حرفي معتمد' : role === 'company' ? 'شركة صيانة' : 'عميل' }}
+        </span>
+        
+        <div class="w-full mt-6 pt-6 border-t border-gray-100 text-right flex flex-col gap-3 text-xs text-gray-500">
+          <div class="flex justify-between items-center">
+            <span>البريد الإلكتروني:</span>
+            <span class="font-bold text-gray-800">{{ email }}</span>
+          </div>
+          <div class="flex justify-between items-center" *ngIf="phone">
+            <span>رقم الهاتف:</span>
+            <span class="font-bold text-gray-800">{{ phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex gap-3 text-right">
+        <span class="text-2xl">🛡️</span>
+        <div class="flex flex-col">
+          <h5 class="text-xs font-bold text-blue-900" style="font-family: 'Cairo', var(--font-arabic);">تأمين وحماية البيانات</h5>
+          <p class="text-[11px] text-blue-700 leading-relaxed mt-0.5">
+            تلتزم منصة معلم بأعلى معايير الأمان لحماية بياناتك الشخصية وبيانات الاتصال والتعاملات الحرة.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Settings Form (Span 2) -->
+    <div class="lg:col-span-2 flex flex-col gap-6 font-arabic text-right">
+      
+      <div class="settings-card p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-sm">
+        
+        <h3 class="text-lg font-extrabold text-gray-900 border-b pb-3 mb-6" style="font-family: 'Cairo', var(--font-arabic);">📝 تعديل البيانات الشخصية</h3>
+        
+        <form class="flex flex-col gap-6" (ngSubmit)="saveProfile()">
+          
+          <!-- Basic Info Rows -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-gray-500">الاسم الكامل</label>
+              <input 
+                type="text" 
+                [(ngModel)]="name" 
+                name="name"
+                class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+              >
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-gray-500">رقم الهاتف</label>
+              <input 
+                type="text" 
+                [(ngModel)]="phone" 
+                name="phone"
+                placeholder="مثال: 01012345678"
+                class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+              >
+            </div>
+          </div>
+
+          <!-- Worker-Specific Form Details -->
+          <div *ngIf="role === 'worker' || role === 'company'" class="flex flex-col gap-6 pt-6 border-t border-gray-100">
+            
+            <h4 class="text-sm font-extrabold text-amber-500" style="font-family: 'Cairo', var(--font-arabic);">🔧 معلومات المهنة والملف الحرفي</h4>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-500">التخصصات (مفصولة بفواصل)</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="specializations" 
+                  name="specializations"
+                  placeholder="مثال: سباكة، كهرباء، صيانة عامة"
+                  class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+                >
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-500">سنوات الخبرة</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="experience" 
+                  name="experience"
+                  placeholder="مثال: 8 سنوات خبرة"
+                  class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+                >
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-500">المحافظة</label>
+                <select 
+                  [(ngModel)]="city" 
+                  name="city"
+                  class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all cursor-pointer"
+                >
+                  <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-500">العنوان بالتفصيل</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="address" 
+                  name="address"
+                  placeholder="مثال: شارع التحرير، الدقي"
+                  class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+                >
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-gray-500">نبذة تعريفية عنك (Bio)</label>
+              <textarea 
+                rows="4" 
+                [(ngModel)]="bio" 
+                name="bio"
+                placeholder="اكتب نبذة مختصرة عن مهاراتك والخدمات التي تقدمها للعملاء..."
+                class="form-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Portfolio Image Manager -->
+            <div class="flex flex-col gap-3 pt-6 border-t border-gray-100">
+              <h4 class="text-sm font-extrabold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">📸 معرض الأعمال السابقة</h4>
+              
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  [(ngModel)]="portfolioUrl" 
+                  name="portfolioUrl"
+                  placeholder="أدخل رابط صورة لعمل سابق (يبدأ بـ http)"
+                  class="form-control flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+                >
+                <button 
+                  type="button" 
+                  (click)="addPortfolioImage()"
+                  class="px-5 py-3 bg-primary text-white text-xs font-bold rounded-xl shadow hover:shadow-md transition-all cursor-pointer"
+                  style="font-family: 'Cairo', var(--font-arabic);"
+                >
+                  إضافة صورة
+                </button>
+              </div>
+
+              <div *ngIf="portfolioImagesList.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                <div *ngFor="let img of portfolioImagesList; let i = index" class="relative group rounded-xl overflow-hidden aspect-video border border-gray-100">
+                  <img [src]="img" class="w-full h-full object-cover">
+                  <button 
+                    type="button" 
+                    (click)="removePortfolioImage(i)"
+                    class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs shadow-md border-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="portfolioImagesList.length === 0" class="py-6 text-center text-gray-400 bg-gray-50 border border-dashed rounded-2xl">
+                لا توجد صور مضافة لمعرض أعمالك بعد.
+              </div>
+            </div>
+
+          </div>
+
+          <div class="flex justify-end gap-3 pt-6 border-t border-gray-100">
+            <button 
+              type="submit" 
+              [disabled]="saving"
+              class="px-8 py-3.5 bg-accent text-primary-900 text-sm font-extrabold rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+              style="font-family: 'Cairo', var(--font-arabic);"
+            >
+              <span *ngIf="saving" class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-900"></span>
+              حفظ التغييرات
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

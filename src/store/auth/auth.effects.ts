@@ -27,8 +27,11 @@ export class AuthEffects {
   loginEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      exhaustMap(({ credentials }) =>
-        this.authService.login(credentials).pipe(
+      tap(({ credentials }) => console.log('AuthEffects: Received Login Action!', credentials)),
+      exhaustMap(({ credentials }) => {
+        console.log('AuthEffects: Executing login service call...', credentials);
+        return this.authService.login(credentials).pipe(
+          tap(res => console.log('AuthEffects: Login Success Response:', res)),
           map((response) =>
             AuthActions.loginSuccess({
               user: response.data.user,
@@ -36,15 +39,16 @@ export class AuthEffects {
               refreshToken: response.data.refreshToken,
             })
           ),
-          catchError((err) =>
-            of(
+          catchError((err) => {
+            console.error('AuthEffects: Login Error Caught:', err);
+            return of(
               AuthActions.loginFailure({
                 error: err?.error?.message ?? 'Login failed. Please try again.',
               })
-            )
-          )
-        )
-      )
+            );
+          })
+        );
+      })
     )
   );
 
@@ -57,8 +61,11 @@ export class AuthEffects {
   registerEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.register),
-      exhaustMap(({ payload }) =>
-        this.authService.register(payload).pipe(
+      tap(({ payload }) => console.log('AuthEffects: Received Register Action!', payload)),
+      exhaustMap(({ payload }) => {
+        console.log('AuthEffects: Executing register service call...', payload);
+        return this.authService.register(payload).pipe(
+          tap(res => console.log('AuthEffects: Register Success Response:', res)),
           map((response) =>
             AuthActions.registerSuccess({
               user: response.data.user,
@@ -66,16 +73,17 @@ export class AuthEffects {
               refreshToken: response.data.refreshToken,
             })
           ),
-          catchError((err) =>
-            of(
+          catchError((err) => {
+            console.error('AuthEffects: Register Error Caught:', err);
+            return of(
               AuthActions.registerFailure({
                 error:
                   err?.error?.message ?? 'Registration failed. Please try again.',
               })
-            )
-          )
-        )
-      )
+            );
+          })
+        );
+      })
     )
   );
 

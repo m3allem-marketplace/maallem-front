@@ -15,6 +15,7 @@ import { Proposal } from '../../../core/models/proposal.model';
 })
 export class BookingConfirmComponent implements OnInit {
   proposalId: string = '';
+  projectId: string = '';
   proposal: Proposal | null = null;
   loading = false;
   submitting = false;
@@ -35,6 +36,7 @@ export class BookingConfirmComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.proposalId = params.get('proposalId') || '';
+      this.projectId = params.get('projectId') || '';
       if (this.proposalId) {
         this.loadProposalDetails();
       }
@@ -50,6 +52,27 @@ export class BookingConfirmComponent implements OnInit {
         this.proposal = this.createMockProposal(this.proposalId);
         this.loading = false;
       }, 600);
+      return;
+    }
+
+    // Fetch via projectId if available to prevent 403 client authorization error
+    if (this.projectId && !this.projectId.startsWith('mock-')) {
+      this.proposalService.getProposalsForProject(this.projectId).subscribe({
+        next: (res) => {
+          const list = res.data?.proposals || res.data || [];
+          const found = list.find((p: any) => p._id === this.proposalId);
+          if (found) {
+            this.proposal = found;
+          } else {
+            this.proposal = this.createMockProposal(this.proposalId);
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.proposal = this.createMockProposal(this.proposalId);
+          this.loading = false;
+        }
+      });
       return;
     }
 

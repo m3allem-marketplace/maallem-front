@@ -7,4 +7,13 @@ import { Component, Input } from '@angular/core';
 })
 export class BookingCardComponent {
   @Input() booking: any;
+
+  getCategoryIcon(cat?: string): string {
+    const map: Record<string, string> = {
+      plumbing: '🔧', electricity: '⚡', painting: '🎨',
+      carpentry: '🪚', tiling: '🧱', hvac: '❄️',
+      cleaning: '🧹', moving: '📦', welding: '🔥'
+    };
+    return map[cat || ''] || '🛠️';
+  }
 }

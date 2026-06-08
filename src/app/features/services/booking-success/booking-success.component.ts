@@ -22,7 +22,7 @@ export class BookingSuccessComponent implements OnInit {
 
   goToBookings(): void {
     // Navigates to the bookings dashboard page
-    this.router.navigate(['/bookings']);
+    this.router.navigate(['/customer/bookings']);
   }
 
   goToHome(): void {
