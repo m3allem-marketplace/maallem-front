@@ -1,0 +1,190 @@
+<div class="worker-detail-wrapper max-w-5xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل ملف الحرفي...</p>
+  </div>
+
+  <div *ngIf="!loading && worker" class="flex flex-col gap-8">
+    
+    <!-- Profile Card Hero -->
+    <div class="profile-hero p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-sm text-right flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="flex items-center gap-6">
+        <app-avatar [imageUrl]="worker.avatar || null" [name]="worker.user.name" size="lg" class="shrink-0 border-4 border-amber-50"></app-avatar>
+        <div class="flex flex-col text-right font-arabic">
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ worker.user.name }}</h1>
+            <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">★ 4.8</span>
+          </div>
+          <p class="text-sm text-gray-500 mt-1 font-semibold">{{ worker.specializations?.[0] || 'حرفي عام' }}</p>
+          
+          <div class="flex flex-wrap items-center gap-4 mt-3 text-xs text-gray-400">
+            <span class="flex items-center gap-1">📍 {{ worker.location?.address || 'المحافظة' }}، {{ worker.location?.city || '' }}</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span>
+            <span class="flex items-center gap-1">⏱️ {{ worker.experience || 'خبرة ممتازة' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        (click)="openBookingModal()"
+        class="cta-booking px-8 py-3.5 bg-accent text-primary-900 text-sm font-extrabold rounded-2xl shadow-md hover:shadow-lg transition-all"
+        style="font-family: 'Cairo', var(--font-arabic);"
+      >
+        طلب خدمة فورية ⚡
+      </button>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-right font-arabic">
+      
+      <!-- Right Side: Bio & Specs (Span 2) -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+        
+        <!-- Bio Card -->
+        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
+          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">📝 نبذة عن الحرفي</h3>
+          <p class="text-sm text-gray-600 leading-relaxed font-light whitespace-pre-line">
+            {{ worker.bio || 'لم يقم الحرفي بإضافة نبذة تعريفية بعد، ولكنه ملتزم بتقديم أفضل جودة عمل ورضا العملاء.' }}
+          </p>
+        </div>
+
+        <!-- Portfolio Gallery Card -->
+        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
+          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">🖼️ معرض الأعمال السابقة</h3>
+          
+          <div *ngIf="!worker.portfolioImages || worker.portfolioImages.length === 0" class="py-8 text-center text-gray-400">
+            <span class="text-2xl">📸</span>
+            <p class="text-xs mt-2">لا توجد صور في معرض الأعمال بعد.</p>
+          </div>
+
+          <div *ngIf="worker.portfolioImages && worker.portfolioImages.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div *ngFor="let img of worker.portfolioImages" class="portfolio-item rounded-xl overflow-hidden shadow-sm aspect-video border border-gray-100 relative group">
+              <img [src]="img" class="w-full h-full object-cover transition-all duration-300 group-hover:scale-110" alt="Work Example">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Left Side: Sidebar Stats -->
+      <div class="flex flex-col gap-6">
+        
+        <!-- Specs Details -->
+        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
+          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">🛠️ التخصصات</h3>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span *ngFor="let spec of worker.specializations" class="text-xs font-semibold text-primary bg-primary-subtle px-3 py-1.5 rounded-xl">
+              {{ spec }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Guarantee Badge -->
+        <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex gap-3 text-right">
+          <span class="text-2xl">🛡️</span>
+          <div class="flex flex-col">
+            <h5 class="text-xs font-bold text-blue-900" style="font-family: 'Cairo', var(--font-arabic);">ضمان وحماية معلّم</h5>
+            <p class="text-[11px] text-blue-700 leading-relaxed mt-0.5">
+              كل الحجوزات والتعاملات محمية بالكامل عبر المنصة لضمان جودة الخدمة وحقوقك المالية.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Direct Booking Modal Dialog -->
+  <div *ngIf="showBookingModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeBookingModal()"></div>
+    
+    <div class="modal-card relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-scale-in text-right font-arabic">
+      <header class="p-6 bg-gradient-to-l from-primary-800 to-primary-950 text-white flex justify-between items-center">
+        <h3 class="text-lg font-black" style="font-family: 'Cairo', var(--font-arabic);">⚡ طلب خدمة صيانة فورية</h3>
+        <button (click)="closeBookingModal()" class="text-white/80 hover:text-white text-xl bg-transparent border-none cursor-pointer">✕</button>
+      </header>
+
+      <div class="p-6 max-h-[75vh] overflow-y-auto flex flex-col gap-4">
+        
+        <!-- Job Title -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-gray-500">عنوان الطلب</label>
+          <input 
+            type="text" 
+            [(ngModel)]="bookingTitle"
+            placeholder="مثال: تصليح تسريب تحت حوض الحمام"
+            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+          >
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-gray-500">شرح وتفاصيل المشكلة</label>
+          <textarea 
+            rows="3"
+            [(ngModel)]="bookingDescription"
+            placeholder="يرجى وصف المشكلة بالتفصيل لمساعدة الحرفي في التحضير للمهمة..."
+            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Budget & City -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-500">الميزانية المقترحة (جنيه)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="bookingBudget"
+              class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+            >
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-500">المدينة</label>
+            <select 
+              [(ngModel)]="bookingCity"
+              class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all cursor-pointer"
+            >
+              <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-gray-500">العنوان بالتفصيل</label>
+          <input 
+            type="text" 
+            [(ngModel)]="bookingAddress"
+            placeholder="مثال: شارع التحرير، الدقي، بجوار بنك مصر"
+            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+          >
+        </div>
+
+      </div>
+
+      <footer class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+        <button 
+          (click)="closeBookingModal()" 
+          class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        >
+          إلغاء
+        </button>
+        <button 
+          [disabled]="submitting"
+          (click)="submitDirectBooking()" 
+          class="px-6 py-2.5 bg-accent text-primary-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        >
+          <span *ngIf="submitting" class="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-primary-900"></span>
+          إرسال الطلب الآن
+        </button>
+      </footer>
+    </div>
+  </div>
+
+</div>

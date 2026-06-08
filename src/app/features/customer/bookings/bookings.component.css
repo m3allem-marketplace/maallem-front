@@ -1,0 +1,21 @@
+.bookings-container {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.tab-btn {
+  border-bottom-width: 2px;
+  background: transparent;
+  outline: none;
+  font-family: 'Cairo', var(--font-arabic);
+  font-weight: 700;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab-btn:hover {
+  color: var(--color-primary, #1b2b6e);
+}
+
+.tab-btn.active {
+  border-color: var(--color-accent, #ffb400);
+  color: var(--color-accent, #ffb400);
+}

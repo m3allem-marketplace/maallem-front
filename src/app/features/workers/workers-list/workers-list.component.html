@@ -1,0 +1,86 @@
+<div class="workers-list-wrapper max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <!-- Hero Section -->
+  <div class="hero-banner mb-8 p-8 rounded-3xl text-right text-white relative overflow-hidden shadow-lg">
+    <div class="hero-overlay absolute inset-0 z-0"></div>
+    <div class="relative z-10 max-w-2xl font-arabic">
+      <span class="text-xs font-bold text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">دليل الحرفيين والعمال</span>
+      <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-2" style="font-family: 'Cairo', var(--font-arabic);">تصفح أمهر المعلمين والحرفيين</h1>
+      <p class="text-sm md:text-base text-gray-200 leading-relaxed font-light">تواصل مباشرة مع حرفيين موثوقين ومقيمين لإنجاز صيانة منزلك باحترافية وسرعة.</p>
+    </div>
+  </div>
+
+  <!-- Filter Card -->
+  <div class="filter-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm mb-8 text-right font-arabic">
+    <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2" style="font-family: 'Cairo', var(--font-arabic);">
+      🔍 تصفية وتحديد البحث
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- City Filter -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500">المحافظة</label>
+        <select 
+          [(ngModel)]="selectedCity" 
+          (change)="onFilterChange()"
+          class="filter-select px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 outline-none transition-all cursor-pointer"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        >
+          <option *ngFor="let city of cities" [value]="city.value">{{ city.label }}</option>
+        </select>
+      </div>
+
+      <!-- Specialization Filter -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs font-bold text-gray-500">التخصص / المهنة</label>
+        <select 
+          [(ngModel)]="selectedSpecialization" 
+          (change)="onFilterChange()"
+          class="filter-select px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 outline-none transition-all cursor-pointer"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        >
+          <option *ngFor="let spec of specializations" [value]="spec.value">{{ spec.label }}</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري البحث عن المعلمين...</p>
+  </div>
+
+  <!-- Workers Output -->
+  <div *ngIf="!loading">
+    
+    <!-- Empty State -->
+    <div *ngIf="workers.length === 0" class="my-12">
+      <div class="text-center p-12 bg-gray-50 border border-dashed border-gray-200 rounded-3xl max-w-xl mx-auto">
+        <span class="text-4xl">👷</span>
+        <h4 class="text-lg font-bold text-gray-700 mt-4 mb-2" style="font-family: 'Cairo', var(--font-arabic);">لا يوجد عمال يطابقون خيارات التصفية</h4>
+        <p class="text-sm text-gray-400 leading-relaxed mb-6">يرجى تغيير خيارات البحث أو التصفية للعثور على حرفيين في محافظتك.</p>
+        <button 
+          (click)="selectedCity = ''; selectedSpecialization = ''; onFilterChange();"
+          class="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+          style="font-family: 'Cairo', var(--font-arabic);"
+        >
+          إعادة تعيين الفلاتر
+        </button>
+      </div>
+    </div>
+
+    <!-- Workers Grid -->
+    <div *ngIf="workers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+      <app-worker-card 
+        *ngFor="let worker of workers" 
+        [worker]="worker"
+        class="w-full max-w-[360px]"
+      ></app-worker-card>
+    </div>
+
+  </div>
+
+</div>

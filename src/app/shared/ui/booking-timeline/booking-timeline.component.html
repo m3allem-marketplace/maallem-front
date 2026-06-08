@@ -1,0 +1,31 @@
+<div class="booking-timeline" [class.is-cancelled]="isCancelled">
+  <div class="timeline-track-wrapper">
+    <div class="timeline-track">
+      <div class="timeline-progress" [style.width.%]="(activeStepIndex / (steps.length - 1)) * 100"></div>
+    </div>
+  </div>
+
+  <div class="timeline-steps">
+    <div 
+      *ngFor="let step of steps; let i = index" 
+      class="timeline-step" 
+      [class.active]="i <= activeStepIndex"
+      [class.current]="i === activeStepIndex"
+      [class.cancelled]="isCancelled && i === activeStepIndex"
+    >
+      <div class="step-icon-wrap">
+        <span class="step-number" *ngIf="!isCancelled || i !== activeStepIndex">
+          <svg *ngIf="i < activeStepIndex" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span *ngIf="i >= activeStepIndex">{{ i + 1 }}</span>
+        </span>
+        <span class="step-number cancel-symbol" *ngIf="isCancelled && i === activeStepIndex">✕</span>
+      </div>
+      <div class="step-content">
+        <div class="step-label">{{ isCancelled && i === activeStepIndex ? 'ملغي' : step.label }}</div>
+        <div class="step-desc">{{ isCancelled && i === activeStepIndex ? 'تم إلغاء هذا الطلب' : step.desc }}</div>
+      </div>
+    </div>
+  </div>
+</div>

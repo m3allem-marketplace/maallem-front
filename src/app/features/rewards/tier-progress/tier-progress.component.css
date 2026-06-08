@@ -1,0 +1,552 @@
+.rewards-page {
+  min-height: 100vh;
+  background: #f8f9fc;
+  padding-bottom: 3rem;
+}
+
+/* ── Page Header ──────────────────────────────────────────── */
+.page-header {
+  padding: 2.5rem 2rem 2rem;
+  color: white;
+  transition: background 0.4s;
+}
+
+.header-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.page-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.tier-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-family: 'Cairo', var(--font-arabic);
+  white-space: nowrap;
+}
+
+/* ── Tab Bar ───────────────────────────────────────────────── */
+.tab-bar {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 0;
+  max-width: 760px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #888;
+  cursor: pointer;
+  font-family: 'Cairo', var(--font-arabic);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  color: var(--color-primary, #1b2b6e);
+  border-bottom-color: var(--color-primary, #1b2b6e);
+}
+
+.tab-btn:hover:not(.active) {
+  color: #555;
+}
+
+/* ── Page Body ─────────────────────────────────────────────── */
+.page-body {
+  max-width: 760px;
+  margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Hero Card ─────────────────────────────────────────────── */
+.hero-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* ── SVG Ring ──────────────────────────────────────────────── */
+.ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ring-svg {
+  width: 130px;
+  height: 130px;
+}
+
+.progress-arc {
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring-pct {
+  font-size: 22px;
+  font-weight: 900;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.ring-label {
+  font-size: 11px;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+/* ── Hero Info ─────────────────────────────────────────────── */
+.hero-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.points-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.points-value {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #1a1a2e;
+  font-family: 'Cairo', var(--font-arabic);
+  line-height: 1;
+}
+
+.points-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #888;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+/* ── Tier Badges Row ───────────────────────────────────────── */
+.tier-badges-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tier-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  opacity: 0.35;
+  transition: all 0.3s;
+}
+
+.tier-step.reached {
+  opacity: 1;
+}
+
+.tier-step.current-tier {
+  transform: scale(1.15);
+}
+
+.tier-step-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.tier-step-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-family: 'Cairo', var(--font-arabic);
+  color: #888;
+}
+
+/* ── Points to Next ────────────────────────────────────────── */
+.points-to-next {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  background: #f8f9fc;
+  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.8rem;
+  font-family: 'Cairo', var(--font-arabic);
+  color: #555;
+}
+
+.ptn-val {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #1a1a2e;
+}
+
+.ptn-next {
+  font-weight: 800;
+}
+
+.master-badge {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-family: 'Cairo', var(--font-arabic);
+  text-align: center;
+}
+
+/* ── Section Cards ─────────────────────────────────────────── */
+.section-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 1.25rem;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+/* ── Tier Roadmap ──────────────────────────────────────────── */
+.tier-roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.roadmap-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1.5px solid #eee;
+  background: #fafafa;
+  opacity: 0.5;
+  transition: all 0.25s;
+}
+
+.roadmap-item.reached {
+  opacity: 1;
+  background: white;
+  border-color: #d1d5db;
+}
+
+.roadmap-item.is-current {
+  border-color: currentColor;
+  opacity: 1;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.roadmap-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.roadmap-info { flex: 1; }
+
+.roadmap-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.roadmap-points {
+  font-size: 0.72rem;
+  color: #aaa;
+  font-family: 'Cairo', var(--font-arabic);
+  margin-top: 0.15rem;
+}
+
+.roadmap-status {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--color-primary, #1b2b6e);
+  background: rgba(27,43,110,0.07);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.roadmap-check {
+  font-size: 1rem;
+  color: #22c55e;
+  font-weight: 900;
+}
+
+/* ── Benefits List ─────────────────────────────────────────── */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  color: #333;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.benefit-check {
+  font-size: 1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* ── History Timeline ──────────────────────────────────────── */
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.history-line {
+  position: absolute;
+  right: 1.1rem;
+  top: 3rem;
+  bottom: 0;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.history-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.history-content { flex: 1; padding-top: 0.3rem; }
+
+.history-tier-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.history-meta {
+  font-size: 0.75rem;
+  color: #aaa;
+  font-family: 'Cairo', var(--font-arabic);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.dot-sep { color: #ccc; }
+
+/* ── Master Tab ────────────────────────────────────────────── */
+.master-hero-card {
+  background: linear-gradient(135deg, #1a1040 0%, #3b0764 50%, #1b2b6e 100%);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.master-hero-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.3), transparent 70%);
+}
+
+.master-glow-ring {
+  font-size: 3.5rem;
+  margin-bottom: 0.75rem;
+  animation: star-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes star-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255,180,0,0.5)); }
+  50%       { transform: scale(1.12); filter: drop-shadow(0 0 20px rgba(255,180,0,0.9)); }
+}
+
+.master-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0 0 0.4rem;
+  font-family: 'Cairo', var(--font-arabic);
+  position: relative;
+}
+
+.master-subtitle {
+  font-size: 0.88rem;
+  opacity: 0.75;
+  margin: 0 0 1.25rem;
+  font-family: 'Cairo', var(--font-arabic);
+  line-height: 1.6;
+  position: relative;
+}
+
+.master-requirement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Cairo', var(--font-arabic);
+  position: relative;
+}
+
+.req-icon { font-size: 1.1rem; }
+
+/* ── Master Benefits Grid ──────────────────────────────────── */
+.master-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.master-benefit-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 2px solid #f5f3ff;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all 0.2s;
+}
+
+.master-benefit-card:hover {
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124,58,237,0.12);
+}
+
+.mbcard-icon { font-size: 1.25rem; flex-shrink: 0; }
+
+.mbcard-text {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: #333;
+  font-family: 'Cairo', var(--font-arabic);
+  line-height: 1.5;
+}
+
+/* ── Master Progress Bar ───────────────────────────────────── */
+.master-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.mp-current, .mp-target {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #555;
+  font-family: 'Cairo', var(--font-arabic);
+  white-space: nowrap;
+}
+
+.mp-bar-wrap { flex: 1; }
+
+.mp-bar {
+  height: 10px;
+  background: #f0f0f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.mp-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mp-hint {
+  font-size: 0.78rem;
+  color: #888;
+  font-family: 'Cairo', var(--font-arabic);
+  margin: 0;
+  text-align: center;
+}
+
+/* ── Loading ───────────────────────────────────────────────── */
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: #888;
+  font-family: 'Cairo', var(--font-arabic);
+}

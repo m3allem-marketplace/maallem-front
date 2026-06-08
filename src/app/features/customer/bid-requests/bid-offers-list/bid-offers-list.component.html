@@ -1,0 +1,86 @@
+<div class="bid-offers-container max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <!-- Back Nav Link -->
+  <div class="mb-6 text-right">
+    <a routerLink="/customer/bid-requests" class="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-primary no-underline" style="font-family: 'Cairo', var(--font-arabic);">
+      ← العودة لطلبات الخدمة
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل عروض الأسعار...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    
+    <!-- Project Header Info -->
+    <div *ngIf="project" class="card p-6 bg-gradient-to-r from-blue-900 to-indigo-950 text-white rounded-2xl shadow-sm mb-8 text-right">
+      <div class="flex justify-between items-start mb-3">
+        <h1 class="text-lg font-extrabold" style="font-family: 'Cairo', var(--font-arabic);">{{ project.title }}</h1>
+        <span class="text-sm font-extrabold text-amber-400" style="font-family: 'Cairo', var(--font-arabic);">ميزانيتك: {{ project.budget | currencyFormat }}</span>
+      </div>
+      <p class="text-xs text-blue-200 leading-relaxed font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ project.description }}</p>
+    </div>
+
+    <!-- Offers List -->
+    <div *ngIf="offers.length === 0">
+      <app-empty-state
+        title="لا توجد عروض أسعار مقدمة بعد"
+        description="لم يقم أي معلم بتقديم عرض سعر على هذا الطلب حتى الآن. يرجى الانتظار قليلاً وسيصلك إشعارات فور تقديمهم للعروض."
+        icon="bid"
+        actionText="العودة للرئيسية"
+        (actionClick)="router.navigate(['/'])"
+      ></app-empty-state>
+    </div>
+
+    <div *ngIf="offers.length > 0" class="flex flex-col gap-6">
+      <h2 class="text-base font-extrabold text-gray-800 text-right mb-1" style="font-family: 'Cairo', var(--font-arabic);">💬 العروض المستلمة ({{ offers.length }})</h2>
+      
+      <div 
+        *ngFor="let offer of offers"
+        class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-gray-200 transition-all text-right flex flex-col md:flex-row justify-between gap-6"
+      >
+        <!-- Worker Profile Info & Message -->
+        <div class="flex items-start gap-4">
+          <app-avatar 
+            [imageUrl]="offer.worker.avatar" 
+            [name]="offer.worker.name" 
+            size="md"
+            class="shrink-0 mt-1"
+          ></app-avatar>
+          <div class="flex flex-col text-right">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <h3 class="text-sm font-extrabold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ offer.worker.name }}</h3>
+              <div class="flex items-center gap-1 bg-yellow-50 px-2 py-0.5 rounded text-[10px] font-extrabold text-yellow-700">
+                ⭐ {{ offer.worker.rating }}
+              </div>
+              <app-tier-badge [tier]="offer.worker.tier"></app-tier-badge>
+            </div>
+            <p class="text-xs text-gray-600 mt-3 bg-gray-50 p-4 rounded-xl border border-gray-100/50 leading-relaxed font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ offer.message }}</p>
+          </div>
+        </div>
+
+        <!-- Hired details & Accept Action -->
+        <div class="flex md:flex-col items-stretch md:items-end justify-between w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-gray-50 gap-4 shrink-0">
+          <div class="flex flex-col text-right">
+            <span class="text-xs text-gray-400" style="font-family: 'Cairo', var(--font-arabic);">السعر المعروض</span>
+            <span class="text-base font-extrabold text-green-700">{{ offer.price | currencyFormat }}</span>
+            <span class="text-[10px] text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">المدة المتوقعة: {{ offer.estimatedDuration }}</span>
+          </div>
+
+          <button 
+            class="py-2.5 px-5 bg-primary hover:bg-primary-dark text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2"
+            (click)="acceptOffer(offer._id)"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            تأكيد وقبول العرض 🤝
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

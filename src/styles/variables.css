@@ -268,7 +268,7 @@
    * ------------------------------------------------------------------- */
 
   /* Navbar */
-  --navbar-height:      64px;
+  --navbar-height:      80px;
   --navbar-bg:          var(--color-primary);
   --navbar-text:        var(--text-inverse);
   --navbar-border:      rgba(255, 255, 255, 0.1);

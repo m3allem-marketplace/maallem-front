@@ -1,0 +1,12 @@
+.booking-detail-container {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.card {
+  transition: all var(--transition-base, 0.2s ease-in-out);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md, 0 10px 15px -3px rgba(0, 0, 0, 0.05));
+  border-color: rgba(27, 43, 110, 0.05);
+}

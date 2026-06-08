@@ -1,0 +1,313 @@
+<div class="playground-container">
+  <header class="playground-header">
+    <h1>🛠️ M3allem Live HTTP Integration Playground</h1>
+    <p>A secure testing suite to execute, debug, and monitor backend API calls in real-time. Navigate away or delete route to clean up.</p>
+  </header>
+
+  <div class="playground-grid">
+    <!-- COLUMN 1: Session Status & Auth Controls -->
+    <div class="card session-card">
+      <h2>👤 Current Session State</h2>
+      <div class="session-info">
+        <p><strong>Status:</strong> 
+          <span class="badge" [class.badge-success]="isLoggedIn$ | async" [class.badge-danger]="!(isLoggedIn$ | async)">
+            {{ (isLoggedIn$ | async) ? 'Authenticated' : 'Guest / Unauthorized' }}
+          </span>
+        </p>
+        <div *ngIf="currentUser$ | async as user" class="user-details">
+          <p><strong>Name:</strong> {{ user.name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Role:</strong> <span class="badge badge-role">{{ user.role }}</span></p>
+          <p><strong>ID:</strong> <code>{{ user._id }}</code></p>
+        </div>
+      </div>
+
+      <h2 class="section-title">🔑 Authentication REST API Actions</h2>
+      <div class="button-group">
+        <button class="btn btn-primary" (click)="testRegister()">🧪 Quick Register Worker</button>
+        <button class="btn btn-secondary" (click)="testLoginClient()">👤 Login client&#64;mail.com</button>
+        <button class="btn btn-secondary" (click)="testLoginWorker()">🔧 Login worker&#64;mail.com</button>
+        <button class="btn btn-danger" (click)="testLogout()" [disabled]="!(isLoggedIn$ | async)">🔒 Terminate Session</button>
+      </div>
+    </div>
+
+    <!-- COLUMN 2: Projects & Proposals Integration -->
+    <div class="card rest-card">
+      <h2>📂 Projects & Proposals (Bids) REST API Actions</h2>
+      <p class="description">Requires proper roles (Client 'user' to manage projects; Worker 'worker' to submit bids/proposals).</p>
+      
+      <div class="button-group">
+        <button class="btn btn-info" (click)="fetchProjects()">🔍 GET /projects (Public List)</button>
+        <button class="btn btn-gold" (click)="createProject()">🛠️ POST /projects (Client Job)</button>
+        <button class="btn btn-success" (click)="fetchProposals()">📨 GET /proposals/my (Worker Bids)</button>
+        <button class="btn btn-info" (click)="fetchWorkers()">👷 GET /profiles/workers (Public Directory)</button>
+      </div>
+
+      <h2 class="section-title">🌍 Feature 7 Booking Flow Pages</h2>
+      <p class="description">Test the confirmed, success, and cancel visual checkout workflows:</p>
+      <div class="button-group">
+        <a routerLink="/services/booking-confirm/mock-proposal-777" class="btn btn-gold no-underline text-center font-bold">➡️ Go to Booking Confirm Screen</a>
+        <a routerLink="/services/booking-success/mock-booking-888" class="btn btn-secondary no-underline text-center font-bold">➡️ Go to Booking Success Screen</a>
+        <a routerLink="/services/booking-cancel/mock-booking-999" class="btn btn-danger no-underline text-center font-bold" style="background: var(--color-error); color: white;">➡️ Go to Booking Cancel Screen</a>
+      </div>
+    </div>
+
+    <!-- COLUMN 3: Notifications Simulation -->
+    <div class="card alerts-card">
+      <h2>🔔 Notifications & Alert States <span class="badge badge-unread" *ngIf="(unreadCount$ | async) as unread">{{ unread }} unread</span></h2>
+      <p class="description">Simulates WebSocket triggers and global state updates. Uses the in-memory singleton service.</p>
+      
+      <div class="button-group">
+        <button class="btn btn-gold" (click)="simulateIncomingNotification()">🔔 Simulate Push Notification</button>
+        <button class="btn btn-primary" (click)="markAllRead()">✅ Mark All as Read</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="playground-grid-row">
+    <!-- Terminal Logs Box -->
+    <div class="card terminal-card">
+      <h2>🖥️ REST HTTP Network Log Console</h2>
+      <div class="terminal">
+        <div *ngFor="let log of logs" class="log-entry">{{ log }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Tables Render Output -->
+  <div class="card data-card" *ngIf="(projects$ | async)?.length || (proposals$ | async)?.length || (notifications$ | async)?.length || workers.length > 0">
+    <h2>📊 Fetched Backend Data Visualizer</h2>
+    
+    <!-- Render Projects -->
+    <div *ngIf="projects$ | async as storeProjects" class="data-section">
+      <div *ngIf="projectsLoading$ | async" class="loading-label">⚡ Loading from NgRx Store state...</div>
+      <div *ngIf="projectsError$ | async as err" class="error-label">❌ Error: {{ err }}</div>
+      
+      <div *ngIf="storeProjects.length > 0">
+        <h3>Projects Listing from NgRx Store ({{ storeProjects.length }} items)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Client</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let proj of storeProjects">
+                <td><code>{{ proj._id }}</code></td>
+                <td>{{ proj.title }}</td>
+                <td><span class="category-chip">{{ proj.category }}</span></td>
+                <td>EGP {{ proj.budget }}</td>
+                <td><span class="status-chip" [attr.data-status]="proj.status">{{ proj.status }}</span></td>
+                <td>{{ proj.client.name }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Render Proposals -->
+    <div *ngIf="proposals$ | async as storeProposals" class="data-section">
+      <div *ngIf="proposalsLoading$ | async" class="loading-label">⚡ Loading from NgRx Store state...</div>
+      <div *ngIf="proposalsError$ | async as err" class="error-label">❌ Error: {{ err }}</div>
+      
+      <div *ngIf="storeProposals.length > 0">
+        <h3>Submitted Worker Proposals from NgRx Store ({{ storeProposals.length }} items)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Project Title</th>
+                <th>Price Proposal</th>
+                <th>Duration</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prop of storeProposals">
+                <td><code>{{ prop._id }}</code></td>
+                <td>{{ prop.project.title }}</td>
+                <td>EGP {{ prop.price }}</td>
+                <td>{{ prop.estimatedDuration }}</td>
+                <td><span class="status-chip" [attr.data-status]="prop.status">{{ prop.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Render Notifications -->
+    <div *ngIf="notifications$ | async as storeNotifs" class="data-section">
+      <div *ngIf="notificationsLoading$ | async" class="loading-label">⚡ Loading from NgRx Store state...</div>
+      <div *ngIf="notificationsError$ | async as err" class="error-label">❌ Error: {{ err }}</div>
+      
+      <div *ngIf="storeNotifs.length > 0">
+        <h3>Notifications Listing from NgRx Store ({{ storeNotifs.length }} items)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Read Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let notif of storeNotifs">
+                <td><code>{{ notif.id }}</code></td>
+                <td><span class="category-chip">{{ notif.type }}</span></td>
+                <td>{{ notif.title }}</td>
+                <td>{{ notif.body }}</td>
+                <td>
+                  <span class="badge" [class.badge-success]="notif.isRead" [class.badge-danger]="!notif.isRead">
+                    {{ notif.isRead ? 'Read' : 'Unread' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Render Workers -->
+    <div *ngIf="workers.length > 0" class="data-section">
+      <h3>Public Worker Profiles ({{ workers.length }} items)</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Name</th>
+              <th>Bio</th>
+              <th>Specializations</th>
+              <th>Experience</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let w of workers">
+              <td>
+                <img [src]="w.avatar || 'https://via.placeholder.com/40'" class="table-avatar" alt="Avatar" />
+              </td>
+              <td>{{ w.user?.name }}</td>
+              <td>{{ w.bio }}</td>
+              <td>
+                <span *ngFor="let spec of w.specializations" class="category-chip spec-chip">{{ spec }}</span>
+              </td>
+              <td>{{ w.experience }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎨 FEATURE 6: SHARED COMPONENTS INTERACTIVE SHOWCASE -->
+  <div class="card data-card mt-8" style="direction: rtl;">
+    <h2 class="text-right border-bottom pb-3 mb-6 font-bold" style="font-family: 'Cairo', var(--font-arabic); font-size: 1.6rem; color: var(--color-primary-dark);">
+      🎨 حزمة واجهة المستخدم المشتركة (Feature 6 UI Kit Showcase)
+    </h2>
+    <p class="text-right text-gray-500 mb-8" style="font-family: 'Cairo', var(--font-arabic);">
+      معاينة حية للمكونات المشتركة الـ 7 التي تم بناؤها لتسهيل تطوير لوحات التحكم وعمليات الحجز.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- 1. Status Chips -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-3">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">1. Status Chip Component (مكون رقاقات الحالة)</h3>
+        <div class="flex flex-wrap gap-3 justify-start" style="direction: rtl;">
+          <app-status-chip status="open" size="sm"></app-status-chip>
+          <app-status-chip status="pending" size="md"></app-status-chip>
+          <app-status-chip status="confirmed" size="md"></app-status-chip>
+          <app-status-chip status="in-progress" size="md"></app-status-chip>
+          <app-status-chip status="completed" size="lg"></app-status-chip>
+          <app-status-chip status="cancelled" size="md"></app-status-chip>
+          <app-status-chip status="rejected" size="sm"></app-status-chip>
+        </div>
+      </div>
+
+      <!-- 2. Step Wizard Stepper -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-4 text-right" style="font-family: 'Cairo', var(--font-arabic);">2. Step Wizard Component (مؤشر الخطوات)</h3>
+          <app-step-wizard [steps]="showcaseSteps" [currentStep]="showcaseCurrentStep"></app-step-wizard>
+        </div>
+        <div class="flex gap-2 justify-center mt-4">
+          <button class="btn btn-secondary py-1.5 px-4 text-xs font-semibold" (click)="prevShowcaseStep()" [disabled]="showcaseCurrentStep === 0" style="font-family: 'Cairo', var(--font-arabic);">الخطوة السابقة</button>
+          <button class="btn btn-primary py-1.5 px-4 text-xs font-semibold" (click)="nextShowcaseStep()" [disabled]="showcaseCurrentStep === showcaseSteps.length - 1" style="font-family: 'Cairo', var(--font-arabic);">الخطوة التالية</button>
+        </div>
+      </div>
+
+      <!-- 3. Booking Timeline -->
+      <div class="col-span-1 md:col-span-2 p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">3. Booking Timeline Component (تتبع حالة الحجز)</h3>
+        <app-booking-timeline [currentStatus]="showcaseTimelineStatus"></app-booking-timeline>
+        <div class="flex flex-wrap gap-2 justify-center mt-2">
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('pending')">Pending</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('confirmed')">Confirmed</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('in-progress')">In Progress</button>
+          <button class="btn btn-secondary py-1 px-3 text-xs" (click)="setTimelineStatus('completed')">Completed</button>
+          <button class="btn btn-danger py-1 px-3 text-xs" (click)="setTimelineStatus('cancelled')">Cancelled / Rejected</button>
+        </div>
+      </div>
+
+      <!-- 4. Stats Cards -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">4. Stats Card Component (بطاقات الإحصائيات)</h3>
+        <div class="flex flex-col gap-3">
+          <app-stats-card icon="money" label="أرباح اليوم" value="EGP 2,450" [change]="12.5" changeType="increase"></app-stats-card>
+          <app-stats-card icon="briefcase" label="طلبات مكتملة" value="28 طلب" [change]="8.2" changeType="increase"></app-stats-card>
+          <app-stats-card icon="star" label="تقييم المنصة العام" value="4.85 / 5" [change]="1.5" changeType="increase"></app-stats-card>
+        </div>
+      </div>
+
+      <!-- 5. Price Summary Card -->
+      <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50 flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">5. Price Summary Component (كشف الحساب)</h3>
+        <app-price-summary-card 
+          serviceName="تصليح وصيانة لوحة الكهرباء الرئيسية" 
+          [basePrice]="650" 
+          [extras]="showcaseExtras"
+          ctaText="تأكيد ودفع التكلفة"
+          (ctaClick)="openShowcaseConfirm()"
+        ></app-price-summary-card>
+      </div>
+
+      <!-- 6. Empty State Card -->
+      <div class="col-span-1 md:col-span-2 p-5 border border-gray-100 rounded-2xl bg-gray-50">
+        <h3 class="text-sm font-bold text-gray-700 border-b pb-2 mb-2 text-right" style="font-family: 'Cairo', var(--font-arabic);">6. Empty State Component (مكون الصفحة الفارغة)</h3>
+        <app-empty-state 
+          title="لا توجد عروض أسعار حتى الآن" 
+          description="بمجرد تقديم الحرفيين لعروض أسعار على طلبك، ستظهر العروض هنا لتتمكن من المقارنة والاختيار بينها."
+          icon="bid"
+          actionText="ابحث عن حرفيين مميزين"
+          (actionClick)="addLog('Empty State CTA clicked!')"
+        ></app-empty-state>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 7. Confirm Modal Component Integration -->
+  <app-confirm-modal 
+    [isOpen]="showcaseConfirmOpen" 
+    title="تأكيد الدفع وإنهاء الحجز" 
+    message="هل أنت متأكد من رغبتك في دفع التكلفة الكلية وإنهاء حجز الحرفي؟ سيتم تحويل المبلغ لحساب الحرفي فوراً."
+    confirmText="نعم، تأكيد ودفع" 
+    cancelText="إلغاء العملية" 
+    type="success"
+    (confirm)="triggerConfirmAction()"
+    (cancel)="closeShowcaseConfirm()"
+  ></app-confirm-modal>
+</div>

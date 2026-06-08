@@ -1,0 +1,23 @@
+.post-job-container {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.category-option-card {
+  transition: all var(--transition-base, 0.2s ease-in-out);
+}
+
+.category-option-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary-light, #e5e7eb);
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+}
+
+.category-option-card.active {
+  box-shadow: 0 4px 12px rgba(27, 43, 110, 0.05);
+  background: var(--color-primary-subtle, rgba(27, 43, 110, 0.04));
+  border-color: var(--color-primary, #1b2b6e) !important;
+}
+
+textarea:focus {
+  border-color: var(--color-primary, #1b2b6e);
+}

@@ -1,0 +1,33 @@
+.confirm-modal-body {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.confirm-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.confirm-icon-wrap--info {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent-900);
+}
+
+.confirm-icon-wrap--success {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.confirm-icon-wrap--warning {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+
+.confirm-icon-wrap--danger {
+  background-color: #fef2f2;
+  color: #991b1b;
+}

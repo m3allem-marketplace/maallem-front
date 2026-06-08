@@ -1,0 +1,91 @@
+<div class="bookings-container max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+  <header class="mb-8 text-right">
+    <h1 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">📅 إدارة حجوزاتي</h1>
+    <p class="text-sm text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">تصفح حجوزاتك النشطة، والمكتملة، والملغية مع الحرفيين.</p>
+  </header>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-nav border-b border-gray-200 mb-6 flex justify-start gap-8" style="direction: rtl;">
+    <button 
+      class="tab-btn pb-3 text-sm font-bold border-b-2 transition-all cursor-pointer"
+      [class.active]="activeTab === 'active'"
+      [class.border-primary]="activeTab === 'active'"
+      [class.text-primary]="activeTab === 'active'"
+      [class.border-transparent]="activeTab !== 'active'"
+      [class.text-gray-400]="activeTab !== 'active'"
+      (click)="setActiveTab('active')"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      الحجوزات النشطة
+      <span class="badge ml-1 bg-blue-50 text-primary px-1.5 py-0.5 rounded-full text-xs">
+        {{ getActiveBookingsCount() }}
+      </span>
+    </button>
+    <button 
+      class="tab-btn pb-3 text-sm font-bold border-b-2 transition-all cursor-pointer"
+      [class.active]="activeTab === 'completed'"
+      [class.border-primary]="activeTab === 'completed'"
+      [class.text-primary]="activeTab === 'completed'"
+      [class.border-transparent]="activeTab !== 'completed'"
+      [class.text-gray-400]="activeTab !== 'completed'"
+      (click)="setActiveTab('completed')"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      الحجوزات المكتملة
+      <span class="badge ml-1 bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full text-xs">
+        {{ getCompletedBookingsCount() }}
+      </span>
+    </button>
+    <button 
+      class="tab-btn pb-3 text-sm font-bold border-b-2 transition-all cursor-pointer"
+      [class.active]="activeTab === 'cancelled'"
+      [class.border-primary]="activeTab === 'cancelled'"
+      [class.text-primary]="activeTab === 'cancelled'"
+      [class.border-transparent]="activeTab !== 'cancelled'"
+      [class.text-gray-400]="activeTab !== 'cancelled'"
+      (click)="setActiveTab('cancelled')"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      الحجوزات الملغية
+      <span class="badge ml-1 bg-red-50 text-red-600 px-1.5 py-0.5 rounded-full text-xs">
+        {{ getCancelledBookingsCount() }}
+      </span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل الحجوزات...</p>
+  </div>
+
+  <!-- Bookings List Output -->
+  <div *ngIf="!loading">
+    <div *ngIf="filteredBookings.length === 0">
+      <app-empty-state
+        [title]="
+          activeTab === 'active' ? 'لا توجد حجوزات نشطة حالياً' :
+          activeTab === 'completed' ? 'لا توجد حجوزات مكتملة بعد' : 'لا توجد حجوزات ملغية'
+        "
+        [description]="
+          activeTab === 'active' ? 'يمكنك البحث عن حرفي مميز أو نشر طلب خدمة جديد للبدء.' :
+          activeTab === 'completed' ? 'الحجوزات المكتملة أو المغلقة ستظهر هنا للرجوع إليها مستقبلاً.' : 'سجل الحجوزات الملغية أو المرفوضة فارغ.'
+        "
+        [icon]="
+          activeTab === 'active' ? 'calendar' :
+          activeTab === 'completed' ? 'success' : 'cancel'
+        "
+        [actionText]="activeTab === 'active' ? 'ابحث عن حرفي الآن' : ''"
+        (actionClick)="router.navigate(['/services'])"
+      ></app-empty-state>
+    </div>
+
+    <div *ngIf="filteredBookings.length > 0" class="flex flex-col gap-4">
+      <app-booking-card 
+        *ngFor="let item of filteredBookings" 
+        [booking]="item"
+        (click)="onBookingClick(item)"
+      ></app-booking-card>
+    </div>
+  </div>
+</div>

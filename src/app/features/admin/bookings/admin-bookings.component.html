@@ -1,0 +1,47 @@
+<div class="tab-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+  <div class="tab-header">
+    <h2 class="tab-title">📋 إدارة الحجوزات</h2>
+    <p class="tab-sub">{{ filteredBookings.length }} حجز</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <input class="search-input" type="text" placeholder="🔍 بحث بعنوان الخدمة أو اسم العميل..."
+      [value]="searchQuery" (input)="onSearch($any($event.target).value)" />
+    <select class="role-select" [value]="filterStatus" (change)="onStatusFilter($any($event.target).value)">
+      <option *ngFor="let opt of statusOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>عنوان الخدمة</th>
+          <th>العميل</th>
+          <th>المعلم</th>
+          <th>الميزانية</th>
+          <th>الحالة</th>
+          <th>التاريخ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of filteredBookings" class="table-row">
+          <td class="title-cell">{{ b.title }}</td>
+          <td>{{ b.clientName }}</td>
+          <td>{{ b.workerName }}</td>
+          <td class="budget-cell">{{ b.budget | number }} ج.م</td>
+          <td>
+            <span class="status-chip"
+              [style.color]="getStatusColor(b.status)"
+              [style.background]="getStatusColor(b.status) + '18'">
+              {{ getStatusLabel(b.status) }}
+            </span>
+          </td>
+          <td class="date-cell">{{ b.createdAt | date:'d/M/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

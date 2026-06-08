@@ -1,0 +1,34 @@
+<div class="step-wizard flex items-center justify-between w-full mb-8 relative" style="direction: rtl;">
+  <div *ngFor="let step of steps; let i = index; let last = last" class="step-wizard-item flex flex-col items-center flex-1 relative">
+    
+    <!-- Step line connector (drawn to the left/previous element in RTL layout) -->
+    <div 
+      *ngIf="!last" 
+      class="step-line" 
+      [class.active]="i < currentStep"
+    ></div>
+
+    <!-- Step circle -->
+    <div 
+      class="step-circle flex items-center justify-center w-10 h-10 rounded-full border-2 font-bold z-10 transition-all duration-300"
+      [class.active]="i <= currentStep"
+      [class.completed]="i < currentStep"
+    >
+      <span *ngIf="i < currentStep">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </span>
+      <span *ngIf="i >= currentStep">{{ i + 1 }}</span>
+    </div>
+
+    <!-- Step Label -->
+    <span 
+      class="step-label text-xs md:text-sm mt-2 font-bold"
+      [class.active]="i <= currentStep"
+      style="font-family: 'Cairo', var(--font-arabic);"
+    >
+      {{ step }}
+    </span>
+  </div>
+</div>

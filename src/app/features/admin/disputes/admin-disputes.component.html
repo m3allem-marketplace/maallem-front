@@ -1,0 +1,75 @@
+<div class="tab-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+  <div class="tab-header">
+    <h2 class="tab-title">⚠️ إدارة النزاعات</h2>
+    <p class="tab-sub">{{ filteredDisputes.length }} نزاع</p>
+  </div>
+
+  <!-- Filter Pills -->
+  <div class="pill-filters">
+    <button class="pill" [class.active]="filterStatus === 'open'"     (click)="setFilter('open')">مفتوح ({{ openCount }})</button>
+    <button class="pill" [class.active]="filterStatus === 'resolved'" (click)="setFilter('resolved')">محلول ({{ resolvedCount }})</button>
+    <button class="pill" [class.active]="filterStatus === ''"         (click)="setFilter('')">الكل</button>
+  </div>
+
+  <!-- Disputes List -->
+  <div class="disputes-list">
+    <div *ngFor="let d of filteredDisputes" class="dispute-card" (click)="openDispute(d)">
+      <div class="dispute-urgency-bar" [style.background]="getUrgencyColor(d.urgency)"></div>
+      <div class="dispute-body">
+        <div class="dispute-top">
+          <span class="urgency-badge"
+            [style.color]="getUrgencyColor(d.urgency)"
+            [style.background]="getUrgencyColor(d.urgency) + '18'">
+            {{ getUrgencyLabel(d.urgency) }}
+          </span>
+          <span class="dispute-status" [class.resolved]="d.status === 'resolved'">
+            {{ d.status === 'open' ? '🔓 مفتوح' : '✅ محلول' }}
+          </span>
+        </div>
+        <div class="dispute-title">{{ d.bookingTitle }}</div>
+        <div class="dispute-reason">{{ d.reason }}</div>
+        <div class="dispute-parties">
+          <span>👤 {{ d.clientName }}</span>
+          <span class="vs">vs</span>
+          <span>🔧 {{ d.workerName }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resolve Panel -->
+  <div class="detail-overlay" *ngIf="selectedDispute" (click)="closePanel()">
+    <div class="detail-panel dispute-panel" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closePanel()">✕</button>
+      <h3 class="panel-title">🔍 تفاصيل النزاع</h3>
+      <div class="panel-booking">{{ selectedDispute.bookingTitle }}</div>
+      <div class="panel-reason">
+        <strong>سبب النزاع:</strong> {{ selectedDispute.reason }}
+      </div>
+      <div class="panel-parties">
+        <div class="party-box client">
+          <div class="party-icon">👤</div>
+          <div class="party-label">العميل</div>
+          <div class="party-name">{{ selectedDispute.clientName }}</div>
+        </div>
+        <div class="party-vs">VS</div>
+        <div class="party-box worker">
+          <div class="party-icon">🔧</div>
+          <div class="party-label">المعلم</div>
+          <div class="party-name">{{ selectedDispute.workerName }}</div>
+        </div>
+      </div>
+      <textarea class="resolution-note" [(ngModel)]="resolutionNote"
+        placeholder="ملاحظات القرار (اختياري)..." rows="3"></textarea>
+      <div class="resolve-btns" *ngIf="selectedDispute.status === 'open'">
+        <button class="resolve-btn client-btn" [disabled]="resolving"
+          (click)="resolveFor('client')">✅ لصالح العميل</button>
+        <button class="resolve-btn worker-btn" [disabled]="resolving"
+          (click)="resolveFor('worker')">✅ لصالح المعلم</button>
+      </div>
+      <div class="resolved-notice" *ngIf="selectedDispute.status === 'resolved'">
+        ✅ تم حل هذا النزاع لصالح {{ selectedDispute.resolution === 'client' ? 'العميل' : 'المعلم' }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+.booking-cancel-container {
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.reason-btn {
+  border-color: var(--color-neutral-200);
+  transition: all var(--transition-base);
+}
+
+.reason-btn:hover {
+  border-color: var(--color-primary-400);
+  background-color: var(--color-primary-subtle);
+}
+
+.reason-btn.active {
+  border-color: var(--color-primary-700);
+  background-color: var(--color-primary-50);
+}
+
+.radio-indicator {
+  border-color: var(--color-neutral-300);
+  transition: all var(--transition-fast);
+}
+
+.radio-indicator.active {
+  border-color: var(--color-primary-700);
+}
+
+.inner-dot {
+  background-color: var(--color-primary-700);
+}

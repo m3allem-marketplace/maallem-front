@@ -1,0 +1,100 @@
+<div class="booking-confirm-container max-w-6xl mx-auto my-8 px-4" style="direction: rtl;">
+  
+  <!-- Step Wizard Progress -->
+  <div class="mb-8">
+    <app-step-wizard 
+      [steps]="['تفاصيل الطلب', 'عروض الحرفيين', 'تأكيد الحجز', 'تم التأكيد']" 
+      [currentStep]="2"
+    ></app-step-wizard>
+  </div>
+
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-16 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل تفاصيل العرض...</p>
+  </div>
+
+  <div *ngIf="!loading && proposal" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Details (Span 2) -->
+    <div class="lg:col-span-2 flex flex-col gap-6">
+      
+      <!-- Worker Details Card -->
+      <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
+        <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">👷 الحرفي المختار</h3>
+        
+        <div class="flex items-center gap-4">
+          <app-avatar [name]="proposal.worker.name" size="lg"></app-avatar>
+          <div class="flex flex-col text-right">
+            <h4 class="text-lg font-bold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ proposal.worker.name }}</h4>
+            <span class="text-xs text-gray-500 mt-1" style="font-family: 'Cairo', var(--font-arabic);">حرفي معتمد بالمنصة</span>
+            <div class="flex items-center gap-1.5 mt-2">
+              <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-md">★ 4.8</span>
+              <span class="text-xs text-gray-400" style="font-family: 'Cairo', var(--font-arabic);">(12 تقييم)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-gray-50 text-right">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1" style="font-family: 'Cairo', var(--font-arabic);">الرسالة المرفقة مع العرض:</p>
+          <p class="text-sm text-gray-700 bg-gray-50 p-4 rounded-xl leading-relaxed italic">
+            "{{ proposal.message || 'سأقوم بإنهاء العمل بدقة واحترافية وبالموعد المحدد. يسعدني التعامل معك.' }}"
+          </p>
+        </div>
+      </div>
+
+      <!-- Project Details Card -->
+      <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
+        <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">📋 تفاصيل الطلب الخاص بك</h3>
+        
+        <div class="flex flex-col gap-3">
+          <div>
+            <span class="text-xs text-gray-400 font-bold" style="font-family: 'Cairo', var(--font-arabic);">عنوان المهمة</span>
+            <h4 class="text-base font-bold text-gray-900 mt-0.5" style="font-family: 'Cairo', var(--font-arabic);">{{ proposal.project.title }}</h4>
+          </div>
+
+          <div>
+            <span class="text-xs text-gray-400 font-bold" style="font-family: 'Cairo', var(--font-arabic);">شرح وتفاصيل العمل</span>
+            <p class="text-sm text-gray-600 mt-1 leading-relaxed">{{ proposal.project.description }}</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 pt-4 border-t border-gray-50">
+            <div>
+              <span class="text-xs text-gray-400 font-bold" style="font-family: 'Cairo', var(--font-arabic);">📍 موقع العمل</span>
+              <p class="text-sm font-semibold text-gray-700 mt-0.5" style="font-family: 'Cairo', var(--font-arabic);">
+                {{ proposal.project.location?.address || 'العنوان المسجل' }}، {{ proposal.project.location?.city || '' }}
+              </p>
+            </div>
+            <div>
+              <span class="text-xs text-gray-400 font-bold" style="font-family: 'Cairo', var(--font-arabic);">⏱️ المدة الزمنية المقترحة</span>
+              <p class="text-sm font-semibold text-gray-700 mt-0.5" style="font-family: 'Cairo', var(--font-arabic);">{{ proposal.estimatedDuration || 'غير محددة' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Price Summary (Span 1) -->
+    <div class="flex flex-col gap-6">
+      <app-price-summary-card
+        [serviceName]="proposal.project.title"
+        [basePrice]="proposal.price"
+        [extras]="extras"
+        ctaText="تأكيد الحجز وتعيين الحرفي"
+        [loading]="submitting"
+        (ctaClick)="confirmBooking()"
+      ></app-price-summary-card>
+      
+      <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-right">
+        <span class="text-lg">🛡️</span>
+        <div class="flex flex-col">
+          <h5 class="text-xs font-bold text-blue-900" style="font-family: 'Cairo', var(--font-arabic);">ضمان المعلم الذهبي</h5>
+          <p class="text-[11px] text-blue-700 leading-relaxed mt-0.5" style="font-family: 'Cairo', var(--font-arabic);">
+            أموالك محمية بالكامل عبر المنصة. لن يتم تحويل المبلغ للحرفي إلا بعد إنهاء العمل بنجاح وموافقتك التامة.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

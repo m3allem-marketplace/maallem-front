@@ -1,0 +1,43 @@
+<div class="stats-card p-5 rounded-2xl bg-white border border-gray-100 shadow-md flex items-center justify-between" style="direction: rtl;">
+  <div class="flex items-center gap-4">
+    <!-- Icon Container -->
+    <div class="stats-card-icon-wrap flex items-center justify-center w-12 h-12 rounded-xl" [class]="'icon-wrap--' + changeType">
+      <!-- Icon Switcher -->
+      <ng-container [ngSwitch]="icon">
+        <!-- Money/Earnings -->
+        <svg *ngSwitchCase="'money'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        <!-- Briefcase/Jobs -->
+        <svg *ngSwitchCase="'briefcase'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <!-- Users/Clients -->
+        <svg *ngSwitchCase="'users'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <!-- Star/Rating -->
+        <svg *ngSwitchCase="'star'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <!-- Default Activity -->
+        <svg *ngSwitchDefault width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </ng-container>
+    </div>
+
+    <!-- Stats Info -->
+    <div class="flex flex-col gap-0.5 text-right">
+      <span class="text-xs text-gray-500 font-bold" style="font-family: 'Cairo', var(--font-arabic);">{{ label }}</span>
+      <span class="text-2xl font-extrabold text-gray-900 leading-none">{{ value }}</span>
+    </div>
+  </div>
+
+  <!-- Delta Badge -->
+  <div *ngIf="change !== undefined" class="stats-card-delta px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1" [class]="'delta--' + changeType">
+    <span *ngIf="changeType === 'increase'">▲</span>
+    <span *ngIf="changeType === 'decrease'">▼</span>
+    <span>{{ change }}%</span>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+.booking-card {
+  transition: all var(--transition-base, 0.2s ease-in-out);
+  border: 1px solid var(--border-color, #f3f4f6);
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary-light, #e5e7eb);
+  box-shadow: var(--shadow-md, 0 10px 15px -3px rgba(0, 0, 0, 0.05));
+}

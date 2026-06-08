@@ -1,29 +1,27 @@
+import { UserRole } from '../../core/models/user.model';
 import {
   Directive,
   Input,
   TemplateRef,
   ViewContainerRef,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
-// import { Subscription } from 'rxjs';
 import { UserContextService } from '../../core/services/user-context.service';
 
 @Directive({ selector: '[hasRole]', standalone: true })
 export class HasRoleDirective implements OnInit {
   @Input() hasRole: string | string[] = [];
 
-  // private sub!: Subscription;
   private rendered = false;
 
   constructor(
-    private templateRef: TemplateRef<any>,
-    private viewContainer: ViewContainerRef,
+    private templateRef:    TemplateRef<any>,
+    private viewContainer:  ViewContainerRef,
     private userContextService: UserContextService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const role = this.userContextService.role;
+    const role    = this.userContextService.role;
     const allowed = Array.isArray(this.hasRole) ? this.hasRole : [this.hasRole];
     const hasAccess = allowed.includes(role ?? '');
 
@@ -36,8 +34,3 @@ export class HasRoleDirective implements OnInit {
     }
   }
 }
-
-
-// ngOnDestroy(): void {
-//   this.sub.unsubscribe();
-// }

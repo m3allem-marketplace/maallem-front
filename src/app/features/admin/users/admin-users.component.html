@@ -1,0 +1,90 @@
+<div class="tab-page" style="direction: rtl; font-family: 'Cairo', var(--font-arabic);">
+  <div class="tab-header">
+    <h2 class="tab-title">👥 إدارة المستخدمين</h2>
+    <p class="tab-sub">{{ filteredUsers.length }} مستخدم</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <input class="search-input" type="text" placeholder="🔍 بحث بالاسم أو البريد..."
+      [value]="searchQuery" (input)="onSearch($any($event.target).value)" />
+    <select class="role-select" [value]="filterRole" (change)="onRoleFilter($any($event.target).value)">
+      <option value="">كل الأدوار</option>
+      <option value="user">عميل</option>
+      <option value="worker">معلم</option>
+      <option value="company">شركة</option>
+      <option value="admin">مشرف</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>الدور</th>
+          <th>الحجوزات</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of filteredUsers" (click)="selectUser(u)" class="table-row">
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar">{{ u.name?.charAt(0) }}</div>
+              <span>{{ u.name }}</span>
+            </div>
+          </td>
+          <td class="email-cell">{{ u.email }}</td>
+          <td>
+            <span class="role-badge" [style.color]="getRoleColor(u.role)"
+              [style.background]="getRoleColor(u.role) + '18'">
+              {{ getRoleLabel(u.role) }}
+            </span>
+          </td>
+          <td class="center">{{ u.totalBookings }}</td>
+          <td>
+            <span class="status-dot" [class.active]="u.isActive">
+              {{ u.isActive ? 'نشط' : 'موقوف' }}
+            </span>
+          </td>
+          <td class="actions-cell" (click)="$event.stopPropagation()">
+            <button class="tbl-btn" (click)="toggleUserStatus(u)"
+              [class.danger]="u.isActive">
+              {{ u.isActive ? 'إيقاف' : 'تفعيل' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- User Detail Panel -->
+  <div class="detail-overlay" *ngIf="selectedUser" (click)="closeDetail()">
+    <div class="detail-panel" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeDetail()">✕</button>
+      <div class="detail-avatar">{{ selectedUser.name?.charAt(0) }}</div>
+      <div class="detail-name">{{ selectedUser.name }}</div>
+      <div class="detail-email">{{ selectedUser.email }}</div>
+      <div class="detail-role">
+        <span class="role-badge" [style.color]="getRoleColor(selectedUser.role)"
+          [style.background]="getRoleColor(selectedUser.role) + '18'">
+          {{ getRoleLabel(selectedUser.role) }}
+        </span>
+      </div>
+      <div class="detail-stats">
+        <div class="dstat"><span>📋</span> {{ selectedUser.totalBookings }} حجز</div>
+        <div class="dstat"><span>📅</span> منذ {{ formatDate(selectedUser.createdAt) }}</div>
+        <div class="dstat"><span>⚡</span> {{ selectedUser.isActive ? 'حساب نشط' : 'حساب موقوف' }}</div>
+      </div>
+      <button class="detail-action-btn"
+        [class.danger-btn]="selectedUser.isActive"
+        (click)="toggleUserStatus(selectedUser); closeDetail()">
+        {{ selectedUser.isActive ? '🚫 إيقاف الحساب' : '✅ تفعيل الحساب' }}
+      </button>
+    </div>
+  </div>
+</div>

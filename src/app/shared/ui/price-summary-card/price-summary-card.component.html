@@ -1,0 +1,30 @@
+<div class="price-summary-card p-6 rounded-2xl bg-white border border-gray-100 shadow-md" style="direction: rtl;">
+  <h3 class="text-base font-bold text-gray-800 mb-4" style="font-family: 'Cairo', var(--font-arabic);">تفاصيل التكلفة</h3>
+  
+  <div class="flex justify-between py-2.5 border-b border-gray-50">
+    <span class="text-sm text-gray-500 font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ serviceName || 'الخدمة الأساسية' }}</span>
+    <span class="text-sm font-bold text-gray-800">{{ basePrice | currencyFormat }}</span>
+  </div>
+
+  <div *ngFor="let extra of extras" class="flex justify-between py-2.5 border-b border-gray-50">
+    <span class="text-sm text-gray-500 font-semibold" style="font-family: 'Cairo', var(--font-arabic);">{{ extra.label }}</span>
+    <span class="text-sm font-bold text-gray-800">{{ extra.price | currencyFormat }}</span>
+  </div>
+
+  <div class="my-4 border-t border-dashed border-gray-200"></div>
+
+  <div class="flex justify-between items-center mb-6">
+    <span class="text-base font-bold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">المجموع الكلي</span>
+    <span class="text-xl font-extrabold" style="color: var(--color-primary-700);">{{ total | currencyFormat }}</span>
+  </div>
+
+  <app-button 
+    *ngIf="ctaText" 
+    variant="primary" 
+    (click)="onCtaClick()" 
+    [loading]="loading"
+    class="w-full text-center block"
+  >
+    {{ ctaText }}
+  </app-button>
+</div>

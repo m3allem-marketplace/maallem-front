@@ -1,0 +1,34 @@
+/* Task Details page styling */
+.task-detail-container {
+  max-width: 1280px;
+}
+
+.detail-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #f1f5f9);
+}
+
+.category-badge {
+  letter-spacing: -0.01em;
+}
+
+.status-badge {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.price-box {
+  font-family: 'Cairo', sans-serif;
+}
+
+.avatar-mock {
+  font-family: 'Cairo', sans-serif;
+}
+
+.proposal-card {
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.proposal-card:hover {
+  border-color: var(--color-primary-muted, #cbd5e1);
+}

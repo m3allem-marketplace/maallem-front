@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { WorkerSummary } from '../../../shared/models/worker-summary.model';
 import { Category } from '../../../shared/models/category.model';
 
+import { WorkerProfileService } from '../../../core/services/worker-profile.service';
+
 const STUB_CATEGORIES: Category[] = [
   {
     id: '1',
@@ -135,13 +137,33 @@ export class HomePageComponent implements OnInit {
   featuredWorkers: WorkerSummary[] = [];
   isLoading = true;
 
+  constructor(private workerProfileService: WorkerProfileService) {}
+
   ngOnInit(): void {
-  this.categories = STUB_CATEGORIES;
+    this.categories = STUB_CATEGORIES;
 
-  this.featuredWorkers = STUB_WORKERS.filter(
-    worker => worker.tier === 'gold'
-  );
-
-  this.isLoading = false;
-}
+    this.workerProfileService.getWorkerProfiles().subscribe({
+      next: (res) => {
+        const profiles = res?.data?.profiles || [];
+        if (profiles.length > 0) {
+          this.featuredWorkers = profiles.map((p: any) => ({
+            id: p._id,
+            name: p.user?.name || 'حرفي معتمد',
+            avatar: p.avatar || '',
+            category: p.specializations?.[0] || 'حرفي عام',
+            rating: 4.8,
+            tier: 'gold',
+            ratePerHour: 150
+          }));
+        } else {
+          this.featuredWorkers = STUB_WORKERS.filter(worker => worker.tier === 'gold');
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.featuredWorkers = STUB_WORKERS.filter(worker => worker.tier === 'gold');
+        this.isLoading = false;
+      }
+    });
   }
+}
