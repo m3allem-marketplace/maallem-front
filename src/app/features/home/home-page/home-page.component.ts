@@ -125,7 +125,42 @@ const STUB_WORKERS: WorkerSummary[] = [
     rating: 3,
     tier: 'gold',
     ratePerHour: 130,
+  },{
+    id: 'w1',
+    name: 'أحمد حسن',
+    avatar: 'https://i.pravatar.cc/150?img=11',
+    category: 'سباك',
+    rating: 4,
+    tier: 'gold',
+    ratePerHour: 150,
   },
+  {
+    id: 'w2',
+    name: 'محمد علي',
+    avatar: 'https://i.pravatar.cc/150?img=32',
+    category: 'كهربائي',
+    rating: 5,
+    tier: 'gold',
+    ratePerHour: 130,
+  },
+   {
+    id: 'w3',
+    name: 'محمد علي',
+    avatar: 'https://i.pravatar.cc/150?img=32',
+    category: 'كهربائي',
+    rating: 2.5,
+    tier: 'gold',
+    ratePerHour: 130,
+  },
+   {
+    id: 'w4',
+    name: 'محمد علي',
+    avatar: 'https://i.pravatar.cc/150?img=32',
+    category: 'كهربائي',
+    rating: 3,
+    tier: 'gold',
+    ratePerHour: 130,
+  }
 ];
 
 @Component({

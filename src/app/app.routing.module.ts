@@ -70,6 +70,10 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'about-us',
+    loadChildren: () => import('./features/about-us/about-us.module').then(m => m.AboutUsModule)
+  },
+  {
     path: 'settings',
     redirectTo: 'profile'
   },

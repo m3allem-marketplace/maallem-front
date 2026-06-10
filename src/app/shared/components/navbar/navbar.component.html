@@ -67,6 +67,7 @@
     <div class="hidden md:flex order-2 items-center gap-2" style="direction: rtl;">
       <a routerLink="/" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">الرئيسية</a>
       <a routerLink="/workers" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">تصفح العمال</a>
+      <a routerLink="/about-us" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">من نحن</a>
 
       <ng-container *ngIf="isUser">
         <a routerLink="/customer/dashboard" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">لوحة التحكم</a>
@@ -116,7 +117,7 @@
           <div>
             <div class="text-[10px] font-bold uppercase tracking-wider font-arabic" style="color: var(--color-accent);"> محتاج مساعدة؟</div>
             <a href="tel:199916" class="text-sm font-extrabold no-underline hover:text-[var(--color-accent)] transition-colors duration-200 font-arabic" style="color: var(--color-primary-dark);">
-              199916
+              19019
             </a>
           </div>
         </div>
@@ -207,6 +208,7 @@
   <div class="px-6 py-5 flex flex-col gap-1.5 font-arabic">
     <a routerLink="/" class="px-4 py-3 text-sm font-bold no-underline rounded-xl arabic-text" lang="ar" style="color: var(--color-accent); background: var(--color-accent-subtle);" (click)="toggleMenu()">الرئيسية</a>
     <a routerLink="/workers" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors animate-fade-in arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">تصفح العمال</a>
+    <a routerLink="/about-us" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors animate-fade-in arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">من نحن</a>
     
     <ng-container *ngIf="isUser">
       <a routerLink="/customer/dashboard" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">لوحة التحكم</a>

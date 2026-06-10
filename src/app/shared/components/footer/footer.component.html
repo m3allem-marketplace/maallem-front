@@ -90,7 +90,7 @@
       <div class="lg:col-span-2">
         <h4 class="text-white mb-6 font-bold text-base" style="letter-spacing: 0.05em;">روابط سريعة</h4>
         <ul class="list-none p-0 m-0 flex flex-col gap-3 text-sm">
-          <li><a routerLink="/about" class="text-slate-300 hover:text-amber-500 transition-colors font-medium">من نحن</a></li>
+          <li><a routerLink="/about-us" class="text-slate-300 hover:text-amber-500 transition-colors font-medium">من نحن</a></li>
           <li><a routerLink="/contact" class="text-slate-300 hover:text-amber-500 transition-colors font-medium">اتصل بنا</a></li>
         </ul>
       </div>
@@ -104,16 +104,24 @@
       </div>
 
       <div class="lg:col-span-4 flex flex-col items-end text-right" style="direction: rtl !important; text-align: right !important;">
-        <div class="flex flex-row items-center gap-3 mb-6 select-none cursor-pointer" routerLink="/" style="direction: ltr; text-align: left;">
-          <div class="w-10 h-10 bg-amber-500 flex items-center justify-center rounded-xl shadow-md flex-shrink-0">
-            <svg class="w-6 h-6 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-          </div>
-          <span class="text-2xl font-extrabold text-white tracking-tight">
-            M<span class="text-amber-500">3</span>allem
-          </span>
-        </div>
+       <div class="flex flex-row-reverse items-center gap-3 mb-6 select-none cursor-pointer" routerLink="/">
+  <div class="w-10 h-10 flex items-center justify-center rounded-xl border transition-colors duration-300 shadow-md flex-shrink-0" style="background: #0d153a; border-color: rgba(223,186,107,0.3);">
+    <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#1B2B6E" stroke="url(#footerLogoGrad)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M30 68V32L50 51L70 32V68" stroke="url(#footerLogoGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#DFBA6B" />
+          <stop offset="100%" stop-color="#B99343" />
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <div class="flex flex-col text-right font-arabic">
+    <span class="text-xl font-black tracking-wide leading-tight transition-colors duration-300" style="color: white;">مَعْلَم</span>
+    <span class="text-[9px] font-bold uppercase leading-none mt-0.5 opacity-90" style="color: #B99343;">منصة الحرفيين</span>
+  </div>
+</div>
         
         <p class="mb-6 text-sm leading-relaxed text-slate-300 max-w-sm">
           اعثر على العاملين الموثوقين، قارن الخدمات، واستأجر المحترفين لأي عمل حول منزلك.
