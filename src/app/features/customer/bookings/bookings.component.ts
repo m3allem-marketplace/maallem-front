@@ -27,8 +27,26 @@ export class BookingsComponent implements OnInit {
     this.loading = true;
     this.bookingService.getBookings().subscribe({
       next: (res) => {
-        const list = res.data?.projects || res.data || [];
-        this.bookings = list;
+        const list = res.data?.bookings || res.data?.projects || (Array.isArray(res.data) ? res.data : []) || [];
+        this.bookings = list.map((b: any) => {
+          if (b.project && typeof b.project === 'object') {
+            return {
+              ...b,
+              title: b.title || b.project.title,
+              description: b.description || b.project.description,
+              category: b.category || b.project.category,
+              location: b.location || b.project.location,
+              budget: b.budget || b.price || b.project.budget,
+              worker: b.worker || b.provider
+            };
+          } else {
+            return {
+              ...b,
+              budget: b.budget || b.price,
+              worker: b.worker || b.provider
+            };
+          }
+        });
         this.loading = false;
       },
       error: (err) => {
@@ -41,7 +59,7 @@ export class BookingsComponent implements OnInit {
   get filteredBookings(): any[] {
     if (this.activeTab === 'active') {
       return this.bookings.filter(
-        b => ['open', 'pending', 'confirmed', 'in-progress'].includes(b.status)
+        b => ['open', 'pending', 'confirmed', 'in-progress', 'direct_pending', 'pending_payment', 'paid', 'delivered', 'disputed'].includes(b.status)
       );
     } else if (this.activeTab === 'completed') {
       return this.bookings.filter(
@@ -49,7 +67,7 @@ export class BookingsComponent implements OnInit {
       );
     } else {
       return this.bookings.filter(
-        b => ['cancelled', 'rejected'].includes(b.status)
+        b => ['cancelled', 'rejected', 'refunded'].includes(b.status)
       );
     }
   }
@@ -64,9 +82,10 @@ export class BookingsComponent implements OnInit {
 
   getActiveBookingsCount(): number {
     return this.bookings.filter(
-      b => ['open', 'pending', 'confirmed', 'in-progress'].includes(b.status)
+      b => ['open', 'pending', 'confirmed', 'in-progress', 'direct_pending', 'pending_payment', 'paid', 'delivered', 'disputed'].includes(b.status)
     ).length;
   }
+
 
   getCompletedBookingsCount(): number {
     return this.bookings.filter(
@@ -76,7 +95,7 @@ export class BookingsComponent implements OnInit {
 
   getCancelledBookingsCount(): number {
     return this.bookings.filter(
-      b => ['cancelled', 'rejected'].includes(b.status)
+      b => ['cancelled', 'rejected', 'refunded'].includes(b.status)
     ).length;
   }
 

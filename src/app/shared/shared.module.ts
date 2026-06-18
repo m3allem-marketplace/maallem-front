@@ -29,6 +29,7 @@ import { EmptyStateComponent } from './components/empty-state/empty-state.compon
 import { PriceSummaryCardComponent } from './ui/price-summary-card/price-summary-card.component';
 import { StepWizardComponent } from './ui/step-wizard/step-wizard.component';
 import { StatsCardComponent } from './ui/stats-card/stats-card.component';
+import { MapPickerComponent } from './components/map-picker/map-picker.component';
 
 // ── UI Kit ────────────────────────────────────────────────────────────────────
 import {
@@ -48,7 +49,8 @@ const COMPONENTS = [
   AvatarComponent, SearchBarComponent, StarRatingComponent,
   TierBadgeComponent, WorkerCardComponent, NavbarComponent, FooterComponent,
   StatusChipComponent, BookingTimelineComponent, ConfirmModalComponent,
-  EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent
+  EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent,
+  MapPickerComponent
 ];
 const UI_KIT = [
   ButtonComponent, InputComponent, ModalComponent,

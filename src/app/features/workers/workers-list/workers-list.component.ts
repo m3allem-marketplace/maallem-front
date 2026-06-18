@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { WorkerProfileService } from '../../../core/services/worker-profile.service';
 import { WorkerSummary } from '../../../shared/models/worker-summary.model';
 import { ToastService } from '@m3allem/ui-kit';
@@ -35,11 +36,37 @@ export class WorkersListComponent implements OnInit {
 
   constructor(
     private workerProfileService: WorkerProfileService,
-    private toast: ToastService
+    private toast: ToastService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadWorkers();
+    const categoryMap: Record<string, string> = {
+      'plumbing': 'سباكة',
+      'electricity': 'كهرباء',
+      'carpentry': 'نجارة',
+      'painting': 'دهان',
+      'hvac': 'تكييف',
+      'cleaning': 'تنظيف'
+    };
+
+    this.route.queryParams.subscribe(params => {
+      const categoryParam = params['category'];
+      if (categoryParam) {
+        this.selectedSpecialization = categoryMap[categoryParam.toLowerCase()] || categoryParam;
+      }
+
+      const cityParam = params['city'];
+      if (cityParam) {
+        const found = this.cities.some(c => c.value === cityParam);
+        if (!found) {
+          this.cities = [...this.cities, { value: cityParam, label: cityParam }];
+        }
+        this.selectedCity = cityParam;
+      }
+
+      this.loadWorkers();
+    });
   }
 
   loadWorkers(): void {
@@ -55,15 +82,25 @@ export class WorkersListComponent implements OnInit {
     this.workerProfileService.getWorkerProfiles(filters).subscribe({
       next: (res) => {
         const list = res?.data?.profiles || [];
-        this.workers = list.map((p: any) => ({
-          id: p._id,
-          name: p.user?.name || 'حرفي معتمد',
-          avatar: p.avatar || '',
-          category: p.specializations?.[0] || 'حرفي عام',
-          rating: 4.8, // default premium rating
-          tier: p.portfolioImages?.length > 3 ? 'gold' : 'silver', // dynamic tier based on details
-          ratePerHour: 120 + Math.floor(Math.random() * 80) // mock rate per hour
-        }));
+        this.workers = list.map((p: any) => {
+          const localImagesStr = localStorage.getItem(`worker_portfolio_images_${p._id}`) ||
+                                 (p.user?._id ? localStorage.getItem(`worker_portfolio_images_${p.user._id}`) : null);
+          let portfolioImages = p.portfolioImages || [];
+          if (localImagesStr) {
+            try {
+              portfolioImages = JSON.parse(localImagesStr);
+            } catch (e) {}
+          }
+          return {
+            id: p._id,
+            name: p.user?.name || 'حرفي معتمد',
+            avatar: p.avatar || '',
+            category: p.specializations?.[0] || 'حرفي عام',
+            rating: 4.8, // default premium rating
+            tier: portfolioImages.length > 3 ? 'gold' : 'silver', // dynamic tier based on details
+            ratePerHour: 120 + Math.floor(Math.random() * 80) // mock rate per hour
+          };
+        });
         this.loading = false;
       },
       error: (err) => {

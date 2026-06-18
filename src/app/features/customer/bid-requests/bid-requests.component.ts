@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ProjectService } from '../../../core/services/project.service';
 import { ToastService } from '@m3allem/ui-kit';
 import { Project } from '../../../core/models/project.model';
+import { UserContextService } from '../../../core/services/user-context.service';
 
 @Component({
   selector: 'app-bid-requests',
@@ -16,7 +17,8 @@ export class BidRequestsComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private userContext: UserContextService
   ) {}
 
   ngOnInit(): void {
@@ -25,9 +27,23 @@ export class BidRequestsComponent implements OnInit {
 
   loadMyProjects(): void {
     this.loading = true;
-    this.projectService.getProjects().subscribe({
+    const user = this.userContext.currentUser;
+    const params: Record<string, string> = {};
+    if (user) {
+      params['client'] = user._id;
+      params['clientId'] = user._id;
+      params['userId'] = user._id;
+    }
+
+    this.projectService.getProjects(params).subscribe({
       next: (res) => {
-        const list = res.data?.projects || res.data || [];
+        let list = res.data?.projects || res.data || [];
+        if (user && Array.isArray(list)) {
+          list = list.filter((project: any) => {
+            const clientId = project.client?._id || project.client || project.clientId;
+            return clientId === user._id;
+          });
+        }
         this.projects = list;
         this.loading = false;
       },

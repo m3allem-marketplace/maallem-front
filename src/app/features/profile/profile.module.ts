@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileDashboardComponent } from './profile-dashboard.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { MapPickerComponent } from '../../shared/components/map-picker/map-picker.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
     FormsModule,
     ReactiveFormsModule,
     ProfileRoutingModule,
-    AvatarComponent
+    AvatarComponent,
+    MapPickerComponent
   ]
 })
 export class ProfileModule {}

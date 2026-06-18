@@ -8,12 +8,18 @@ import { SharedModule } from '../../shared/shared.module';
 import { WorkerDashboardComponent } from './dashboard/dashboard.component';
 import { OpenJobsComponent } from './bids/open-jobs.component';
 import { SubmitBidFormComponent } from './bids/submit-bid-form/submit-bid-form.component';
+import { MyBidsComponent } from './bids/my-bids.component';
+import { ServicesListComponent } from './services/services-list.component';
+import { DirectOffersComponent } from './bids/direct-offers/direct-offers.component';
 
 @NgModule({
   declarations: [
     WorkerDashboardComponent,
     OpenJobsComponent,
     SubmitBidFormComponent,
+    MyBidsComponent,
+    ServicesListComponent,
+    DirectOffersComponent,
   ],
   imports: [
     CommonModule,
@@ -23,3 +29,4 @@ import { SubmitBidFormComponent } from './bids/submit-bid-form/submit-bid-form.c
   ]
 })
 export class WorkerModule {}
+

@@ -1,0 +1,96 @@
+<div class="availability-container">
+  <div class="availability-card">
+    <div class="card-header">
+      <h2>جدول المواعيد والخدمات / Availability & Services</h2>
+      <p>حدد ساعات عملك وأسعار الخدمات ليتمكن العملاء من حجزك مباشرة</p>
+    </div>
+
+    <form [formGroup]="servicesForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Services (Specializations) Selection -->
+      <div class="form-section">
+        <h3 class="section-title">تحديد الخدمات النشطة / Select Offered Services</h3>
+        <div class="services-grid">
+          <button 
+            type="button"
+            *ngFor="let spec of availableServicesList"
+            (click)="toggleSpecialization(spec)"
+            [class.active]="isSpecializationSelected(spec)"
+            class="service-chip-btn">
+            {{ spec }}
+            <span class="icon" *ngIf="isSpecializationSelected(spec)">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Availability Matrix Grid -->
+      <div class="form-section">
+        <h3 class="section-title">جدول العمل الأسبوعي / Weekly Working Hours</h3>
+        <div formArrayName="availabilities" class="schedule-list">
+          <div 
+            *ngFor="let item of availabilitiesFormArray.controls; let i=index" 
+            [formGroupName]="i" 
+            class="schedule-row"
+            [class.row-active]="item.get('isActive')?.value">
+            
+            <div class="day-toggle-group">
+              <label class="switch">
+                <input type="checkbox" formControlName="isActive">
+                <span class="slider round"></span>
+              </label>
+              <span class="day-name">{{ daysOfWeekAr[i] }} <span class="day-en">({{ daysOfWeek[i] }})</span></span>
+            </div>
+
+            <div class="time-inputs" *ngIf="item.get('isActive')?.value">
+              <div class="time-field">
+                <label>من / From</label>
+                <input type="time" formControlName="startTime" class="time-picker">
+              </div>
+              <div class="time-field">
+                <label>إلى / To</label>
+                <input type="time" formControlName="endTime" class="time-picker">
+              </div>
+            </div>
+
+            <div class="offline-placeholder" *ngIf="!item.get('isActive')?.value">
+              غير متاح / Unavailable
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Tier -->
+      <div class="form-section">
+        <h3 class="section-title">سعر الخدمة / Base Rate</h3>
+        <div class="rate-inputs-row">
+          <div class="rate-field">
+            <label>سعر الساعة القياسي (جنيه مصري / EGP) *</label>
+            <input type="number" formControlName="hourlyRate" class="rate-input" placeholder="مثال: 150">
+            <div class="error-msg" *ngIf="servicesForm.get('hourlyRate')?.invalid && servicesForm.get('hourlyRate')?.touched">
+              السعر يجب أن يكون 50 جنيه على الأقل
+            </div>
+          </div>
+
+          <div class="checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="offersFlatRate">
+              <span>أقبل أسعار المشاريع الثابتة / Accept Flat Rates</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="actions-footer">
+        <button 
+          type="submit" 
+          [disabled]="servicesForm.invalid || (loading$ | async)"
+          class="save-btn">
+          <span *ngIf="!(loading$ | async)">حفظ التغييرات / Save Schedule</span>
+          <span *ngIf="loading$ | async">جاري الحفظ...</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

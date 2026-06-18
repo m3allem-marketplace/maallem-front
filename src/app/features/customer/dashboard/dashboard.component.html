@@ -3,11 +3,16 @@
   <!-- Dashboard Header -->
   <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
     <div class="text-right">
-      <h1 class="text-2xl font-extrabold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">مرحباً بك في لوحة التحكم 👋</h1>
-      <p class="text-sm text-gray-500 mt-1" style="font-family: 'Cairo', var(--font-arabic);">تتبع حجوزاتك، قارن عروض الحرفيين، واطلب خدمات جديدة بكل سهولة.</p>
+      <h1 class="text-2xl font-extrabold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">مرحباً بك في لوحة التحكم</h1>
+      <p class="text-sm text-gray-500 mt-1" style="font-family: 'Cairo', var(--font-arabic);">تتبع خدماتك ومزاداتك، وقارن عروض الحرفيين بكل سهولة.</p>
     </div>
     <app-button variant="primary" (click)="postNewJob()" class="font-bold shadow-sm" style="font-family: 'Cairo', var(--font-arabic);">
-      انشر طلب خدمة جديد ➕
+      <span class="flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>ابدأ مزاداً جديداً</span>
+      </span>
     </app-button>
   </header>
 
@@ -29,14 +34,14 @@
       ></app-stats-card>
       <app-stats-card 
         icon="briefcase" 
-        label="الحجوزات النشطة حالياً" 
+        label="خدماتي النشطة حالياً" 
         [value]="activeBookingsCount" 
         [change]="activeBookingsCount > 0 ? 10 : 0" 
         changeType="neutral"
       ></app-stats-card>
       <app-stats-card 
         icon="activity" 
-        label="إجمالي الطلبات المنشورة" 
+        label="إجمالي المزادات المنشورة" 
         [value]="totalJobsCount" 
         [change]="5" 
         changeType="increase"
@@ -50,16 +55,21 @@
       <div class="lg:col-span-2 flex flex-col gap-6">
         <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
           <div class="flex justify-between items-center border-b pb-4 mb-4">
-            <h3 class="text-base font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">📋 أحدث الطلبات والحجوزات</h3>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <h3 class="text-base font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">أحدث المزادات والخدمات</h3>
+            </div>
             <a routerLink="/customer/bookings" class="text-xs font-bold text-primary hover:underline" style="font-family: 'Cairo', var(--font-arabic);">عرض الكل ←</a>
           </div>
 
           <div *ngIf="bookings.length === 0">
             <app-empty-state
-              title="لا توجد حجوزات نشطة"
-              description="لم تقم بنشر أي طلبات أو حجز حرفيين بعد. ابدأ بنشر طلبك الأول وسيصلك عروض فورية."
+              title="لا توجد خدمات أو مزادات نشطة"
+              description="لم تقم ببدء أي مزاد أو طلب خدمات بعد. ابدأ مزادك الأول لتلقي عروض فورية."
               icon="calendar"
-              actionText="انشر طلب خدمة الآن"
+              actionText="ابدأ مزاداً الآن"
               (actionClick)="postNewJob()"
             ></app-empty-state>
           </div>
@@ -71,8 +81,13 @@
               (click)="viewBookingDetails(booking._id)"
             >
               <div class="flex items-center gap-3">
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-primary font-bold">
-                  🔧
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-primary font-bold" [ngSwitch]="booking.category">
+                  <svg *ngSwitchCase="'plumbing'" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  <svg *ngSwitchCase="'electricity'" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  <svg *ngSwitchCase="'painting'" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  <svg *ngSwitchCase="'carpentry'" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 9H4a2 2 0 00-2 2v3a2 2 0 002 2h7l9-9-9-9zM18 10l-4 4"/></svg>
+                  <svg *ngSwitchCase="'masonry'" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16M9 6v14M15 6v14"/></svg>
+                  <svg *ngSwitchDefault class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </div>
                 <div class="flex flex-col text-right">
                   <h4 class="text-sm font-bold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ booking.title }}</h4>
@@ -94,29 +109,40 @@
         
         <!-- Quick Actions Card -->
         <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
-          <h3 class="text-base font-bold text-gray-800 border-b pb-4 mb-4" style="font-family: 'Cairo', var(--font-arabic);">⚡ إجراءات سريعة</h3>
+          <div class="flex items-center gap-2 mb-4 border-b pb-4">
+            <svg class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <h3 class="text-base font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">إجراءات سريعة</h3>
+          </div>
           
           <div class="flex flex-col gap-3">
             <button 
               class="w-full text-right p-3 rounded-xl border border-gray-100 hover:bg-gray-50 flex items-center justify-between cursor-pointer"
               (click)="postNewJob()"
             >
-              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">طلب صيانة جديدة</span>
-              <span class="text-gray-400">➕</span>
+              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">بدء مزاد جديد</span>
+              <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
             </button>
             <button 
               class="w-full text-right p-3 rounded-xl border border-gray-100 hover:bg-gray-50 flex items-center justify-between cursor-pointer"
               routerLink="/customer/bookings"
             >
-              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">إدارة الحجوزات النشطة</span>
-              <span class="text-gray-400">📅</span>
+              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">إدارة خدماتي النشطة</span>
+              <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
             </button>
             <button 
               class="w-full text-right p-3 rounded-xl border border-gray-100 hover:bg-gray-50 flex items-center justify-between cursor-pointer"
               routerLink="/customer/bid-requests"
             >
-              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">متابعة عروض الحرفيين</span>
-              <span class="text-gray-400">📨</span>
+              <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">متابعة مزاداتي وعروضها</span>
+              <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
             </button>
           </div>
         </div>
@@ -128,7 +154,10 @@
             فريق الدعم الفني بالمنصة متاح لمساعدتك وحل أي خلافات أو مشاكل مع الحرفيين على مدار الساعة.
           </p>
           <a href="tel:199916" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs no-underline shadow-sm transition-all" style="font-family: 'Cairo', var(--font-arabic);">
-            📞 اتصل بالدعم: 199916
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span>اتصل بالدعم: 199916</span>
           </a>
         </div>
 

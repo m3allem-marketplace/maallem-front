@@ -13,10 +13,10 @@ export class BookingTimelineComponent implements OnChanges {
   @Input() currentStatus: string = 'pending';
 
   steps = [
-    { key: 'pending', label: 'قيد الانتظار', desc: 'بانتظار موافقة الحرفي' },
-    { key: 'confirmed', label: 'مؤكد', desc: 'تم تأكيد الحجز والاتفاق' },
-    { key: 'in-progress', label: 'قيد التنفيذ', desc: 'العمل جاري الآن' },
-    { key: 'completed', label: 'مكتمل', desc: 'تم إنهاء الخدمة بنجاح' }
+    { key: 'pending_payment', label: 'بانتظار الدفع', desc: 'بانتظار سداد ميزانية الحجز' },
+    { key: 'paid', label: 'مؤكد / بدأ العمل', desc: 'تم تأكيد الحجز والاتفاق' },
+    { key: 'delivered', label: 'تم التسليم', desc: 'تأكيد إنجاز الحرفي للعمل' },
+    { key: 'completed', label: 'مكتمل', desc: 'تم تحرير الدفع وتقييم الخدمة' }
   ];
 
   activeStepIndex = 0;
@@ -29,7 +29,7 @@ export class BookingTimelineComponent implements OnChanges {
   private updateActiveStep(): void {
     const status = this.currentStatus ? this.currentStatus.toLowerCase() : 'pending';
     
-    if (status === 'cancelled' || status === 'rejected') {
+    if (status === 'cancelled' || status === 'rejected' || status === 'refunded') {
       this.isCancelled = true;
       this.activeStepIndex = 1; // Mark the error at the confirmation stage
       return;
@@ -38,18 +38,24 @@ export class BookingTimelineComponent implements OnChanges {
     this.isCancelled = false;
 
     switch (status) {
+      case 'pending_payment':
       case 'pending':
+      case 'direct_pending':
+      case 'direct-pending':
         this.activeStepIndex = 0;
         break;
+      case 'paid':
       case 'confirmed':
       case 'accepted':
-        this.activeStepIndex = 1;
-        break;
       case 'in-progress':
       case 'in_progress':
+        this.activeStepIndex = 1;
+        break;
+      case 'delivered':
         this.activeStepIndex = 2;
         break;
       case 'completed':
+      case 'closed':
         this.activeStepIndex = 3;
         break;
       default:

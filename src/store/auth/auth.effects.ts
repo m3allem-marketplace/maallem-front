@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
-
 import { AuthService } from '../../app/core/auth/auth.service';
 import { TokenStorageService } from '../../app/core/services/token-storage.service';
 import { UserContextService } from '../../app/core/services/user-context.service';
@@ -154,38 +153,12 @@ export class AuthEffects {
   );
 
   // ─── Load Current User (app init) ───────────────────────────────────────────
-
-  /**
-   * Dispatched on app init (via APP_INITIALIZER or AppComponent.ngOnInit).
-   * Fetches the current user from the API using the stored token.
-   * On failure it dispatches loadCurrentUserFailure — the reducer will clear
-   * user and token from state so the app reflects the unauthenticated state.
-   */
-  loadCurrentUserEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.loadCurrentUser),
-      exhaustMap(() =>
-        this.authService.getMe().pipe(
-          map((response) =>
-            AuthActions.loadCurrentUserSuccess({ user: response.data.user })
-          ),
-          catchError(() => of(AuthActions.loadCurrentUserFailure()))
-        )
-      )
-    )
-  );
-
-  /**
-   * On successful user load, keep UserContextService in sync with the store.
-   */
-  loadCurrentUserSuccessEffect$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.loadCurrentUserSuccess),
-        tap(({ user }) => {
-          this.userContext.setUser(user);
-        })
-      ),
-    { dispatch: false }
-  );
+  //
+  // NOTE: App-init user loading is handled imperatively by UserContextService
+  // (which calls GET /auth/me in its constructor and dispatches
+  // loadCurrentUserSuccess / loadCurrentUserFailure directly).
+  //
+  // We intentionally do NOT define a loadCurrentUserEffect$ here to avoid
+  // making a duplicate /auth/me request on startup, which would contribute
+  // to 429 (Too Many Requests) rate-limit errors from the backend.
 }

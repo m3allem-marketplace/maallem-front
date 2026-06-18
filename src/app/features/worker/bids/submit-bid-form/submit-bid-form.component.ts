@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../../../core/services/project.service';
 import { ProposalService } from '../../../../core/services/proposal.service';
+import { UserContextService } from '../../../../core/services/user-context.service';
 import { ToastService } from '@m3allem/ui-kit';
 
 @Component({
@@ -15,6 +16,7 @@ export class SubmitBidFormComponent implements OnInit {
 
   projectId = '';
   project: any = null;
+  hasSubmitted = false;
 
   // Form fields
   price: number | null = null;
@@ -26,12 +28,14 @@ export class SubmitBidFormComponent implements OnInit {
     public router: Router,
     private projectService: ProjectService,
     private proposalService: ProposalService,
+    private userContext: UserContextService,
     private toast: ToastService
   ) {}
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('jobId') || '';
     this.loadProject();
+    this.checkIfAlreadySubmitted();
   }
 
   private loadProject(): void {
@@ -54,6 +58,19 @@ export class SubmitBidFormComponent implements OnInit {
           createdAt: new Date().toISOString()
         };
         this.loading = false;
+      }
+    });
+  }
+
+  private checkIfAlreadySubmitted(): void {
+    this.proposalService.getMyProposals().subscribe({
+      next: (res) => {
+        const myBids = res.data?.proposals || res.data || [];
+        if (Array.isArray(myBids)) {
+          this.hasSubmitted = myBids.some(p => 
+            p.projectId === this.projectId || p.project?._id === this.projectId || p.project === this.projectId
+          );
+        }
       }
     });
   }

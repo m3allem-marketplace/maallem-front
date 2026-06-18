@@ -9,30 +9,48 @@
   <div *ngIf="!loading && worker" class="flex flex-col gap-8">
     
     <!-- Profile Card Hero -->
-    <div class="profile-hero p-6 md:p-8 bg-white border border-gray-100 rounded-3xl shadow-sm text-right flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="profile-hero p-6 md:p-8 bg-white border border-slate-100 rounded-[30px] shadow-sm hover:shadow-md transition-shadow duration-300 text-right flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div class="flex items-center gap-6">
-        <app-avatar [imageUrl]="worker.avatar || null" [name]="worker.user.name" size="lg" class="shrink-0 border-4 border-amber-50"></app-avatar>
+        <app-avatar [imageUrl]="worker.avatar || null" [name]="worker.user.name" size="lg" class="shrink-0 border-4 border-amber-50/50"></app-avatar>
         <div class="flex flex-col text-right font-arabic">
           <div class="flex items-center gap-2.5">
             <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">{{ worker.user.name }}</h1>
-            <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">★ 4.8</span>
+            <span class="text-[11px] font-extrabold text-[#B99343] bg-amber-50/50 px-2.5 py-0.5 rounded-lg border border-[#DFBA6B]/30 flex items-center gap-1 shadow-sm">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" class="text-[#DFBA6B]"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              4.8
+            </span>
           </div>
           <p class="text-sm text-gray-500 mt-1 font-semibold">{{ worker.specializations?.[0] || 'حرفي عام' }}</p>
           
-          <div class="flex flex-wrap items-center gap-4 mt-3 text-xs text-gray-400">
-            <span class="flex items-center gap-1">📍 {{ worker.location?.address || 'المحافظة' }}، {{ worker.location?.city || '' }}</span>
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-200"></span>
-            <span class="flex items-center gap-1">⏱️ {{ worker.experience || 'خبرة ممتازة' }}</span>
+          <div class="flex flex-wrap items-center gap-4 mt-3 text-xs">
+            <span class="flex items-center gap-1.5 font-semibold text-slate-500">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 shrink-0">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ worker.location?.address || 'المحافظة' }}، {{ worker.location?.city || '' }}
+            </span>
+            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+            <span class="flex items-center gap-1.5 font-semibold text-slate-500">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 shrink-0">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {{ worker.experience || 'خبرة ممتازة' }}
+            </span>
           </div>
         </div>
       </div>
-
+ 
       <button 
         (click)="openBookingModal()"
-        class="cta-booking px-8 py-3.5 bg-accent text-primary-900 text-sm font-extrabold rounded-2xl shadow-md hover:shadow-lg transition-all"
+        class="cta-booking px-7 py-3.5 bg-accent text-primary-900 text-sm font-extrabold rounded-2xl shadow-md hover:shadow-lg hover:translate-y-[-1px] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
         style="font-family: 'Cairo', var(--font-arabic);"
       >
-        طلب خدمة فورية ⚡
+        <span>طلب خدمة فورية</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="shrink-0">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
       </button>
     </div>
 
@@ -43,25 +61,41 @@
       <div class="lg:col-span-2 flex flex-col gap-6">
         
         <!-- Bio Card -->
-        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">📝 نبذة عن الحرفي</h3>
-          <p class="text-sm text-gray-600 leading-relaxed font-light whitespace-pre-line">
+        <div class="detail-card p-6 bg-white border border-slate-100 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100/50">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h3 class="text-base font-extrabold text-slate-800" style="font-family: 'Cairo', var(--font-arabic);">نبذة عن الحرفي</h3>
+          </div>
+          <p class="text-sm text-slate-600 leading-relaxed font-semibold whitespace-pre-line">
             {{ worker.bio || 'لم يقم الحرفي بإضافة نبذة تعريفية بعد، ولكنه ملتزم بتقديم أفضل جودة عمل ورضا العملاء.' }}
           </p>
         </div>
 
         <!-- Portfolio Gallery Card -->
-        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">🖼️ معرض الأعمال السابقة</h3>
+        <div class="detail-card p-6 bg-white border border-slate-100 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100/50">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            </div>
+            <h3 class="text-base font-extrabold text-slate-800" style="font-family: 'Cairo', var(--font-arabic);">معرض الأعمال السابقة</h3>
+          </div>
           
-          <div *ngIf="!worker.portfolioImages || worker.portfolioImages.length === 0" class="py-8 text-center text-gray-400">
-            <span class="text-2xl">📸</span>
-            <p class="text-xs mt-2">لا توجد صور في معرض الأعمال بعد.</p>
+          <div *ngIf="!worker.portfolioImages || worker.portfolioImages.length === 0" class="py-12 flex flex-col items-center justify-center text-center">
+            <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-400 mb-4 shadow-sm">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </div>
+            <p class="text-xs font-bold text-slate-700">لا توجد صور في معرض الأعمال بعد</p>
+            <p class="text-[11px] text-slate-400 mt-1 max-w-[240px] leading-relaxed">لم يقم هذا الحرفي بمشاركة صور أو لقطات من مشاريع وأعمال سابقة له بعد.</p>
           </div>
 
           <div *ngIf="worker.portfolioImages && worker.portfolioImages.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div *ngFor="let img of worker.portfolioImages" class="portfolio-item rounded-xl overflow-hidden shadow-sm aspect-video border border-gray-100 relative group">
-              <img [src]="img" class="w-full h-full object-cover transition-all duration-300 group-hover:scale-110" alt="Work Example">
+              <img [src]="img" class="w-full h-full object-cover transition-all duration-300 group-hover:scale-105" alt="Work Example">
             </div>
           </div>
         </div>
@@ -72,8 +106,13 @@
       <div class="flex flex-col gap-6">
         
         <!-- Specs Details -->
-        <div class="detail-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-          <h3 class="text-base font-bold text-gray-800 border-b pb-3 mb-4" style="font-family: 'Cairo', var(--font-arabic);">🛠️ التخصصات</h3>
+        <div class="detail-card p-6 bg-white border border-slate-100 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100/50">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            </div>
+            <h3 class="text-base font-extrabold text-slate-800" style="font-family: 'Cairo', var(--font-arabic);">التخصصات</h3>
+          </div>
           <div class="flex flex-wrap gap-2 mt-2">
             <span *ngFor="let spec of worker.specializations" class="text-xs font-semibold text-primary bg-primary-subtle px-3 py-1.5 rounded-xl">
               {{ spec }}
@@ -82,11 +121,13 @@
         </div>
 
         <!-- Guarantee Badge -->
-        <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex gap-3 text-right">
-          <span class="text-2xl">🛡️</span>
+        <div class="p-5 bg-gradient-to-br from-blue-50/70 to-indigo-50/30 border border-blue-100/60 rounded-[24px] flex gap-3.5 text-right shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/20">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
           <div class="flex flex-col">
-            <h5 class="text-xs font-bold text-blue-900" style="font-family: 'Cairo', var(--font-arabic);">ضمان وحماية معلّم</h5>
-            <p class="text-[11px] text-blue-700 leading-relaxed mt-0.5">
+            <h5 class="text-[13px] font-extrabold text-blue-950" style="font-family: 'Cairo', var(--font-arabic);">ضمان وحماية معلّم</h5>
+            <p class="text-xs text-blue-700 leading-relaxed mt-1">
               كل الحجوزات والتعاملات محمية بالكامل عبر المنصة لضمان جودة الخدمة وحقوقك المالية.
             </p>
           </div>
@@ -99,90 +140,178 @@
   </div>
 
   <!-- Direct Booking Modal Dialog -->
-  <div *ngIf="showBookingModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeBookingModal()"></div>
+  <div *ngIf="showBookingModal" class="modal-overlay">
+    <div class="modal-backdrop absolute inset-0 bg-transparent cursor-default" (click)="closeBookingModal()"></div>
     
     <div class="modal-card relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-scale-in text-right font-arabic">
-      <header class="p-6 bg-gradient-to-l from-primary-800 to-primary-950 text-white flex justify-between items-center">
-        <h3 class="text-lg font-black" style="font-family: 'Cairo', var(--font-arabic);">⚡ طلب خدمة صيانة فورية</h3>
-        <button (click)="closeBookingModal()" class="text-white/80 hover:text-white text-xl bg-transparent border-none cursor-pointer">✕</button>
+      <header class="p-6 bg-gradient-to-l from-[#1B2B6E] to-[#0d153a] text-white flex justify-between items-center">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-white/10 text-accent flex items-center justify-center shadow-sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-white" style="font-family: 'Cairo', var(--font-arabic);">طلب خدمة صيانة فورية</h3>
+            <p class="text-[11px] text-white/75 mt-0.5 font-semibold">
+              {{ bookingStep === 1 ? 'الخطوة 1 من 2: تفاصيل المشكلة والميزانية' : 'الخطوة 2 من 2: حدد موقع العمل لتأكيد الطلب' }}
+            </p>
+          </div>
+        </div>
+        <button (click)="closeBookingModal()" class="text-white/80 hover:text-white text-xl bg-transparent border-none cursor-pointer leading-none">✕</button>
       </header>
+
+      <!-- Step progress tracker -->
+      <div class="px-6 pt-5 pb-2 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between text-xs font-semibold text-gray-500 font-arabic select-none">
+        <div class="flex items-center gap-2" [class.text-[#1B2B6E]]="bookingStep === 1" [class.font-extrabold]="bookingStep === 1">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px]" 
+                [class.bg-[#1B2B6E]]="bookingStep === 1" [class.text-white]="bookingStep === 1"
+                [class.bg-emerald-500]="bookingStep > 1" [class.text-white]="bookingStep > 1"
+                [class.bg-gray-200]="bookingStep < 1">
+            <ng-container *ngIf="bookingStep > 1">✓</ng-container>
+            <ng-container *ngIf="bookingStep === 1">1</ng-container>
+          </span>
+          <span>تفاصيل الطلب</span>
+        </div>
+        <div class="flex-1 mx-4 h-0.5 bg-gray-200 relative rounded-full">
+          <div class="absolute inset-y-0 right-0 bg-[#1B2B6E] transition-all duration-300" [style.width.%]="bookingStep === 1 ? 0 : 100"></div>
+        </div>
+        <div class="flex items-center gap-2" [class.text-[#1B2B6E]]="bookingStep === 2" [class.font-extrabold]="bookingStep === 2">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px]" 
+                [class.bg-[#1B2B6E]]="bookingStep === 2" [class.text-white]="bookingStep === 2"
+                [class.bg-gray-200]="bookingStep < 2">
+            2
+          </span>
+          <span>موقع العمل</span>
+        </div>
+      </div>
 
       <div class="p-6 max-h-[75vh] overflow-y-auto flex flex-col gap-4">
         
-        <!-- Job Title -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-gray-500">عنوان الطلب</label>
-          <input 
-            type="text" 
-            [(ngModel)]="bookingTitle"
-            placeholder="مثال: تصليح تسريب تحت حوض الحمام"
-            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
-          >
-        </div>
-
-        <!-- Description -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-gray-500">شرح وتفاصيل المشكلة</label>
-          <textarea 
-            rows="3"
-            [(ngModel)]="bookingDescription"
-            placeholder="يرجى وصف المشكلة بالتفصيل لمساعدة الحرفي في التحضير للمهمة..."
-            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all resize-none"
-          ></textarea>
-        </div>
-
-        <!-- Budget & City -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- Phase 1: Job Details -->
+        <ng-container *ngIf="bookingStep === 1">
+          <!-- Job Title -->
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-gray-500">الميزانية المقترحة (جنيه)</label>
+            <label class="text-xs font-bold text-gray-500">عنوان الطلب</label>
             <input 
-              type="number" 
-              [(ngModel)]="bookingBudget"
+              type="text" 
+              [(ngModel)]="bookingTitle"
+              placeholder="مثال: تصليح تسريب تحت حوض الحمام"
               class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
             >
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-gray-500">المدينة</label>
-            <select 
-              [(ngModel)]="bookingCity"
-              class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all cursor-pointer"
-            >
-              <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-            </select>
-          </div>
-        </div>
 
-        <!-- Address -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-gray-500">العنوان بالتفصيل</label>
-          <input 
-            type="text" 
-            [(ngModel)]="bookingAddress"
-            placeholder="مثال: شارع التحرير، الدقي، بجوار بنك مصر"
-            class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
-          >
-        </div>
+          <!-- Description -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-500">شرح وتفاصيل المشكلة</label>
+            <textarea 
+              rows="3"
+              [(ngModel)]="bookingDescription"
+              placeholder="يرجى وصف المشكلة بالتفصيل لمساعدة الحرفي في التحضير للمهمة..."
+              class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Budget -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-500">الميزانية المقترحة (جنيه)</label>
+            <div class="relative flex items-center">
+              <input 
+                type="number" 
+                [(ngModel)]="bookingBudget"
+                class="input-control w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all font-semibold"
+              >
+              <span class="absolute left-4 text-xs font-bold text-gray-400">ج.م</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Phase 2: Location Selector -->
+        <ng-container *ngIf="bookingStep === 2">
+          <!-- Map Picker Wrapper -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-500">حدد موقع العمل بدقة على الخريطة</label>
+            <div class="map-picker-container rounded-xl overflow-hidden border border-gray-200">
+              <app-map-picker
+                [lat]="bookingLat"
+                [lng]="bookingLng"
+                height="240px"
+                [zoom]="14"
+                (locationChange)="onBookingLocationChange($event)"
+              ></app-map-picker>
+            </div>
+          </div>
+
+          <!-- City & Detailed Address -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+            <div class="flex flex-col gap-1.5 md:col-span-1">
+              <label class="text-xs font-bold text-gray-500">المدينة</label>
+              <select 
+                [(ngModel)]="bookingCity"
+                class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all cursor-pointer"
+              >
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+              </select>
+            </div>
+            
+            <div class="flex flex-col gap-1.5 md:col-span-2">
+              <label class="text-xs font-bold text-gray-500">العنوان بالتفصيل</label>
+              <input 
+                type="text" 
+                [(ngModel)]="bookingAddress"
+                placeholder="مثال: شارع التحرير، الدقي، بجوار بنك مصر"
+                class="input-control px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none transition-all"
+              >
+            </div>
+          </div>
+        </ng-container>
 
       </div>
 
-      <footer class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
-        <button 
-          (click)="closeBookingModal()" 
-          class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          إلغاء
-        </button>
-        <button 
-          [disabled]="submitting"
-          (click)="submitDirectBooking()" 
-          class="px-6 py-2.5 bg-accent text-primary-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          <span *ngIf="submitting" class="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-primary-900"></span>
-          إرسال الطلب الآن
-        </button>
+      <footer class="p-6 bg-gray-50 border-t border-gray-100 flex justify-between gap-3">
+        <!-- Step 1 Footer Actions -->
+        <ng-container *ngIf="bookingStep === 1">
+          <button 
+            (click)="closeBookingModal()" 
+            class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            إلغاء
+          </button>
+          <button 
+            (click)="nextStep()" 
+            class="px-6 py-2.5 bg-accent text-primary-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer border-none"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            <span>التالي: تحديد الموقع</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="rotate-180">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </ng-container>
+
+        <!-- Step 2 Footer Actions -->
+        <ng-container *ngIf="bookingStep === 2">
+          <button 
+            (click)="prevStep()" 
+            class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-100 transition-all cursor-pointer flex items-center gap-1.5"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <span>السابق</span>
+          </button>
+          <button 
+            [disabled]="submitting"
+            (click)="submitDirectBooking()" 
+            class="px-6 py-2.5 bg-accent text-primary-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer border-none"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            <span *ngIf="submitting" class="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-primary-900"></span>
+            إرسال الطلب الآن
+          </button>
+        </ng-container>
       </footer>
     </div>
   </div>

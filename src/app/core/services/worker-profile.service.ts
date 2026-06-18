@@ -45,4 +45,18 @@ export class WorkerProfileService {
   deleteMyProfile(): Observable<any> {
     return this.api.delete<any>('/profiles/worker/me');
   }
+
+  getAvailability(): Observable<any> {
+    return this.api.get<any>('/profiles/worker/me');
+  }
+
+  updateAvailability(availabilities: any[], hourlyRate: number, offersFlatRate: boolean): Observable<any> {
+    const payload = {
+      availabilities,
+      hourlyRate,
+      offersFlatRate
+    };
+    return this.api.patch<any>('/profiles/worker/me', payload);
+  }
 }
+

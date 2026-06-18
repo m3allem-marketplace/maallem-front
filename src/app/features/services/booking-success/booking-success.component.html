@@ -7,21 +7,21 @@
     </svg>
   </div>
 
-  <h2 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">تم تأكيد حجزك بنجاح! 🎉</h2>
+  <h2 class="text-2xl font-extrabold text-gray-900 mb-2" style="font-family: 'Cairo', var(--font-arabic);">تم طلب الخدمة بنجاح! 🎉</h2>
   <p class="text-sm text-gray-500 max-w-md mx-auto mb-8 leading-relaxed" style="font-family: 'Cairo', var(--font-arabic);">
-    لقد تم إسناد المهمة للحرفي بنجاح. يمكنك الآن متابعة مراحل تنفيذ الحجز مباشرة من خلال شريط التتبع أدناه.
+    لقد تم إرسال طلب الخدمة للحرفي بنجاح. يمكنك الآن متابعة مراحل تنفيذ الخدمة مباشرة من خلال شريط التتبع أدناه.
   </p>
 
   <!-- Interactive Timeline Progress -->
   <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm mb-8 text-right">
-    <h4 class="text-xs font-bold text-gray-400 uppercase mb-4" style="font-family: 'Cairo', var(--font-arabic);">📍 حالة تنفيذ الحجز الحالية</h4>
-    <app-booking-timeline currentStatus="confirmed"></app-booking-timeline>
+    <h4 class="text-xs font-bold text-gray-400 uppercase mb-4" style="font-family: 'Cairo', var(--font-arabic);">📍 حالة تنفيذ الخدمة الحالية</h4>
+    <app-booking-timeline currentStatus="pending_payment"></app-booking-timeline>
   </div>
 
   <!-- Summary Info Box -->
   <div class="p-5 bg-gray-50 border border-gray-100 rounded-xl mb-8 flex flex-col gap-3 text-right">
     <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
-      <span class="text-gray-500 font-medium" style="font-family: 'Cairo', var(--font-arabic);">رقم مرجع الحجز:</span>
+      <span class="text-gray-500 font-medium" style="font-family: 'Cairo', var(--font-arabic);">رقم مرجع الخدمة:</span>
       <code class="text-xs font-bold text-gray-700 bg-white px-2 py-0.5 rounded border">{{ bookingId }}</code>
     </div>
     <div class="flex justify-between items-center text-sm">
@@ -33,7 +33,7 @@
   <!-- Action CTA Buttons -->
   <div class="flex flex-col sm:flex-row gap-3 justify-center">
     <app-button variant="primary" (click)="goToBookings()" class="px-8 font-bold" style="font-family: 'Cairo', var(--font-arabic);">
-      الذهاب إلى حجوزاتي
+      الذهاب إلى خدماتي
     </app-button>
     <app-button variant="ghost" (click)="goToHome()" class="px-8 font-semibold" style="font-family: 'Cairo', var(--font-arabic);">
       الرجوع إلى الرئيسية
