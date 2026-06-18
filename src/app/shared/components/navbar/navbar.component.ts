@@ -380,7 +380,6 @@ import { selectUnreadCount } from '../../../store/notifications/notifications.se
     ::ng-deep .main-content {
       background-color: var(--bg-page) !important;
       border-radius: 24px 24px 0 0 !important;
-      margin: 0 16px 0 16px !important;
       box-shadow: 0 15px 40px rgba(27, 43, 110, 0.08) !important;
       overflow: hidden !important;
       position: relative;

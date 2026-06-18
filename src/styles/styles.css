@@ -162,7 +162,7 @@ strong { font-weight: var(--font-semibold); }
 
 .main-content {
   flex: 1;
-  padding-top: var(--navbar-height); /* offset for sticky navbar */
+  padding-top: 0;
 }
 
 .container {
