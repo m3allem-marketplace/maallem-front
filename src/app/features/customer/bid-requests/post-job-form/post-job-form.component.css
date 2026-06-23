@@ -21,3 +21,155 @@
 textarea:focus {
   border-color: var(--color-primary, #1b2b6e);
 }
+
+/* Step 4 Review Grid */
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .review-grid {
+    grid-template-columns: 1fr 1.5fr; /* Left: Budget/Location Card, Right: Problem Description & Category */
+  }
+}
+
+/* Card Styling */
+.review-summary-card, .review-details-card {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.review-summary-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-color: #e2e8f0;
+}
+
+/* Badge styles */
+.budget-badge-premium {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.budget-badge-premium .badge-label {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+.budget-badge-premium .badge-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.location-badge-premium {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.location-badge-premium .badge-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.location-badge-premium .badge-value {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+/* Review Details */
+.review-details-card .detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.review-details-card .detail-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.review-details-card .detail-value {
+  font-size: 0.9rem;
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.review-details-card .desc-box {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-weight: 500;
+}
+
+/* Custom Number Input styling to match standard app-input styling */
+.custom-number-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  outline: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  text-align: right;
+  background-color: #ffffff;
+}
+
+.custom-number-input:focus {
+  border-color: var(--color-primary, #1b2b6e);
+  box-shadow: 0 0 0 3px rgba(27, 43, 110, 0.08);
+}
+
+.custom-number-input::-webkit-outer-spin-button,
+.custom-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-number-input {
+  -moz-appearance: textfield;
+}
+
+/* Validator Warning & Character Counter styling */
+.validator-warning {
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.char-counter {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+}

@@ -1,0 +1,45 @@
+.tabs-bar {
+  scrollbar-width: none; /* Firefox */
+}
+.tabs-bar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.tab-btn {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.tab-btn.active {
+  background: var(--color-primary-600, #f59e0b);
+  color: #ffffff;
+  border-color: var(--color-primary-600, #f59e0b);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+}
+
+.bid-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 220px;
+}
+
+.bid-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.category-badge {
+  letter-spacing: 0.025em;
+}
+
+.status-badge {
+  text-transform: uppercase;
+}

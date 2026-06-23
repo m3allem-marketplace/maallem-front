@@ -5,12 +5,12 @@
     <div class="header-inner">
       <div>
         <h1 class="page-title">
-          <svg class="dashboard-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-          الوظائف المتاحة
+           <svg class="dashboard-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          المزادات المفتوحة
         </h1>
-        <p class="page-subtitle">اعرض الطلبات المفتوحة وقدم عروض أسعارك التنافسية الآن</p>
+        <p class="page-subtitle">اعرض المزادات المفتوحة وقدم عروض أسعارك التنافسية الآن</p>
       </div>
-      <div class="results-badge" *ngIf="!loading">{{ filteredJobs.length }} وظيفة متاحة</div>
+      <div class="results-badge" *ngIf="!loading">{{ filteredJobs.length }} مزاد متاح</div>
     </div>
   </div>
 
@@ -42,7 +42,7 @@
   <!-- ── Loading ──────────────────────────────────────────────── -->
   <div class="loading-box" *ngIf="loading">
     <app-spinner size="lg"></app-spinner>
-    <p>جاري تحميل الوظائف...</p>
+    <p>جاري تحميل المزادات المفتوحة...</p>
   </div>
 
   <!-- ── Jobs Grid ────────────────────────────────────────────── -->
@@ -104,7 +104,7 @@
     <app-empty-state
       *ngIf="filteredJobs.length === 0"
       icon="🔍"
-      title="لا توجد وظائف مطابقة"
+      title="لا توجد مزادات مطابقة"
       subtitle="جرب تغيير فلتر التخصص أو المحافظة للبحث في نطاق أوسع"
     ></app-empty-state>
   </div>

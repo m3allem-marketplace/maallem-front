@@ -14,7 +14,35 @@
     <!-- Left column: Task details and description -->
     <div class="lg:col-span-2 flex flex-col gap-6">
       
+      <!-- Timeline Header -->
+      <div *ngIf="task.status !== 'open'" class="detail-card p-6 bg-white border border-slate-100 rounded-3xl shadow-sm text-right">
+        <div class="flex items-center gap-2 mb-6 border-b pb-4">
+          <svg class="w-5 h-5 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7" />
+          </svg>
+          <h2 class="text-sm font-bold text-slate-800">تتبع حالة الحجز</h2>
+        </div>
+        <app-booking-timeline [currentStatus]="getTimelineStatus()"></app-booking-timeline>
+      </div>
+
+      <!-- Countdown Card for Direct Pending -->
+      <div *ngIf="task.status === 'direct_pending'" class="detail-card p-6 bg-purple-50/50 border border-purple-100 rounded-3xl shadow-sm text-right">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">⏱️</span>
+            <div>
+              <h2 class="text-sm font-bold text-purple-900 m-0">الوقت المتبقي لقبول الطلب</h2>
+              <p class="text-xs text-purple-600 m-0">ينتهي الحجز المباشر تلقائياً إذا لم يستجب الحرفي خلال ساعتين</p>
+            </div>
+          </div>
+          <div class="text-lg font-extrabold text-purple-800 direction-ltr" style="direction: ltr;">
+            {{ countdownText }}
+          </div>
+        </div>
+      </div>
+
       <!-- Main Details Card -->
+
       <div class="detail-card bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
         
         <!-- Header -->
@@ -37,8 +65,23 @@
         </div>
       </div>
 
+      <!-- Review display section -->
+      <div *ngIf="taskReview" class="detail-card bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
+        <h3 class="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">تقييم العميل للخدمة ⭐</h3>
+        
+        <div class="bg-emerald-50/40 border border-emerald-100/50 p-5 rounded-2xl flex flex-col gap-3">
+          <div class="flex items-center gap-2">
+            <app-star-rating [rating]="taskReview.rating" [readonly]="true"></app-star-rating>
+            <span class="text-xs font-extrabold text-emerald-800">({{ taskReview.rating }}/5)</span>
+          </div>
+          <p class="text-xs text-slate-600 italic font-semibold leading-relaxed m-0">
+            "{{ taskReview.comment }}"
+          </p>
+        </div>
+      </div>
+
       <!-- Proposals / Bids Section -->
-      <div class="detail-card bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
+      <div *ngIf="!isDirectProject" class="detail-card bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
         <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
           <h2 class="text-base md:text-lg font-extrabold text-slate-800">العروض المقدمة ({{ proposals.length }})</h2>
         </div>
@@ -65,15 +108,25 @@
               <div class="flex items-center gap-4">
                 <div class="text-left md:text-right">
                   <div class="text-xs font-semibold text-slate-400">مدة التنفيذ</div>
-                  <div class="text-xs font-extrabold text-slate-700">{{ proposal.duration }} ساعات</div>
+                  <div class="text-xs font-extrabold text-slate-700">{{ proposal.duration || proposal.estimatedDuration }} {{ proposal.durationUnit || (!proposal.estimatedDuration ? 'ساعات' : '') }}</div>
                 </div>
                 <div class="price-box bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl text-sm font-extrabold">
                   {{ proposal.price }} ج.م
                 </div>
-              </div>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">{{ proposal.message }}</p>
+            
+            <div class="flex justify-between items-center mt-3 border-t border-slate-100/50 pt-3" *ngIf="isClientOwner()">
+              <span class="text-[10px] text-slate-400">تواصل للتفاوض حول التفاصيل</span>
+              <button 
+                (click)="openChatWithWorker(proposal.worker?._id || proposal.workerId || proposal.worker)"
+                class="px-4 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg border-none cursor-pointer transition-colors"
+              >
+                💬 تواصل عبر المحادثة
+              </button>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -120,58 +173,241 @@
       <div class="detail-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <h3 class="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">لوحة التحكم بالطلب</h3>
 
-        <!-- Case 1: Logged-in user is NOT the owner of the job, and they are a worker (can bid) -->
-        <ng-container *ngIf="!isClientOwner() && (currentUserRole === 'worker' || currentUserRole === 'company')">
+        <!-- Case 1: Assigned Worker Actions -->
+        <ng-container *ngIf="isAssignedWorker()">
+          <div class="flex flex-col gap-3">
+            <div class="text-xs font-bold text-slate-400 mb-1">تحديث حالة العمل:</div>
+            
+            <!-- Real Booking Escrow Actions -->
+            <ng-container *ngIf="bookingId">
+              <div *ngIf="bookingStatus === 'pending_payment' && !showDirectAcceptReject" class="text-center py-3 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl">
+                بانتظار قيام العميل بسداد ميزانية الحجز للبدء ⏱️
+              </div>
+ 
+              <!-- Accept / Reject Direct Booking Request -->
+              <div *ngIf="showDirectAcceptReject" class="flex flex-col gap-2 mb-2">
+                <div class="text-xs font-bold text-purple-900 bg-purple-50 p-3 rounded-xl mb-1 text-center">
+                  لقد أرسل لك العميل طلب حجز مباشر ⚡
+                </div>
+                <button 
+                  (click)="changeStatus('confirmed')" 
+                  class="w-full text-xs font-bold border border-green-200 bg-green-50 hover:bg-green-100 text-green-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+                >
+                  قبول طلب الحجز والموافقة
+                </button>
+                <button 
+                  (click)="changeStatus('open')" 
+                  class="w-full text-xs font-bold border border-red-200 bg-red-50/50 hover:bg-red-100 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+                >
+                  رفض ونشر الطلب للجميع
+                </button>
+              </div>
+
+              <button 
+                *ngIf="bookingStatus === 'paid'"
+                (click)="deliverTask()" 
+                class="w-full text-xs font-bold border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                تأكيد إنجاز العمل وتسليمه للعميل 🚀
+              </button>
+
+              <div *ngIf="bookingStatus === 'delivered'" class="text-center py-3 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 rounded-xl">
+                تم تسليم العمل وبانتظار تأكيد العميل لتحرير الدفع ⏱️
+              </div>
+
+              <div *ngIf="bookingStatus === 'completed'" class="text-center py-3 text-xs font-bold text-green-600 bg-green-50 rounded-xl">
+                تم إنهاء الحجز وتحرير المستحقات بنجاح 🎉
+              </div>
+
+              <div *ngIf="bookingStatus === 'disputed'" class="text-center py-3 text-xs font-bold text-red-700 bg-red-50 border border-red-200 rounded-xl">
+                هذا الحجز قيد النزاع، جاري مراجعته من الإدارة ⚠️
+              </div>
+
+              <div *ngIf="bookingStatus === 'cancelled' || bookingStatus === 'refunded'" class="text-center py-3 text-xs font-bold text-red-600 bg-red-50 rounded-xl">
+                تم إلغاء هذا الحجز
+              </div>
+            </ng-container>
+
+            <!-- Fallback to original Project status checks if booking is not created yet -->
+            <ng-container *ngIf="!bookingId">
+              <div *ngIf="showDirectAcceptReject" class="flex flex-col gap-2 mb-2">
+                <button 
+                  (click)="changeStatus('confirmed')" 
+                  class="w-full text-xs font-bold border border-green-200 bg-green-50 hover:bg-green-100 text-green-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+                >
+                  قبول طلب الحجز والموافقة
+                </button>
+                <button 
+                  (click)="changeStatus('open')" 
+                  class="w-full text-xs font-bold border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+                >
+                  رفض ونشر الطلب للجميع
+                </button>
+              </div>
+
+              <button 
+                *ngIf="task.status === 'pending'"
+                (click)="changeStatus('confirmed')" 
+                class="w-full text-xs font-bold border border-green-200 bg-green-50 hover:bg-green-100 text-green-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                قبول طلب الحجز وتأكيد الاتفاق
+              </button>
+
+              <button 
+                *ngIf="task.status === 'confirmed'"
+                (click)="changeStatus('in-progress')" 
+                class="w-full text-xs font-bold border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                بدء العمل (قيد التنفيذ)
+              </button>
+
+              <button 
+                *ngIf="task.status === 'in-progress'"
+                (click)="changeStatus('completed')" 
+                class="w-full text-xs font-bold border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                إنهاء العمل (تعليم كمكتمل)
+              </button>
+              
+              <div *ngIf="task.status === 'completed'" class="text-center py-3 text-xs font-bold text-green-600 bg-green-50 rounded-xl">
+                تم إنهاء العمل بنجاح ودفع المستحقات 🎉
+              </div>
+              
+              <div *ngIf="task.status === 'cancelled'" class="text-center py-3 text-xs font-bold text-red-600 bg-red-50 rounded-xl">
+                تم إلغاء هذا الحجز
+              </div>
+            </ng-container>
+
+            <!-- Chat button for assigned worker -->
+            <button 
+              (click)="openChatWithClient()"
+              class="w-full text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 py-2.5 rounded-xl cursor-pointer transition-colors mt-3"
+            >
+              💬 تواصل مع العميل / Chat with Client
+            </button>
+          </div>
+        </ng-container>
+
+
+        <!-- Case 2: Client Owner Actions -->
+        <ng-container *ngIf="isClientOwner()">
+          <div class="flex flex-col gap-3">
+            <div class="text-xs font-bold text-slate-400 mb-1">تعديل حالة الطلب:</div>
+            
+            <div *ngIf="task.status === 'open'" class="text-center py-4 text-xs font-semibold text-slate-500 bg-slate-50 rounded-2xl leading-relaxed">
+              بانتظار تلقي عروض أسعار من الحرفيين لبدء العمل.
+            </div>
+
+            <div *ngIf="task.status === 'direct_pending'" class="flex flex-col gap-2">
+              <div class="text-xs font-semibold text-purple-900 bg-purple-50 p-3 rounded-xl mb-2">
+                لقد أرسلت طلب حجز مباشر للحرفي. بانتظار قبوله أو رفضه أو انتهاء الصلاحية.
+              </div>
+              <button 
+                (click)="changeStatus('cancelled')" 
+                class="w-full text-xs font-bold border border-red-200 bg-red-50/50 hover:bg-red-50 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                إلغاء طلب الحجز المباشر
+              </button>
+            </div>
+
+            <div *ngIf="task.status === 'pending'" class="flex flex-col gap-2">
+
+              <div class="text-xs font-semibold text-slate-500 bg-blue-50/50 p-3 rounded-xl mb-2">
+                لقد قبلت العرض وبانتظار تأكيد الحرفي لبدء العمل.
+              </div>
+              <button 
+                (click)="changeStatus('cancelled')" 
+                class="w-full text-xs font-bold border border-red-200 bg-red-50/50 hover:bg-red-50 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                إلغاء طلب الحجز
+              </button>
+            </div>
+
+            <div *ngIf="task.status === 'confirmed'" class="flex flex-col gap-2">
+              <div class="text-xs font-semibold text-slate-500 bg-green-50/50 p-3 rounded-xl mb-2">
+                تم تأكيد الحجز من قبل الحرفي وبانتظار بدء التنفيذ.
+              </div>
+              <button 
+                (click)="changeStatus('cancelled')" 
+                class="w-full text-xs font-bold border border-red-200 bg-red-50/50 hover:bg-red-50 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                إلغاء الحجز
+              </button>
+            </div>
+
+            <div *ngIf="task.status === 'in-progress'" class="flex flex-col gap-2">
+              <div class="text-xs font-semibold text-slate-500 bg-amber-50/50 p-3 rounded-xl mb-2">
+                العمل قيد التنفيذ الآن. يرجى تأكيد الاكتمال بعد فحص الجودة.
+              </div>
+              <button 
+                (click)="changeStatus('completed')" 
+                class="w-full text-xs font-bold border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+              >
+                تأكيد اكتمال الخدمة وتحرير الدفع
+              </button>
+              <button 
+                (click)="changeStatus('cancelled')" 
+                class="w-full text-xs font-bold border border-red-200 bg-red-50/50 hover:bg-red-50 text-red-700 py-2.5 rounded-xl cursor-pointer transition-colors mt-1"
+              >
+                إلغاء الحجز
+              </button>
+            </div>
+
+            <div *ngIf="task.status === 'completed'" class="text-center py-4 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-2xl">
+              تم اكتمال المهمة بنجاح ودفع المستحقات 🎉
+            </div>
+
+            <div *ngIf="task.status === 'cancelled'" class="text-center py-4 text-xs font-bold text-red-700 bg-red-50 border border-red-200 rounded-2xl">
+              تم إلغاء هذا الحجز/الطلب
+            </div>
+
+            <!-- Chat button for client owner if worker is assigned -->
+            <button 
+              *ngIf="task.status !== 'open'"
+              (click)="openChatWithWorker(task.worker?._id || task.worker)"
+              class="w-full text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 py-2.5 rounded-xl cursor-pointer transition-colors mt-3"
+            >
+
+              💬 تواصل مع الحرفي / Chat with Worker
+            </button>
+          </div>
+        </ng-container>
+
+
+        <!-- Case 3: Other Worker (not assigned) -->
+        <ng-container *ngIf="!isClientOwner() && !isAssignedWorker() && (currentUserRole === 'worker' || currentUserRole === 'company')">
           <button 
-            *ngIf="task.status === 'open'"
+            *ngIf="task.status === 'open' && !hasSubmittedProposal() && !isDirectProject"
             (click)="placeBid()" 
             class="w-full text-sm font-extrabold bg-amber-400 hover:bg-amber-500 text-slate-800 py-3.5 rounded-xl border-none cursor-pointer transition-colors"
           >
             تقديم عرض سعر
           </button>
-          <div *ngIf="task.status !== 'open'" class="text-center py-3 text-xs font-bold text-slate-400 bg-slate-50 rounded-xl">
+          
+          <div *ngIf="task.status === 'open' && hasSubmittedProposal() && !isDirectProject" class="flex flex-col gap-3">
+            <div class="text-center py-4 px-3 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl">
+              لقد قمت بتقديم عرض سعر بالفعل على هذا الطلب
+            </div>
+            <button 
+              (click)="openChatWithClient()"
+              class="w-full text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 py-2.5 rounded-xl cursor-pointer transition-colors"
+            >
+              💬 تواصل مع العميل / Chat with Client
+            </button>
+          </div>
+
+          <div *ngIf="task.status !== 'open' || isDirectProject" class="text-center py-3 text-xs font-bold text-slate-400 bg-slate-50 rounded-xl">
             هذه المهمة مغلقة حالياً للتقديم
           </div>
         </ng-container>
 
-        <!-- Case 2: Logged-in user IS the client owner (can change status) -->
-        <ng-container *ngIf="isClientOwner()">
-          <div class="flex flex-col gap-3">
-            <div class="text-xs font-bold text-slate-400 mb-1">تعديل حالة الطلب:</div>
-            
-            <button 
-              (click)="changeStatus('open')" 
-              class="w-full text-xs font-bold border border-blue-200 bg-blue-50/50 hover:bg-blue-50 text-blue-700 py-2.5 rounded-xl cursor-pointer transition-colors"
-              [class.ring-2]="task.status === 'open'"
-              [class.ring-blue-500]="task.status === 'open'"
-            >
-              فتح مجدداً للتقديم
-            </button>
-
-            <button 
-              (click)="changeStatus('in-progress')" 
-              class="w-full text-xs font-bold border border-amber-200 bg-amber-50/50 hover:bg-amber-50 text-amber-700 py-2.5 rounded-xl cursor-pointer transition-colors"
-              [class.ring-2]="task.status === 'in-progress'"
-              [class.ring-amber-500]="task.status === 'in-progress'"
-            >
-              بدء تنفيذ المهمة
-            </button>
-
-            <button 
-              (click)="changeStatus('closed')" 
-              class="w-full text-xs font-bold border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 text-emerald-700 py-2.5 rounded-xl cursor-pointer transition-colors"
-              [class.ring-2]="task.status === 'closed'"
-              [class.ring-emerald-500]="task.status === 'closed'"
-            >
-              إغلاق وتأكيد الاكتمال
-            </button>
-          </div>
-        </ng-container>
-
-        <!-- Case 3: Public / Other Roles -->
+        <!-- Case 4: Public / Other Roles -->
         <ng-container *ngIf="!isClientOwner() && currentUserRole !== 'worker' && currentUserRole !== 'company'">
-          <div class="text-center py-4 text-xs font-semibold text-slate-400 leading-relaxed">
+          <div *ngIf="task.status === 'open'" class="text-center py-4 text-xs font-semibold text-slate-400 leading-relaxed">
             يجب تسجيل الدخول بحساب فني لتتمكن من تقديم عرض أسعار على هذا الطلب
+          </div>
+          <div *ngIf="task.status !== 'open'" class="text-center py-4 text-xs font-semibold text-slate-400 leading-relaxed">
+            هذا الطلب مغلق أو تم الحجز عليه بالفعل
           </div>
         </ng-container>
 

@@ -1,0 +1,46 @@
+/* ── Global AI Assistant Floating Widget ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+
+.global-ai-container {
+  font-family: 'Cairo', sans-serif;
+  z-index: 9999 !important;
+}
+
+/* Chat textarea input */
+.global-chat-input {
+  flex: 1;
+  background: #F4F5F8;
+  border: 1.5px solid #DDE0EB;
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.875rem;
+  font-size: 0.775rem;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 500;
+  color: #111827;
+  resize: none;
+  height: 38px;
+  outline: none;
+  text-align: right;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.global-chat-input:focus {
+  border-color: #1B2B6E;
+  box-shadow: 0 0 0 3px rgba(27, 43, 110, 0.08);
+}
+
+.global-chat-input::placeholder {
+  color: #9CA3AF;
+}
+
+/* Thin scrollbar */
+#global-chat-viewport::-webkit-scrollbar { width: 4px; }
+#global-chat-viewport::-webkit-scrollbar-track { background: transparent; }
+#global-chat-viewport::-webkit-scrollbar-thumb {
+  background: #DDE0EB;
+  border-radius: 2px;
+}
+
+textarea { font-family: 'Cairo', sans-serif; }
+button, textarea { outline: none; }
+button:focus, textarea:focus { outline: none; }

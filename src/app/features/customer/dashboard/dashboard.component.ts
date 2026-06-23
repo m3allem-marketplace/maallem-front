@@ -37,8 +37,26 @@ export class CustomerDashboardComponent implements OnInit {
     // Fetch client bookings
     this.bookingService.getBookings().subscribe({
       next: (res) => {
-        const list = res.data?.projects || res.data || [];
-        this.bookings = list;
+        const list = res.data?.bookings || res.data?.projects || (Array.isArray(res.data) ? res.data : []) || [];
+        this.bookings = list.map((b: any) => {
+          if (b.project && typeof b.project === 'object') {
+            return {
+              ...b,
+              title: b.title || b.project.title,
+              description: b.description || b.project.description,
+              category: b.category || b.project.category,
+              location: b.location || b.project.location,
+              budget: b.budget || b.price || b.project.budget,
+              worker: b.worker || b.provider
+            };
+          } else {
+            return {
+              ...b,
+              budget: b.budget || b.price,
+              worker: b.worker || b.provider
+            };
+          }
+        });
         this.calculateStats();
         this.loading = false;
       },

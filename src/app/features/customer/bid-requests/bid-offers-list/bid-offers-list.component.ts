@@ -38,21 +38,40 @@ export class BidOffersListComponent implements OnInit {
     // Fetch project info
     this.projectService.getProjectById(this.projectId).subscribe({
       next: (res) => {
-        this.project = res.data?.project || res.data || res;
+        this.project = res?.data?.project || res?.data || res;
+        // Check if project has offers/proposals directly as fallback
+        const fallbackOffers = this.project?.offers || this.project?.proposals;
+        if ((!this.offers || this.offers.length === 0) && fallbackOffers && fallbackOffers.length > 0) {
+          this.offers = fallbackOffers;
+        }
       },
       error: () => {
         this.seedMockProject();
+        const fallbackOffers = this.project?.offers || this.project?.proposals;
+        if ((!this.offers || this.offers.length === 0) && fallbackOffers && fallbackOffers.length > 0) {
+          this.offers = fallbackOffers;
+        }
       }
     });
 
     // Fetch proposals
     this.proposalService.getProposalsForProject(this.projectId).subscribe({
       next: (res) => {
-        this.offers = res.data?.proposals || res.data || [];
+        const fetchedOffers = res?.data?.proposals || res?.data || [];
+        if (fetchedOffers && fetchedOffers.length > 0) {
+          this.offers = fetchedOffers;
+        } else {
+          this.offers = this.project?.offers || this.project?.proposals || this.offers || [];
+        }
         this.loading = false;
       },
       error: () => {
-        this.seedMockOffers();
+        const fallback = this.project?.offers || this.project?.proposals;
+        if (fallback && fallback.length > 0) {
+          this.offers = fallback;
+        } else {
+          this.seedMockOffers();
+        }
         this.loading = false;
       }
     });
@@ -60,6 +79,12 @@ export class BidOffersListComponent implements OnInit {
 
   acceptOffer(offerId: string): void {
     this.router.navigate(['/services/booking-confirm', this.projectId, offerId]);
+  }
+
+  openChatWithWorker(workerId: any): void {
+    const id = workerId?._id || workerId;
+    if (!id) return;
+    this.router.navigate(['/chat'], { queryParams: { workerId: id, projectId: this.projectId } });
   }
 
   private seedMockProject(): void {

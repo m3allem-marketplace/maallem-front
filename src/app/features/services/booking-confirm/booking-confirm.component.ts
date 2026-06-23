@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, of, switchMap } from 'rxjs';
 import { ProposalService } from '../../../core/services/proposal.service';
+import { ProjectService } from '../../../core/services/project.service';
+import { BookingService } from '../../../core/services/booking.service';
 import { ProposalsActions } from '../../../store/proposals/proposals.actions';
 import { selectProposalsEntities } from '../../../store/proposals/proposals.selectors';
 import { ToastService } from '@m3allem/ui-kit';
@@ -30,6 +32,8 @@ export class BookingConfirmComponent implements OnInit {
     private router: Router,
     private store: Store,
     private proposalService: ProposalService,
+    private projectService: ProjectService,
+    private bookingService: BookingService,
     private toast: ToastService
   ) {}
 
@@ -127,9 +131,30 @@ export class BookingConfirmComponent implements OnInit {
         if (updatedProposal) {
           this.store.dispatch(ProposalsActions.updateProposalStatusSuccess({ proposal: updatedProposal }));
         }
-        this.toast.success('تمت الموافقة على العرض وتأكيد الحجز! 🎉');
-        this.router.navigate(['/services/booking-success', this.proposalId]);
-        this.submitting = false;
+        
+        // Create the actual Booking in escrow (pending_payment)
+        const bookingPayload = {
+          providerId: this.proposal?.worker?._id || this.proposal?.worker,
+          price: this.proposal?.price || 0,
+          projectId: this.projectId,
+          proposalId: this.proposalId
+        };
+
+        this.bookingService.createBooking(bookingPayload).subscribe({
+          next: (bookingRes) => {
+            const createdBooking = bookingRes.data?.booking || bookingRes.data;
+            const finalBookingId = createdBooking?._id || this.proposalId;
+            this.toast.success('تمت الموافقة على العرض وتأكيد الحجز! 🎉');
+            this.router.navigate(['/services/booking-success', finalBookingId]);
+            this.submitting = false;
+          },
+          error: () => {
+            // Fallback: navigate with proposalId if bookings endpoint fails
+            this.toast.success('تمت الموافقة على العرض وتأكيد الحجز! 🎉');
+            this.router.navigate(['/services/booking-success', this.proposalId]);
+            this.submitting = false;
+          }
+        });
       },
       error: (err) => {
         // Fallback successful simulation in local dev mode if API is unavailable

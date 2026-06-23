@@ -20,6 +20,7 @@ import { TierBadgeComponent } from './components/tier-badge/tier-badge.component
 import { WorkerCardComponent } from './components/worker-card/worker-card.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { GlobalAiAssistantComponent } from './components/global-ai-assistant/global-ai-assistant.component';
 
 // ── Shared UI Components ──────────────────────────────────────────────────────
 import { StatusChipComponent } from './ui/status-chip/status-chip.component';
@@ -29,6 +30,7 @@ import { EmptyStateComponent } from './components/empty-state/empty-state.compon
 import { PriceSummaryCardComponent } from './ui/price-summary-card/price-summary-card.component';
 import { StepWizardComponent } from './ui/step-wizard/step-wizard.component';
 import { StatsCardComponent } from './ui/stats-card/stats-card.component';
+import { MapPickerComponent } from './components/map-picker/map-picker.component';
 
 // ── UI Kit ────────────────────────────────────────────────────────────────────
 import {
@@ -47,8 +49,10 @@ const PIPES = [TimeAgoPipe, CurrencyFormatPipe, TruncatePipe];
 const COMPONENTS = [
   AvatarComponent, SearchBarComponent, StarRatingComponent,
   TierBadgeComponent, WorkerCardComponent, NavbarComponent, FooterComponent,
+  GlobalAiAssistantComponent,
   StatusChipComponent, BookingTimelineComponent, ConfirmModalComponent,
-  EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent
+  EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent,
+  MapPickerComponent
 ];
 const UI_KIT = [
   ButtonComponent, InputComponent, ModalComponent,

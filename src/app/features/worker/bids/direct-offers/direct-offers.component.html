@@ -1,0 +1,110 @@
+<div class="direct-offers-container max-w-5xl mx-auto my-8 px-4" style="direction: rtl; text-align: right; font-family: 'Cairo', sans-serif;">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div>
+      <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+        <span class="text-2xl">⚡</span>
+        الطلبات المباشرة
+      </h1>
+      <p class="text-xs text-slate-400 mt-1">طلبات حجز مباشرة أُرسلت لك من العملاء — استجب قبل انتهاء المهلة</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
+    <app-spinner size="lg"></app-spinner>
+    <p class="text-sm font-semibold text-slate-500">جاري تحميل الطلبات المباشرة...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && offers.length === 0" class="empty-state py-20 text-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/20">
+    <div class="text-5xl mb-4">📭</div>
+    <h3 class="text-base font-extrabold text-slate-700 mb-1">لا توجد طلبات مباشرة حالياً</h3>
+    <p class="text-xs text-slate-400">عندما يختارك عميل مباشرةً، ستظهر طلباته هنا وتصلك إشعار فوري.</p>
+  </div>
+
+  <!-- Offers list -->
+  <div *ngIf="!loading && offers.length > 0" class="flex flex-col gap-6">
+    <div *ngFor="let offer of offers"
+      class="offer-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
+    >
+      <!-- Top accent bar -->
+      <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #1B2B6E, #DFBA6B);"></div>
+
+      <div class="p-6">
+        <!-- Header row: title + expiry -->
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
+          <div class="flex flex-col gap-1">
+            <h2 class="text-base font-extrabold text-slate-800">{{ offer.project?.title || 'طلب صيانة مباشر' }}</h2>
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+              <span class="flex items-center gap-1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {{ offer.client?.name || 'العميل' }}
+              </span>
+              <span *ngIf="offer.project?.location?.city" class="flex items-center gap-1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ offer.project?.location?.city }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Expiry countdown chip -->
+          <div *ngIf="getExpiryCountdown(offer)" class="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-extrabold border"
+            [style]="getExpiryCountdown(offer) === 'منتهي الصلاحية' ? 'background:#fef2f2; border-color:#fecaca; color:#dc2626;' : 'background:#fdf4ff; border-color:#e9d5ff; color:#7c3aed;'"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {{ getExpiryCountdown(offer) }}
+          </div>
+        </div>
+
+        <!-- Price & details row -->
+        <div class="flex items-center gap-6 mb-5 p-4 bg-slate-50/60 rounded-2xl border border-slate-100/50">
+          <div class="flex flex-col">
+            <span class="text-[10px] text-slate-400 mb-0.5">قيمة الطلب المتفق عليه</span>
+            <span class="text-lg font-extrabold text-emerald-600">{{ offer.price | currencyFormat }}</span>
+          </div>
+          <div *ngIf="offer.project?.location?.address" class="flex flex-col border-r border-slate-200 pr-6">
+            <span class="text-[10px] text-slate-400 mb-0.5">العنوان</span>
+            <span class="text-xs font-bold text-slate-700">{{ offer.project?.location?.address }}</span>
+          </div>
+          <button (click)="viewTaskDetail(offer)" class="mr-auto text-[10px] font-bold text-slate-400 hover:text-amber-500 transition-colors cursor-pointer border-none bg-transparent flex items-center gap-1">
+            عرض التفاصيل
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex flex-wrap gap-3">
+          <!-- Chat / Negotiation -->
+          <button
+            (click)="openChat(offer)"
+            class="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-5 py-3 text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white rounded-xl border-none cursor-pointer transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            بدء المحادثة والتفاوض
+          </button>
+
+          <!-- Accept -->
+          <button
+            (click)="acceptOffer(offer)"
+            class="flex items-center justify-center gap-2 px-5 py-3 text-xs font-extrabold bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl border-none cursor-pointer transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            قبول الطلب
+          </button>
+
+          <!-- Reject -->
+          <button
+            (click)="rejectOffer(offer)"
+            class="flex items-center justify-center gap-2 px-5 py-3 text-xs font-extrabold border border-red-200 bg-red-50/50 hover:bg-red-50 text-red-600 rounded-xl cursor-pointer transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            رفض الطلب
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

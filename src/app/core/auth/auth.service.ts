@@ -59,7 +59,11 @@ export class AuthService {
   refreshToken(): Observable<any> {
     const refreshToken = this.tokenStorage.getRefreshToken();
     const headers      = refreshToken ? new HttpHeaders({ Authorization: `Bearer ${refreshToken}` }) : undefined;
-    return this.http.post<any>(`${environment.apiUrl}/auth/refresh-token`, {}, { headers });
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/refresh-token`,
+      { refreshToken },
+      { headers }
+    );
   }
 
   /** Fetches authenticated user profile — used by NgRx loadCurrentUser effect */

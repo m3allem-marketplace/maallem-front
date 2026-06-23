@@ -61,14 +61,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notifications$ = this.store.select(selectAllNotifications);
     this.unreadCount$ = this.store.select(selectUnreadCount);
 
-    // Subscribe for local template usage (for @for / @if control flow)
     this.sub = this.notifications$.subscribe(n => {
-      // Seed mock if store is empty
-      if (n.length === 0) {
-        this.notifications = this.getMockNotifications();
-      } else {
-        this.notifications = n;
-      }
+      this.notifications = n || [];
     });
   }
 
@@ -90,6 +84,20 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notifications = this.notifications.map(n => ({ ...n, isRead: true }));
   }
 
+  getIconBgClass(type: string): string {
+    const map: Record<string, string> = {
+      BOOKING_CONFIRMED: 'bg-emerald-50 text-emerald-600 border border-emerald-100/60',
+      BOOKING_COMPLETED: 'bg-emerald-50 text-emerald-600 border border-emerald-100/60',
+      BOOKING_CANCELLED: 'bg-rose-50 text-rose-600 border border-rose-100/60',
+      BID_RECEIVED:      'bg-amber-50 text-amber-600 border border-amber-100/60',
+      BID_ACCEPTED:      'bg-amber-50 text-amber-600 border border-amber-100/60',
+      BID_REJECTED:      'bg-rose-50 text-rose-600 border border-rose-100/60',
+      REVIEW_RECEIVED:   'bg-indigo-50 text-indigo-600 border border-indigo-100/60',
+      SYSTEM:            'bg-slate-50 text-slate-600 border border-slate-100/60',
+    };
+    return map[type] || 'bg-slate-50 text-slate-600 border border-slate-100/60';
+  }
+
   icon(type: NotificationType | string): string {
     const map: Record<string, string> = {
       BOOKING_CONFIRMED: '📅',
@@ -108,43 +116,5 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
   get unreadCount(): number {
     return this.notifications.filter(n => !n.isRead).length;
-  }
-
-  private getMockNotifications(): Notification[] {
-    return [
-      {
-        id: '1',
-        userId: 'user-1',
-        type: NotificationType.BID_ACCEPTED,
-        title: 'تم قبول عرضك',
-        body: 'قبل أحمد العميل عرضك على وظيفة "تصليح خطوط السباكة"',
-        referenceId: 'bid-1',
-        referenceType: 'bid_request',
-        isRead: false,
-        createdAt: new Date(Date.now() - 2 * 60000).toISOString()
-      },
-      {
-        id: '2',
-        userId: 'user-1',
-        type: NotificationType.BOOKING_CONFIRMED,
-        title: 'تأكيد الحجز',
-        body: 'تم تأكيد حجزك بنجاح. سيصل المعلم يوم الخميس القادم.',
-        referenceId: 'booking-1',
-        referenceType: 'booking',
-        isRead: false,
-        createdAt: new Date(Date.now() - 15 * 60000).toISOString()
-      },
-      {
-        id: '3',
-        userId: 'user-1',
-        type: NotificationType.REVIEW_RECEIVED,
-        title: 'تقييم جديد',
-        body: 'تلقيت تقييماً من محمد الزبون بنسبة 5 نجوم ⭐',
-        referenceId: 'review-1',
-        referenceType: 'review',
-        isRead: true,
-        createdAt: new Date(Date.now() - 2 * 3600000).toISOString()
-      }
-    ];
   }
 }

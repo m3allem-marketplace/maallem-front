@@ -1,0 +1,130 @@
+<div class="chat-container container py-6 mx-auto px-4" style="direction: rtl; text-align: right; font-family: 'Cairo', sans-serif;">
+  
+  <div class="chat-layout-card bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden flex">
+    
+    <!-- Conversations Sidebar (Right side in RTL) -->
+    <div class="conversations-sidebar border-l border-slate-100 flex flex-col">
+      <div class="sidebar-header p-5 border-b border-slate-50">
+        <h2 class="text-lg font-bold text-slate-800">المحادثات / Conversations</h2>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loadingConversations" class="p-8 text-center flex flex-col items-center justify-center gap-3">
+        <span class="text-xs text-slate-400">جاري تحميل المحادثات...</span>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loadingConversations && conversations.length === 0" class="p-8 text-center text-slate-400 text-xs font-semibold">
+        💡 لا توجد محادثات نشطة حالياً
+      </div>
+
+      <!-- Conversations Feed List -->
+      <div class="conversations-list flex-1 overflow-y-auto" *ngIf="conversations.length > 0">
+        <div 
+          *ngFor="let conv of conversations"
+          (click)="selectConversation(conv)"
+          class="conversation-item p-4 flex items-center justify-between gap-3 border-b border-slate-50/50 hover:bg-slate-50/50 cursor-pointer transition-colors"
+          [class.active-item]="selectedConversation?._id === conv._id"
+        >
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <div class="avatar-circle w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 shrink-0">
+              {{ getParticipantName(conv).charAt(0) }}
+            </div>
+            
+            <div class="min-w-0 flex-1">
+              <h4 class="text-xs font-bold text-slate-800 truncate">{{ getParticipantName(conv) }}</h4>
+              <p class="text-[10px] text-slate-400 truncate mt-0.5" *ngIf="conv.lastMessage">
+                {{ conv.lastMessage?.content }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-end gap-1 shrink-0">
+            <span class="text-[9px] text-slate-400" *ngIf="conv.lastMessageAt">
+              {{ conv.lastMessageAt | date:'shortTime' }}
+            </span>
+            <span *ngIf="getUnreadCount(conv) > 0" class="unread-badge bg-amber-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold w-4 h-4">
+              {{ getUnreadCount(conv) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Chat Panel (Left side in RTL) -->
+    <div class="chat-thread-panel flex-1 flex flex-col bg-slate-50/20">
+      
+      <ng-container *ngIf="selectedConversation; else noSelectionPlaceholder">
+        
+        <!-- Thread Header -->
+        <div class="thread-header p-5 border-b border-slate-100 bg-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="avatar-circle w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600">
+              {{ getParticipantName(selectedConversation).charAt(0) }}
+            </div>
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-800">{{ getParticipantName(selectedConversation) }}</h3>
+              <span class="text-[10px] text-slate-400 font-semibold">{{ getParticipantRole(selectedConversation) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message History Bubble list -->
+        <div #messagesContainer class="messages-list flex-1 p-6 overflow-y-auto flex flex-col gap-4">
+          <div *ngIf="loadingMessages" class="p-8 text-center text-xs text-slate-400">
+            جاري تحميل الرسائل...
+          </div>
+
+          <ng-container *ngIf="!loadingMessages">
+            <div 
+              *ngFor="let msg of messages"
+              class="message-bubble-wrapper flex"
+              [class.sent-by-me]="msg.sender?._id === currentUserId || msg.sender === currentUserId"
+              [class.received-by-me]="msg.sender?._id !== currentUserId && msg.sender !== currentUserId"
+            >
+              <div class="bubble-content max-w-[70%] p-3.5 rounded-2xl shadow-sm text-xs leading-relaxed">
+                <p class="m-0 font-medium whitespace-pre-line">{{ msg.content }}</p>
+                <span class="bubble-time text-[9px] text-slate-400 block mt-1 text-left">
+                  {{ msg.createdAt | date:'shortTime' }}
+                </span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Message Input Footer Bar -->
+        <div class="thread-input-footer p-4 border-t border-slate-100 bg-white flex items-center gap-3">
+          <input 
+            type="text" 
+            [(ngModel)]="newMessageContent" 
+            (keyup.enter)="sendMessage()"
+            placeholder="اكتب رسالتك هنا... / Type message..."
+            class="flex-1 border border-slate-200 outline-none rounded-xl px-4 py-3 text-xs font-semibold focus:border-amber-400 bg-slate-50/50"
+            [disabled]="sendingMessage"
+          >
+          
+          <button 
+            (click)="sendMessage()" 
+            [disabled]="!newMessageContent.trim() || sendingMessage"
+            class="send-message-btn px-6 py-3 bg-amber-400 hover:bg-amber-500 font-bold text-xs text-slate-800 rounded-xl cursor-pointer border-none transition-colors shrink-0"
+          >
+            <span *ngIf="!sendingMessage">إرسال / Send</span>
+            <span *ngIf="sendingMessage">جاري...</span>
+          </button>
+        </div>
+
+      </ng-container>
+
+      <ng-template #noSelectionPlaceholder>
+        <div class="no-selection-placeholder flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">
+          <span class="text-4xl mb-4">💬</span>
+          <h3 class="text-sm font-extrabold text-slate-700 mb-1">المحادثات المباشرة / Live Chat</h3>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed">اختر محادثة من القائمة الجانبية لبدء التواصل والتفاوض مع الحرفي أو العميل مباشرة.</p>
+        </div>
+      </ng-template>
+
+    </div>
+
+  </div>
+
+</div>

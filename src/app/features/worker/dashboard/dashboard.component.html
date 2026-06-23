@@ -8,11 +8,11 @@
           <svg class="dashboard-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
           لوحة تحكم الحرفي
         </h1>
-        <p>مرحباً بك — إليك ملخص نشاطك الأخير وأحدث الفرص المتاحة</p>
+        <p>مرحباً بك — إليك ملخص نشاطك الأخير وأحدث مزادات العمل المتاحة</p>
       </div>
       <button class="btn-browse-jobs" (click)="browsAllJobs()">
         <svg class="premium-inline-icon inline-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        استعراض الوظائف المتاحة
+        تصفح المزادات المتاحة
       </button>
     </div>
   </div>
@@ -25,7 +25,7 @@
       </div>
       <div class="stat-body">
         <div class="stat-value">{{ totalBids }}</div>
-        <div class="stat-label">إجمالي العروض المقدمة</div>
+        <div class="stat-label">إجمالي العروض في المزادات</div>
       </div>
     </div>
     <div class="stat-card accent-green">
@@ -64,15 +64,52 @@
   </div>
 
   <div class="dashboard-body" *ngIf="!loading">
+    <!-- ── Incoming Direct Reservations ────────────────────────────────── -->
+    <section class="section-card reservation-card" *ngIf="incomingBookings.length > 0" style="grid-column: 1 / -1; margin-bottom: 1rem;">
+      <div class="section-header">
+        <h2 class="section-title text-purple-900" style="color: #6b21a8; display: flex; align-items: center; gap: 8px;">
+          <span>⚡</span> طلبات خدماتي الواردة (الحجز المباشر) ({{ incomingBookings.length }})
+        </h2>
+        <span class="pulse-badge">طلب جديد</span>
+      </div>
+
+      <div class="bids-list">
+        <div 
+          *ngFor="let reservation of incomingBookings" 
+          class="bid-row reservation-row cursor-pointer" 
+          style="cursor: pointer; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border: 1px solid #f0abfc;"
+          (click)="onReservationClick(reservation)"
+        >
+          <div class="bid-icon" style="background: #fdf4ff; color: #c084fc; border-color: #f0abfc;">
+            ⚡
+          </div>
+          <div class="bid-info">
+            <div class="bid-title" style="font-weight: 800; color: #581c87;">{{ reservation.title || reservation.project?.title }}</div>
+            <div class="bid-meta">
+              <span style="color: #701a75; font-weight: 700;">العميل: {{ reservation.client?.name }}</span>
+              <span class="dot-sep">•</span>
+              <span>{{ reservation.createdAt | timeAgo }}</span>
+            </div>
+          </div>
+          <div class="bid-right">
+            <div class="bid-price" style="color: #701a75; font-weight: 800;">{{ reservation.price || reservation.budget }} ج.م</div>
+            <div class="bid-status" style="background: #fdf4ff; color: #a21caf; border: 1px solid #f0abfc; padding: 0.25rem 0.75rem; border-radius: 999px;">
+              خدماتي (طلب مباشر)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Recent Bids ───────────────────────────────────────────── -->
     <section class="section-card">
       <div class="section-header">
-        <h2 class="section-title">عروضي الأخيرة</h2>
+        <h2 class="section-title">عروضي وطلباتي الأخيرة</h2>
         <button class="section-link" (click)="viewMyBids()">عرض الكل</button>
       </div>
 
       <div class="bids-list" *ngIf="myBids.length > 0">
-        <div class="bid-row" *ngFor="let bid of myBids">
+        <div class="bid-row cursor-pointer" style="cursor: pointer; transition: background-color 0.2s;" *ngFor="let bid of myBids" (click)="onBidClick(bid)">
           <div class="bid-icon" [ngSwitch]="bid.category">
             <svg *ngSwitchCase="'plumbing'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="premium-icon cat-svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
             <svg *ngSwitchCase="'electricity'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="premium-icon cat-svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -86,17 +123,22 @@
             <svg *ngSwitchDefault viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="premium-icon cat-svg"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
           </div>
           <div class="bid-info">
-            <div class="bid-title">{{ bid.projectTitle }}</div>
+            <div class="bid-title">{{ bid.projectTitle || bid.project?.title }}</div>
             <div class="bid-meta">
-              <span>{{ bid.client?.name }}</span>
+              <span>{{ bid.client?.name || bid.project?.client?.name }}</span>
               <span class="dot-sep">•</span>
               <span>{{ bid.createdAt | timeAgo }}</span>
             </div>
           </div>
-          <div class="bid-right">
+          <div class="bid-right" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
             <div class="bid-price">{{ bid.price | currencyFormat }}</div>
-            <div class="bid-status" [class]="'status-' + bid.status">
-              {{ getBidStatusLabel(bid.status) }}
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+              <span *ngIf="bid.isDirect" style="background: #fdf4ff; color: #a21caf; border: 1px solid #f0abfc; font-size: 9px; padding: 2px 6px; border-radius: 6px; font-weight: 700; font-family: 'Cairo', sans-serif; white-space: nowrap;">
+                ⚡ حجز مباشر
+              </span>
+              <div class="bid-status" [class]="'status-' + bid.status" style="margin-top: 0;">
+                {{ getBidStatusLabel(bid.status) }}
+              </div>
             </div>
           </div>
         </div>
@@ -106,8 +148,8 @@
         *ngIf="myBids.length === 0"
         icon="📋"
         title="لا توجد عروض بعد"
-        subtitle="ابدأ بتقديم عرضك على أول وظيفة مناسبة لك"
-        actionLabel="استعراض الوظائف"
+        subtitle="ابدأ بتقديم عرضك على أول مزاد مناسب لك"
+        actionLabel="تصفح المزادات"
         (actionClick)="browsAllJobs()"
       ></app-empty-state>
     </section>
@@ -115,7 +157,7 @@
     <!-- ── Open Jobs Preview ────────────────────────────────────── -->
     <section class="section-card">
       <div class="section-header">
-        <h2 class="section-title">وظائف جديدة متاحة</h2>
+        <h2 class="section-title">مزادات جديدة متاحة</h2>
         <button class="section-link" (click)="browsAllJobs()">استعراض الكل</button>
       </div>
 
@@ -146,7 +188,7 @@
               class="btn-bid"
               (click)="router.navigate(['/worker/open-jobs', job._id, 'bid'])"
             >
-              تقديم عرض
+              تقديم عرض سعر
             </button>
           </div>
         </div>
@@ -155,8 +197,8 @@
       <app-empty-state
         *ngIf="openJobs.length === 0"
         icon="💼"
-        title="لا توجد وظائف جديدة الآن"
-        subtitle="سيتم إخطارك فور نشر وظائف جديدة تتناسب مع تخصصك"
+        title="لا توجد مزادات جديدة حالياً"
+        subtitle="سيتم إخطارك فور بدء مزادات جديدة تتناسب مع تخصصك"
       ></app-empty-state>
     </section>
   </div>

@@ -1,61 +1,33 @@
-// ─── TASK 1.2 ── Booking Model ───────────────────────────────────────────────
+import { UserPublic } from './user.model';
 
-export enum BookingStatus {
-  PENDING     = 'PENDING',
-  CONFIRMED   = 'CONFIRMED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED   = 'COMPLETED',
-  CANCELLED   = 'CANCELLED',
-}
-
-export interface BookingAddress {
-  street:       string;
-  city:         string;
-  district:     string;
-  coordinates?: { lat: number; lng: number };
-}
-
-export interface BookingExtra {
-  label: string;
-  price: number;
-}
+export type BookingStatus =
+  | 'pending_payment'
+  | 'paid'
+  | 'delivered'
+  | 'completed'
+  | 'disputed'
+  | 'refunded'
+  | 'cancelled';
 
 export interface Booking {
-  id:          string;
-  customerId:  string;
-  workerId:    string;
-  serviceId:   string;
-  status:      BookingStatus;
-  scheduledAt: string;           // ISO 8601
-  address:     BookingAddress;
-  notes:       string | null;
-  basePrice:   number;
-  extras:      BookingExtra[];
-  totalPrice:  number;
-  createdAt:   string;
-  updatedAt:   string;
+  _id: string;
+  client: UserPublic;
+  provider: UserPublic;
+  project?: string | null;
+  proposal?: string | null;
+  service?: string | null;
+  price: number;
+  escrowAmount: number;
+  commissionAmount: number;
+  status: BookingStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateBookingPayload {
-  workerId:    string;
-  serviceId:   string;
-  scheduledAt: string;
-  address:     BookingAddress;
-  notes?:      string;
+  providerId: string;
+  price: number;
+  projectId?: string;
+  proposalId?: string;
+  serviceId?: string;
 }
-
-export interface CancelBookingPayload {
-  bookingId: string;
-  reason:    string;
-}
-
-export const CANCEL_REASONS = [
-  'Change of plans',
-  'Found another worker',
-  'Price too high',
-  'Worker not responding',
-  'Scheduled wrong date',
-  'Other',
-] as const;
-
-export type CancelReason = typeof CANCEL_REASONS[number];

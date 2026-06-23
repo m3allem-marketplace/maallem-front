@@ -27,6 +27,11 @@ import { NotificationsEffects } from './store/notifications/notifications.effect
 import { authReducer }          from '../store/auth/auth.reducer';
 import { AuthEffects }          from '../store/auth/auth.effects';
 
+// ── Booking feature slice ────────────────────────────────────────────
+import { bookingReducer }       from '../store/booking/booking.reducer';
+import { BookingEffects }       from '../store/booking/booking.effects';
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -63,6 +68,11 @@ import { AuthEffects }          from '../store/auth/auth.effects';
     // ── Notifications feature slice ───────────────────────────────────
     StoreModule.forFeature('notifications', notificationsReducer),
     EffectsModule.forFeature([NotificationsEffects]),
+
+    // ── Booking feature slice ─────────────────────────────────────────
+    StoreModule.forFeature('booking', bookingReducer),
+    EffectsModule.forFeature([BookingEffects]),
+
 
     // ── Redux DevTools ────────────────────────────────────────────────
     StoreDevtoolsModule.instrument({

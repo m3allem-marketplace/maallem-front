@@ -1,0 +1,151 @@
+<div class="profile-edit-container max-w-3xl mx-auto my-8 px-4" style="direction: rtl; text-align: right; font-family: 'Cairo', sans-serif;">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+      <svg class="w-6 h-6 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      تعديل الملف الشخصي
+    </h1>
+    <p class="text-xs text-slate-400 mt-1">حدّث بياناتك وصورتك وموقعك لجذب المزيد من العملاء</p>
+  </div>
+
+  <div *ngIf="loading" class="flex justify-center py-16">
+    <app-spinner size="lg"></app-spinner>
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="saveProfile()" class="flex flex-col gap-8">
+
+    <!-- ── Section 1: Avatar ─────────────────────────────── -->
+    <div class="profile-section bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <h2 class="text-sm font-extrabold text-slate-700 mb-5 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold text-white" style="background: var(--color-primary);">1</span>
+        صورة الملف الشخصي
+      </h2>
+
+      <div class="flex items-center gap-6">
+        <!-- Preview circle -->
+        <div class="relative shrink-0">
+          <div class="w-24 h-24 rounded-full border-4 border-amber-200 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar preview" class="w-full h-full object-cover">
+            <svg *ngIf="!avatarPreview" class="w-10 h-10 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <button *ngIf="avatarPreview" type="button" (click)="removeAvatar()"
+            class="absolute -top-1 -left-1 w-6 h-6 flex items-center justify-center rounded-full bg-red-500 text-white border-2 border-white text-xs cursor-pointer">
+            ×
+          </button>
+        </div>
+
+        <!-- Upload area -->
+        <div class="flex flex-col gap-3">
+          <label class="avatar-upload-label flex items-center gap-2 px-5 py-3 text-xs font-bold rounded-xl cursor-pointer transition-all border-2 border-dashed border-slate-200 hover:border-amber-400 hover:bg-amber-50/40"
+            style="color: var(--color-primary);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            اختر صورة
+            <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden" (change)="onAvatarSelected($event)">
+          </label>
+          <p class="text-[10px] text-slate-400">PNG, JPG, أو WebP — حتى 5 ميجابايت</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 2: Bio & Basic Info ─────────────────────── -->
+    <div class="profile-section bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <h2 class="text-sm font-extrabold text-slate-700 mb-5 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold text-white" style="background: var(--color-primary);">2</span>
+        المعلومات الأساسية
+      </h2>
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-slate-600">نبذة شخصية</label>
+          <textarea
+            [(ngModel)]="bio" name="bio"
+            rows="4"
+            placeholder="اكتب نبذة مختصرة عن خبراتك وما يميزك كحرفي..."
+            class="w-full px-4 py-3 text-sm border-2 border-slate-200 rounded-xl bg-slate-50/40 focus:outline-none focus:border-amber-400 transition-colors resize-none font-semibold text-slate-700"
+          ></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-slate-600">سنوات الخبرة</label>
+            <input type="number" [(ngModel)]="yearsExperience" name="yearsExperience" min="0" max="50"
+              class="w-full px-4 py-2.5 text-sm border-2 border-slate-200 rounded-xl bg-slate-50/40 focus:outline-none focus:border-amber-400 transition-colors font-bold text-slate-700"
+              style="direction:ltr; text-align:right;">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-slate-600">سعر الساعة (ج.م)</label>
+            <input type="number" [(ngModel)]="hourlyRate" name="hourlyRate" min="0"
+              class="w-full px-4 py-2.5 text-sm border-2 border-slate-200 rounded-xl bg-slate-50/40 focus:outline-none focus:border-amber-400 transition-colors font-bold text-slate-700"
+              style="direction:ltr; text-align:right;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 3: Specializations ─────────────────────── -->
+    <div class="profile-section bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <h2 class="text-sm font-extrabold text-slate-700 mb-5 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold text-white" style="background: var(--color-primary);">3</span>
+        التخصصات
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          *ngFor="let spec of specializationOptions"
+          (click)="toggleSpecialization(spec.value)"
+          class="spec-chip px-4 py-2 text-xs font-bold rounded-xl border-2 cursor-pointer transition-all"
+          [class.selected]="isSelected(spec.value)"
+        >{{ spec.label }}</button>
+      </div>
+    </div>
+
+    <!-- ── Section 4: Location Map ─────────────────────────── -->
+    <div class="profile-section bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <h2 class="text-sm font-extrabold text-slate-700 mb-2 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold text-white" style="background: var(--color-primary);">4</span>
+        موقع الخدمة
+      </h2>
+      <p class="text-xs text-slate-400 mb-4">اضغط على الخريطة لتحديد منطقة تقديم الخدمة. يساعد هذا العملاء القريبين منك على العثور عليك أولاً.</p>
+      <app-map-picker
+        [lat]="currentLat"
+        [lng]="currentLng"
+        height="300px"
+        (locationChange)="onLocationChange($event)"
+      ></app-map-picker>
+    </div>
+
+    <!-- Save button -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        [disabled]="submitting"
+        class="flex items-center gap-2 px-8 py-3.5 text-sm font-extrabold rounded-xl border-none cursor-pointer transition-all disabled:opacity-60"
+        style="background: var(--color-primary-dark); color: white;"
+      >
+        <app-spinner *ngIf="submitting" size="sm" color="white"></app-spinner>
+        <svg *ngIf="!submitting" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        {{ submitting ? 'جاري الحفظ...' : 'حفظ التغييرات' }}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<style>
+.profile-section { transition: box-shadow 0.2s; }
+.profile-section:hover { box-shadow: 0 4px 20px rgba(27,43,110,0.06); }
+.spec-chip {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+.spec-chip:hover {
+  border-color: #DFBA6B;
+  background: #fefce8;
+  color: #1B2B6E;
+}
+.spec-chip.selected {
+  background: #1B2B6E;
+  border-color: #1B2B6E;
+  color: white;
+}
+</style>

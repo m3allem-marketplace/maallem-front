@@ -15,28 +15,37 @@ export class TokenStorageService {
     return this.isBrowser ? localStorage.getItem('access_token') : null;
   }
 
-  setAccessToken(token: string): void {
-    if (this.isBrowser) localStorage.setItem('access_token', token);
+  setAccessToken(token: string | null | undefined): void {
+    if (this.isBrowser) {
+      if (token) localStorage.setItem('access_token', token);
+      else localStorage.removeItem('access_token');
+    }
   }
 
   getRefreshToken(): string | null {
     return this.isBrowser ? localStorage.getItem('refresh_token') : null;
   }
 
-  setRefreshToken(token: string): void {
-    if (this.isBrowser) localStorage.setItem('refresh_token', token);
+  setRefreshToken(token: string | null | undefined): void {
+    if (this.isBrowser) {
+      if (token) localStorage.setItem('refresh_token', token);
+      else localStorage.removeItem('refresh_token');
+    }
   }
 
   // Used by Engineer 2's auth.effects.ts
-  setTokens(accessToken: string, refreshToken: string): void {
+  setTokens(accessToken: string | null | undefined, refreshToken: string | null | undefined): void {
     if (this.isBrowser) {
-      localStorage.setItem('access_token', accessToken);
-      localStorage.setItem('refresh_token', refreshToken);
+      if (accessToken) localStorage.setItem('access_token', accessToken);
+      else localStorage.removeItem('access_token');
+
+      if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+      else localStorage.removeItem('refresh_token');
     }
   }
 
   // Alias for our code that used saveTokens()
-  saveTokens(accessToken: string, refreshToken: string): void {
+  saveTokens(accessToken: string | null | undefined, refreshToken: string | null | undefined): void {
     this.setTokens(accessToken, refreshToken);
   }
 

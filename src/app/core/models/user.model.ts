@@ -33,6 +33,13 @@ export interface CustomerProfile {
   totalSpend:     number;
 }
 
+export interface WorkerAvailabilitySlot {
+  dayOfWeek: number; // 0-6
+  startTime: string; // "HH:MM"
+  endTime: string;   // "HH:MM"
+  isActive: boolean;
+}
+
 export interface WorkerProfile {
   _id?:               string;
   user:               UserPublic;
@@ -44,9 +51,13 @@ export interface WorkerProfile {
   phone?:             string;
   portfolioImages?:   string[];
   isProfileComplete?: boolean;
+  availabilities?:    WorkerAvailabilitySlot[];
+  hourlyRate?:        number;
+  offersFlatRate?:    boolean;
   createdAt?:         string;
   updatedAt?:         string;
 }
+
 
 export interface CompanyProfile {
   _id?:               string;

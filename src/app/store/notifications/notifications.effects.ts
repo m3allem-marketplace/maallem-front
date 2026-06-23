@@ -11,7 +11,12 @@ export class NotificationsEffects {
       ofType(NotificationsActions.loadNotifications),
       mergeMap(() =>
         this.notificationService.getNotifications().pipe(
-          map((notifications) => NotificationsActions.loadNotificationsSuccess({ notifications })),
+          map((res: any) => {
+            let notifications = res?.data?.notifications || res?.data || res || [];
+            // Ensure ID mapping in case backend uses _id
+            notifications = notifications.map((n: any) => ({ ...n, id: n._id || n.id }));
+            return NotificationsActions.loadNotificationsSuccess({ notifications });
+          }),
           catchError((error) =>
             of(
               NotificationsActions.loadNotificationsFailure({

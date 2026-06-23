@@ -1,17 +1,22 @@
 import { Component, HostListener, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { NotificationComponent } from '../notification/notification.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { HasRoleDirective } from '../../directives/has-role.directive';
 import { UserContextService } from '../../../core/services/user-context.service';
+import { ChatService } from '../../../core/services/chat.service';
+import { PusherService } from '../../../core/services/pusher.service';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import * as AuthActions from '../../../../store/auth/auth.actions';
+import { NotificationsActions } from '../../../store/notifications/notifications.actions';
+import { selectUnreadCount } from '../../../store/notifications/notifications.selectors';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, AvatarComponent,NotificationComponent, ClickOutsideDirective],
+  imports: [CommonModule, RouterModule, AvatarComponent, NotificationComponent, ClickOutsideDirective, HasRoleDirective],
   templateUrl: './navbar.component.html',
   styles: [`
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Onest:wght@400;500;600;700&family=Rethink+Sans:wght@400;600;700;800&display=swap');
@@ -232,6 +237,35 @@ import * as AuthActions from '../../../../store/auth/auth.actions';
       100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
     }
 
+    /* ── Chat Icon Button ── */
+    .chat-icon-btn {
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .chat-icon-btn:hover {
+      background: var(--color-primary-muted) !important;
+      transform: scale(1.05);
+    }
+
+    .chat-icon-btn:hover svg {
+      animation: chat-bounce 500ms ease-in-out;
+    }
+
+    @keyframes chat-bounce {
+      0%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-3px); }
+      60% { transform: translateY(1px); }
+    }
+
+    .chat-badge {
+      animation: badge-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes badge-pop {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+
     /* ── Dropdown ── */
     .dropdown-btn {
       border: 1px solid transparent !important;
@@ -356,25 +390,161 @@ import * as AuthActions from '../../../../store/auth/auth.actions';
 export class NavbarComponent implements OnInit, OnDestroy {
   private readonly userContext = inject(UserContextService);
   private readonly store = inject(Store);
+  private readonly chatService = inject(ChatService);
+  private readonly pusherService = inject(PusherService);
+  private readonly router = inject(Router);
   private userSub?: Subscription;
+  private pusherSub?: Subscription;
+  private notificationsSub?: Subscription;
 
   currentUser: any = null;
   isMenuOpen     = false;
   isDropdownOpen = false;
   isScrolled     = false;
   isNotificationOpen = false;
+  isChatOpen     = false;
+  unreadChatCount = 0;
+  unreadNotificationsCount = 0;
+  previewConversations: any[] = [];
+  isDesktop = true;
 
   @HostListener('window:scroll')
   onScroll(): void { this.isScrolled = window.scrollY > 20; }
 
+  @HostListener('window:resize')
+  onResize(): void { this.checkViewport(); }
+
+  private checkViewport(): void {
+    this.isDesktop = window.innerWidth >= 1024;
+  }
+
   ngOnInit(): void {
+    this.checkViewport();
+    // Subscribe to unread notification count
+    this.notificationsSub = this.store.select(selectUnreadCount).subscribe(count => {
+      this.unreadNotificationsCount = count;
+    });
+
     this.userSub = this.userContext.currentUser$.subscribe(user => {
       this.currentUser = user;
+
+      if (user?._id) {
+        console.log(`[Navbar] Connecting Pusher for user ID: ${user._id}`);
+        this.pusherService.connect(user._id);
+        this.loadUnreadChatCount();
+        
+        console.log('[Navbar] Listening to Pusher notification$ stream...');
+        this.pusherSub = this.pusherService.notification$.subscribe(evt => {
+          console.log('[Navbar] Received incoming Pusher event:', evt);
+          
+          if (evt.event === 'new-notification') {
+            // Extract the real-time notification payload directly to save an HTTP request
+            const rawNotif = evt.data?.notification || evt.data;
+            if (rawNotif) {
+              const mappedNotif: any = {
+                id: rawNotif._id || `notif-${Date.now()}`,
+                userId: rawNotif.recipient || 'me',
+                type: rawNotif.type || 'SYSTEM',
+                title: rawNotif.title || 'إشعار جديد',
+                body: rawNotif.message || '',
+                referenceId: rawNotif.data?.projectId || rawNotif.data?.conversationId || null,
+                referenceType: null,
+                isRead: rawNotif.isRead || false,
+                createdAt: rawNotif.createdAt || new Date().toISOString()
+              };
+              this.store.dispatch(NotificationsActions.receiveNotification({ notification: mappedNotif }));
+            }
+            
+            // If the notification happens to be about a chat message, also refresh chat counts
+            if (evt.data?.notification?.type === 'new_message') {
+              this.loadUnreadChatCount();
+            }
+          } else if (evt.event === 'new-message') {
+            const msg = evt.data?.message || evt.data;
+            const senderId = msg?.sender?._id || msg?.sender;
+            
+            // Only increment badge if someone ELSE sent the message
+            if (senderId !== this.currentUser?._id) {
+              this.unreadChatCount++;
+              this.loadUnreadChatCount();
+            }
+          }
+        });
+      } else {
+        console.log('[Navbar] User logged out, disconnecting Pusher.');
+        this.pusherService.disconnect();
+        this.unreadChatCount = 0;
+        this.previewConversations = [];
+        this.pusherSub?.unsubscribe();
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
+    this.pusherSub?.unsubscribe();
+    this.notificationsSub?.unsubscribe();
+  }
+
+  /** Load total unread message count and latest conversations for preview dropdown */
+  loadUnreadChatCount(): void {
+    this.chatService.getConversations().subscribe({
+      next: (res: any) => {
+        const convs: any[] = res?.data?.conversations || res?.data || res || [];
+        
+        // Listen to all conversations instantly to get global live badges
+        convs.forEach(c => this.pusherService.subscribeToConversation(c._id));
+
+        const role = this.currentUser?.role;
+        this.unreadChatCount = convs.reduce((total: number, c: any) => {
+          const unread = role === 'user' ? c.unreadCount?.client : c.unreadCount?.worker;
+          return total + (unread || 0);
+        }, 0);
+        this.previewConversations = convs.slice(0, 5);
+      },
+      error: () => {
+        this.unreadChatCount = 0;
+        this.previewConversations = [];
+      }
+    });
+  }
+
+  toggleChatDropdown(): void {
+    this.isNotificationOpen = false;
+    this.isDropdownOpen = false;
+    this.isChatOpen = !this.isChatOpen;
+    if (this.isChatOpen) {
+      this.loadUnreadChatCount();
+    }
+  }
+
+  navigateToConversation(conv: any): void {
+    this.isChatOpen = false;
+    this.router.navigate(['/chat'], {
+      queryParams: {
+        conversationId: conv._id
+      }
+    });
+  }
+
+  getParticipantName(conv: any): string {
+    const role = this.currentUser?.role;
+    if (role === 'user') {
+      return conv.worker?.name || 'حرفي معلّم';
+    } else {
+      return conv.client?.name || 'عميل معلّم';
+    }
+  }
+
+  getUnreadCount(conv: any): number {
+    if (!conv.unreadCount) return 0;
+    const role = this.currentUser?.role;
+    return role === 'user' ? conv.unreadCount.client : conv.unreadCount.worker;
+  }
+
+  /** Call when user opens the chat page to clear the badge */
+  clearUnreadChat(): void {
+    this.unreadChatCount = 0;
   }
 
   get isGuest(): boolean { return !this.currentUser; }

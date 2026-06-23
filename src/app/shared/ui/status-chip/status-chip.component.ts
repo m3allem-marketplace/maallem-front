@@ -37,6 +37,16 @@ export class StatusChipComponent {
         return 'مكتمل';
       case 'cancelled':
         return 'ملغي';
+      case 'pending_payment':
+        return 'بانتظار الدفع';
+      case 'paid':
+        return 'مدفوع (جاري)';
+      case 'delivered':
+        return 'تم التسليم';
+      case 'disputed':
+        return 'نزاع نشط';
+      case 'refunded':
+        return 'تم الاسترجاع';
       default:
         return this.status;
     }
@@ -50,21 +60,25 @@ export class StatusChipComponent {
         return 'variant-info';
       case 'in-progress':
       case 'in_progress':
+      case 'paid':
         return 'variant-warning';
       case 'closed':
+      case 'withdrawn':
         return 'variant-neutral';
       case 'pending':
+      case 'pending_payment':
         return 'variant-primary';
       case 'confirmed':
       case 'accepted':
         return 'variant-primary-solid';
       case 'completed':
+      case 'delivered':
         return 'variant-success';
       case 'rejected':
       case 'cancelled':
+      case 'disputed':
+      case 'refunded':
         return 'variant-danger';
-      case 'withdrawn':
-        return 'variant-neutral';
       default:
         return 'variant-neutral';
     }

@@ -1,0 +1,519 @@
+/* AI Playground Container */
+.ai-playground {
+  font-family: var(--font-arabic), 'Cairo', sans-serif;
+  direction: rtl;
+}
+
+/* Card Foundations */
+.card {
+  background: #ffffff;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+}
+
+/* Top Tabs Navigation Bar */
+.main-tabs-bar {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.tab-btn:hover {
+  color: #334155;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.tab-btn.active {
+  background: #ea580c;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.25);
+}
+
+/* Trade Selection Pills Bar */
+.trade-pill {
+  background: #ffffff;
+  color: #64748b;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.trade-pill:hover {
+  border-color: #ea580c;
+  color: #ea580c;
+  background: rgba(234, 88, 12, 0.02);
+  transform: scale(1.02);
+}
+
+.trade-pill.active {
+  background: #0f172a;
+  border-color: #ea580c;
+  color: #ea580c;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* Quick Test Templates */
+.quick-template-row {
+  background: var(--bg-page);
+  border: 1px solid var(--border-color);
+  text-align: right;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.quick-template-row:hover {
+  border-color: #ea580c;
+  background: rgba(234, 88, 12, 0.03);
+  transform: translateX(-4px);
+}
+
+/* Volumetric Orb Card */
+.orb-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: inset 0 0 40px rgba(34, 197, 94, 0.05);
+}
+
+.canvas-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orb-canvas {
+  width: 250px;
+  height: 250px;
+  filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.1));
+}
+
+/* Status indicator dot */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.status-indicator.thinking {
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseThinking 1.2s infinite ease-in-out;
+}
+
+.status-indicator.mutation {
+  background-color: #ea580c;
+  box-shadow: 0 0 12px #ea580c;
+  animation: pulseMutation 0.3s 5 alternate;
+}
+
+@keyframes pulseThinking {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes pulseMutation {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.4); }
+}
+
+/* Console Control Card */
+.console-card {
+  background: #ffffff;
+}
+
+/* Terminal Input */
+.terminal-textarea {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  color: #f8fafc;
+  font-family: 'Cairo', var(--font-mono), monospace;
+  line-height: 1.6;
+  caret-color: #ea580c;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.terminal-textarea::placeholder {
+  color: #64748b;
+}
+
+.terminal-textarea:focus {
+  border-color: #ea580c;
+  box-shadow: 0 0 12px rgba(234, 88, 12, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Suggestion Badges */
+.suggestion-badge {
+  color: var(--color-neutral-600);
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.suggestion-badge:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 10px rgba(234, 88, 12, 0.08);
+}
+
+/* Parchment Summary Header */
+.parchment-container {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.05);
+  animation: slideFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.commentary-text {
+  color: #78350f !important;
+}
+
+.validation-badge {
+  letter-spacing: 0.025em;
+  font-weight: 700;
+}
+
+/* API Raw Server Error Display - Red theme, no mock fallback */
+.api-error-card {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.05);
+}
+
+/* Materials BOQ Tiles */
+.material-tile {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: slideFadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.material-tile:hover {
+  transform: translateY(-3px);
+  border-color: rgba(234, 88, 12, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+/* Blueprint design accents inside tiles */
+.grid-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 10px 10px;
+  opacity: 0.75;
+}
+
+/* Empty Blueprint State */
+.empty-blueprint {
+  background: radial-gradient(circle at center, rgba(15, 32, 67, 0.8) 0%, #0f172a 100%),
+              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 16px 16px, 16px 16px;
+  background-position: center;
+  border-radius: var(--radius-xl);
+  border: 1px dashed rgba(59, 130, 246, 0.15);
+}
+
+.blueprint-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+}
+
+.blueprint-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 1px dashed rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  animation: spinSlow 30s linear infinite;
+}
+
+.blueprint-ring-inner {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 50%;
+  animation: spinSlow 15s linear infinite reverse;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Sticky Financial Panel */
+.financial-sticky-panel {
+  border-top: 1px solid #1e293b;
+  box-shadow: 0 -10px 30px rgba(2, 6, 23, 0.4);
+}
+
+/* Recommended Workers Dashboard view */
+.workers-dashboard {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 30px rgba(15, 23, 42, 0.2);
+}
+
+::ng-deep .spinner-orange svg circle {
+  stroke: #ea580c !important;
+}
+
+/* Buttons */
+.btn-action {
+  transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(234, 88, 12, 0.3);
+}
+
+.btn-request {
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+.btn-request:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
+  background-color: #ea580c;
+}
+
+/* Skeletons Loader Animations */
+.skeleton-parchment {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: loadingShimmer 1.5s infinite;
+  opacity: 0.5;
+}
+
+.skeleton-card-item {
+  background: linear-gradient(90deg, #0f172a 25%, #1e293b 50%, #0f172a 75%);
+  background-size: 200% 100%;
+  border: 1px solid #1e293b;
+  animation: loadingShimmer 1.5s infinite;
+  opacity: 0.6;
+}
+
+@keyframes loadingShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Animations & Transitions */
+.animate-fade-in {
+  animation: fadeIn 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth text-fade transition indicators */
+.commentary-text {
+  animation: textFadeIn 0.6s ease-out;
+}
+
+@keyframes textFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scrollbars overrides for Right Panel */
+.invoice-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.invoice-body::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.invoice-body::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: var(--radius-full);
+}
+
+.invoice-body::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Extra Utility details */
+.text-xxs {
+  font-size: 0.65rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+}
+.text-base {
+  font-size: 1rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+/* ── Q-Scale Assistant Logo Card ───────────────────────────────────────── */
+
+/* Override orb-card to use the logo-based dark design */
+.orb-card {
+  background: #0d1117 !important;
+  border-color: #1a2332 !important;
+  box-shadow: 0 0 40px rgba(14, 94, 179, 0.08), inset 0 0 60px rgba(0,0,0,0.4) !important;
+  min-height: 280px;
+}
+
+/* Logo wrapper - centers the logo with relative positioning for the glow ring */
+.qscale-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated glow ring that pulses behind the logo */
+.logo-glow-ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 60%, rgba(59, 130, 246, 0.35) 80%, transparent 100%);
+  animation: spinGlow 5s linear infinite;
+  filter: blur(6px);
+}
+
+@keyframes spinGlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Logo image with subtle hover lift */
+.qscale-logo-img {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+  filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.4));
+}
+
+.qscale-logo-img:hover {
+  transform: scale(1.04) translateY(-3px);
+  filter: drop-shadow(0 0 28px rgba(59, 130, 246, 0.7));
+}
+
+/* Thinking ring overlay shown during loading */
+.logo-thinking-ring {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #ea580c;
+  border-right-color: rgba(234, 88, 12, 0.3);
+  animation: spinRing 1s linear infinite;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Orb canvas now floats subtly in background of the logo card */
+.orb-canvas {
+  width: 250px;
+  height: 250px;
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.06));
+}
+
+/* ── Custom Dimension Input Form Styles ────────────────────────────────── */
+
+.dimension-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Glassmorphic Dark-themed Inputs */
+.dim-input-field {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 0.75rem;
+  color: #f8fafc;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  direction: ltr;
+  text-align: right;
+}
+
+.dim-input-field:focus {
+  border-color: #ea580c;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.dim-input-field::placeholder {
+  color: #475569;
+}
+
+/* Small Option/Sub-Toggles inside the Dimension Form */
+.form-pill-btn {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-pill-btn:hover {
+  color: #cbd5e1;
+}
+
+.form-pill-btn.active {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(234, 88, 12, 0.4);
+}
