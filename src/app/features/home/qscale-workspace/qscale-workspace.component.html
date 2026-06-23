@@ -1,0 +1,783 @@
+<div class="qscale-workspace flex flex-col h-screen overflow-hidden" style="direction: rtl;" [class.show-chat]="activeMobileTab === 'chat'" [class.show-results]="activeMobileTab === 'results'">
+
+  <!-- Mobile Tabs Switcher Bar (Visible only on screens < 992px) -->
+  <div class="mobile-tabs-bar">
+    <button class="mobile-sidebar-toggle" (click)="toggleSidebar()" title="تبديل القائمة">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display: block;">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    
+    <div class="mobile-tabs-buttons">
+      <button (click)="activeMobileTab = 'chat'" class="mobile-tab-btn" [class.active]="activeMobileTab === 'chat'">
+        💬 المحادثة والمساعد
+      </button>
+      <button (click)="activeMobileTab = 'results'" class="mobile-tab-btn" [class.active]="activeMobileTab === 'results'">
+        📊 النتائج والترشيحات
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Workspace Outer Content Wrapper -->
+  <div class="workspace-outer-content flex flex-1 overflow-hidden relative">
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PANEL 1 ▸ LEFT SIDEBAR                                               -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <aside class="ws-sidebar" [class.collapsed]="sidebarCollapsed">
+
+    <!-- Brand Header -->
+    <div class="sidebar-brand">
+      <div class="brand-logo-wrap">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="brand-name">معلّم</span>
+      </div>
+      <button
+        (click)="resetWorkspace()"
+        title="جلسة جديدة"
+        style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-default);background:transparent;color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;"
+        onmouseover="this.style.background='var(--bg-page)';this.style.color='var(--brand-navy)'"
+        onmouseout="this.style.background='transparent';this.style.color='var(--text-muted)'"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="sidebar-search">
+      <div class="search-input-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--text-muted);flex-shrink:0">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="بحث..." style="direction:rtl">
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+
+      <!-- Main Nav -->
+      <button class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        <span>مساعد AI</span>
+      </button>
+
+      <button class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+        </svg>
+        <span>المشاريع</span>
+      </button>
+
+      <button class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>القوالب</span>
+      </button>
+
+      <button class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14 2z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <span>المستندات</span>
+      </button>
+
+      <!-- Section: History -->
+      <span class="nav-section-label">السجل والتاريخ</span>
+
+      <!-- Authenticated History -->
+      <ng-container *ngIf="isLoggedIn">
+        <div *ngIf="historyList.length === 0" style="padding:0.75rem 0.5rem;font-size:0.725rem;color:var(--text-muted);text-align:center;">
+          لا يوجد مقايسات مسجلة بعد.
+        </div>
+        <div class="sidebar-history">
+          <button
+            *ngFor="let item of historyList"
+            (click)="selectHistoryItem(item)"
+            class="history-item-btn"
+          >
+            <span class="history-item-type">{{ getServiceLabel(item.serviceType) }}</span>
+            <span class="history-item-desc">{{ item.description }}</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- Guest fallback -->
+      <ng-container *ngIf="!isLoggedIn">
+        <button class="history-item-btn" style="cursor:default;">
+          <span class="history-item-type" style="background:rgba(223,186,107,0.15);color:#92700A;">الجلسة الحالية</span>
+          <span class="history-item-desc">محادثة Q-Scale الحالية</span>
+        </button>
+      </ng-container>
+
+      <!-- Settings Section -->
+      <span class="nav-section-label">الإعدادات والدعم</span>
+
+      <button class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>
+        </svg>
+        <span>الإعدادات</span>
+      </button>
+
+      <button class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>المساعدة</span>
+      </button>
+
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <span class="sidebar-footer-label">Q-Scale Core v2.0</span>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.65rem;font-weight:600;color:var(--text-muted);">🌙</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PANEL 2 ▸ CENTER CHAT AREA                                           -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section class="ws-chat">
+
+    <!-- Top Header Bar -->
+    <header class="chat-header">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <!-- Toggle Sidebar -->
+        <button class="toggle-sidebar-btn" (click)="toggleSidebar()" title="تبديل الشريط الجانبي">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="chat-header-title">مساحة عمل مساعد معلّم الذكي</h1>
+      </div>
+      
+      <!-- Reset/Change Mode Button -->
+      <button 
+        *ngIf="aiMode !== null"
+        (click)="resetWorkspace()"
+        style="font-size: 0.725rem; font-weight: 700; color: #DC2626; border: 1.5px solid #FCA5A5; background: #FEF2F2; border-radius: 6px; padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 0.35rem; font-family: inherit;"
+        onmouseover="this.style.background='#FEE2E2'"
+        onmouseout="this.style.background='#FEF2F2'"
+      >
+        <span>🔄 تغيير الخدمة</span>
+      </button>
+    </header>
+
+    <!-- Main Message / Chat Area -->
+    <div id="chat-history-viewport" class="messages-viewport">
+
+      <!-- ── ONBOARDING MODE SELECTION (when aiMode is null) ── -->
+      <div *ngIf="aiMode === null" class="welcome-screen">
+        <div>
+          <h2 class="welcome-title" style="margin-bottom: 0.75rem;">مرحباً بك في مساعد المعلّم</h2>
+          <p class="welcome-subtitle">
+            اختر نوع الخدمة التي ترغب بها لبدء المحادثة مع المساعد الذكي:
+          </p>
+        </div>
+
+        <div class="onboarding-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; width: 100%; max-width: 560px; margin-top: 1rem;">
+          <button (click)="setAiMode('survey')" class="mode-select-card">
+            <div class="mode-icon-wrap bg-survey">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B2B6E" stroke-width="2">
+                <path d="M12 20h9M3 20v-8a2 2 0 012-2h14a2 2 0 012 2v8M5 10V6a2 2 0 012-2h10a2 2 0 012 2v4"/>
+                <path d="M12 6v4M8 10v4M16 10v4"/>
+              </svg>
+            </div>
+            <h3 class="mode-card-title">حساب الكميات والتكاليف (Q-Scale)</h3>
+            <p class="mode-card-desc">حساب الخامات والمصنعيات المطلوبة لمشروعك مع كشف كميات BOQ دقيق وتفصيلي.</p>
+          </button>
+
+          <button (click)="setAiMode('recommendations')" class="mode-select-card">
+            <div class="mode-icon-wrap bg-recs">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <h3 class="mode-card-title">ترشيح وتوصية الفنيين والعمال</h3>
+            <p class="mode-card-desc">البحث عن أفضل الفنيين والعمال المتخصصين في منطقتك وتوصيتهم فوراً لطلبك.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q-SCALE WELCOME SCREEN (shown when in survey mode with no messages) ── -->
+      <div *ngIf="aiMode === 'survey' && messages.length <= 1" class="welcome-screen">
+        <div>
+          <h2 class="welcome-title" style="margin-bottom: 0.75rem;">مرحباً بك في مساعد المعلّم</h2>
+          <p class="welcome-subtitle">
+            اكتب استفسارك وسأساعدك في حساب كميات الخامات والتكاليف التقريبية لمشروعك فوراً.
+          </p>
+        </div>
+
+        <!-- Quick Action Cards -->
+        <div class="quick-action-grid">
+          <button class="quick-action-card" (click)="appendSuggestion('أريد دهان غرفة 4×5 متر بارتفاع 3 متر')">
+            <div class="quick-action-icon" style="background: rgba(27, 43, 110, 0.08); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B2B6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <path d="M4 11V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5" />
+                <rect x="2" y="11" width="20" height="6" rx="1" fill="#1B2B6E" fill-opacity="0.1" />
+                <path d="M12 17v4" />
+              </svg>
+            </div>
+            <span>مقايسة دهانات</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('عزل وتأسيس سباكة حمام 3×2 متر')">
+            <div class="quick-action-icon" style="background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="#10B981" fill-opacity="0.1" />
+              </svg>
+            </div>
+            <span>أعمال سباكة</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('بناء جدار فاصل بطول 6 متر وارتفاع 3 متر')">
+            <div class="quick-action-icon" style="background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <rect x="3" y="3" width="18" height="18" rx="2" fill="#F59E0B" fill-opacity="0.1" />
+                <path d="M3 9h18" />
+                <path d="M3 15h18" />
+                <path d="M9 9v6" />
+                <path d="M15 3v6" />
+                <path d="M15 15v6" />
+              </svg>
+            </div>
+            <span>أعمال بناء</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('تأسيسات كهربائية شقة مساحة 100 متر مربع')">
+            <div class="quick-action-icon" style="background: rgba(239, 68, 68, 0.12); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#EF4444" fill-opacity="0.1" />
+              </svg>
+            </div>
+            <span>أعمال كهربائية</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── RECOMMENDATIONS WELCOME SCREEN (shown when in recommendations mode with no messages) ── -->
+      <div *ngIf="aiMode === 'recommendations' && messages.length <= 1" class="welcome-screen">
+        <div>
+          <h2 class="welcome-title" style="margin-bottom: 0.75rem;">ترشيح وتوصية الفنيين والعمال</h2>
+          <p class="welcome-subtitle">
+            صف لي مشكلتك أو العمل المطلوب بالإضافة إلى مدينتك، وسأقوم بترشيح أفضل الفنيين المتاحين لك.
+          </p>
+        </div>
+
+        <!-- Quick Action Cards for Recommendations -->
+        <div class="quick-action-grid">
+          <button class="quick-action-card" (click)="appendSuggestion('أبحث عن فني دهانات شاطر في القاهرة')">
+            <div class="quick-action-icon" style="background: rgba(27, 43, 110, 0.08); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B2B6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              </svg>
+            </div>
+            <span>فني دهانات بالقاهرة</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('عايز سباك لتصليح تسريب حنفية في الجيزة')">
+            <div class="quick-action-icon" style="background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="#10B981" fill-opacity="0.1" />
+              </svg>
+            </div>
+            <span>سباك في الجيزة</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('مطلوب نجار لتركيب باب خشبي في الإسكندرية')">
+            <div class="quick-action-icon" style="background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <path d="M3 9h18M3 15h18M9 9v6M15 3v6M15 15v6"/>
+              </svg>
+            </div>
+            <span>نجار بالإسكندرية</span>
+          </button>
+          <button class="quick-action-card" (click)="appendSuggestion('محتاج كهربائي لتأسيس لوحة مفاتيح شقة بالقاهرة')">
+            <div class="quick-action-icon" style="background: rgba(239, 68, 68, 0.12); display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#EF4444" fill-opacity="0.1" />
+              </svg>
+            </div>
+            <span>كهربائي بالقاهرة</span>
+          </button>
+        </div>
+      </div>
+
+        <!-- ── CHAT MESSAGES ── -->
+        <ng-container *ngIf="messages.length > 1">
+          <div
+            *ngFor="let msg of messages"
+            class="msg-row"
+            [class.user]="msg.sender === 'user'"
+            [class.assistant]="msg.sender === 'assistant'"
+          >
+            <!-- User avatar dot (left of bubble in RTL = visually left) -->
+            <div *ngIf="msg.sender === 'user'"
+              style="width:28px;height:28px;border-radius:50%;background:#E8EDF8;border:2px solid #C5D0F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1B2B6E" stroke-width="2.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+
+            <!-- Assistant avatar dot (left of bubble in RTL = visually left) -->
+            <div *ngIf="msg.sender === 'assistant'"
+              style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;">
+              <img src="assets/ai-avatar.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;border:1px solid #C8CEDF;" alt="AI Avatar">
+            </div>
+
+            <!-- Message bubble -->
+            <div class="msg-bubble" [class.user]="msg.sender === 'user'" [class.assistant]="msg.sender === 'assistant'">
+            <div style="white-space:pre-wrap;">{{ msg.text }}</div>
+
+            <!-- ── INLINE DIMENSION FORM ── -->
+            <div *ngIf="msg.sender === 'assistant' && msg.showDimensionsForm && !loading" class="inline-dim-form">
+              <div class="form-section-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                </svg>
+                أدخل الأبعاد لإتمام المقايسة:
+              </div>
+
+              <div [ngSwitch]="serviceType">
+
+                <!-- Painting -->
+                <div *ngSwitchCase="'painting'" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.625rem;">
+                  <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">الطول (م)</label>
+                    <input type="number" [(ngModel)]="dimLength" placeholder="5" class="dim-input-field">
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">العرض (م)</label>
+                    <input type="number" [(ngModel)]="dimWidth" placeholder="4" class="dim-input-field">
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">الارتفاع (م)</label>
+                    <input type="number" [(ngModel)]="dimHeight" placeholder="3" class="dim-input-field">
+                  </div>
+                </div>
+
+                <!-- Plumbing -->
+                <div *ngSwitchCase="'plumbing'" style="max-width:200px;">
+                  <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">مساحة الحمام (م²)</label>
+                  <input type="number" [(ngModel)]="dimArea" placeholder="6" class="dim-input-field">
+                </div>
+
+                <!-- Demolition / Masonry -->
+                <div *ngSwitchCase="'demolition_alteration'" style="display:flex;flex-direction:column;gap:0.625rem;">
+                  <div style="display:flex;gap:0.375rem;flex-wrap:wrap;">
+                    <button type="button" class="form-pill-btn" [class.active]="demoInputMode==='dimensions'" (click)="demoInputMode='dimensions'">أبعاد الحائط</button>
+                    <button type="button" class="form-pill-btn" [class.active]="demoInputMode==='linear'" (click)="demoInputMode='linear'">أمتار طولية</button>
+                    <button type="button" class="form-pill-btn" [class.active]="demoInputMode==='area'" (click)="demoInputMode='area'">المساحة</button>
+                  </div>
+                  <div *ngIf="demoInputMode==='dimensions'" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">عرض الحائط (م)</label>
+                      <input type="number" [(ngModel)]="dimWidth" placeholder="4" class="dim-input-field">
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">ارتفاع الحائط (م)</label>
+                      <input type="number" [(ngModel)]="dimHeight" placeholder="3" class="dim-input-field">
+                    </div>
+                  </div>
+                  <div *ngIf="demoInputMode==='linear'" style="max-width:200px;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">الطول الطولي (م)</label>
+                    <input type="number" [(ngModel)]="dimLinearMeters" placeholder="10" class="dim-input-field">
+                  </div>
+                  <div *ngIf="demoInputMode==='area'" style="max-width:200px;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">المساحة الكلية (م²)</label>
+                    <input type="number" [(ngModel)]="dimArea" placeholder="20" class="dim-input-field">
+                  </div>
+                </div>
+
+                <!-- Masonry (mirrors demolition) -->
+                <div *ngSwitchCase="'masonry_building'" style="display:flex;flex-direction:column;gap:0.625rem;">
+                  <div style="display:flex;gap:0.375rem;flex-wrap:wrap;">
+                    <button type="button" class="form-pill-btn" [class.active]="demoInputMode==='dimensions'" (click)="demoInputMode='dimensions'">أبعاد الجدار</button>
+                    <button type="button" class="form-pill-btn" [class.active]="demoInputMode==='area'" (click)="demoInputMode='area'">المساحة</button>
+                  </div>
+                  <div *ngIf="demoInputMode==='dimensions'" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">عرض (م)</label>
+                      <input type="number" [(ngModel)]="dimWidth" placeholder="4" class="dim-input-field">
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">ارتفاع (م)</label>
+                      <input type="number" [(ngModel)]="dimHeight" placeholder="3" class="dim-input-field">
+                    </div>
+                  </div>
+                  <div *ngIf="demoInputMode==='area'" style="max-width:200px;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">المساحة (م²)</label>
+                    <input type="number" [(ngModel)]="dimArea" placeholder="20" class="dim-input-field">
+                  </div>
+                </div>
+
+                <!-- Electrical -->
+                <div *ngSwitchCase="'electrical'" style="display:flex;flex-direction:column;gap:0.625rem;">
+                  <div style="display:flex;gap:0.375rem;">
+                    <button type="button" class="form-pill-btn" [class.active]="electricalInputMode==='area'" (click)="electricalInputMode='area'">مساحة الشقة</button>
+                    <button type="button" class="form-pill-btn" [class.active]="electricalInputMode==='dimensions'" (click)="electricalInputMode='dimensions'">أبعاد الغرفة</button>
+                  </div>
+                  <div *ngIf="electricalInputMode==='area'" style="max-width:200px;">
+                    <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">المساحة (م²)</label>
+                    <input type="number" [(ngModel)]="dimArea" placeholder="80" class="dim-input-field">
+                  </div>
+                  <div *ngIf="electricalInputMode==='dimensions'" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">الطول (م)</label>
+                      <input type="number" [(ngModel)]="dimLength" placeholder="5" class="dim-input-field">
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                      <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">العرض (م)</label>
+                      <input type="number" [(ngModel)]="dimWidth" placeholder="4" class="dim-input-field">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Carpentry -->
+                <div *ngSwitchCase="'carpentry'" style="max-width:200px;">
+                  <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">عدد الأبواب / الحلوق</label>
+                  <input type="number" [(ngModel)]="dimQuantity" placeholder="4" class="dim-input-field">
+                </div>
+
+              </div>
+
+              <!-- Submit -->
+              <button class="submit-dims-btn" (click)="submitInlineDimensions()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                تأكيد المقاسات وحساب المقايسة
+              </button>
+            </div>
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div *ngIf="loading" class="msg-row assistant">
+            <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;">
+              <img src="assets/ai-avatar.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;border:1px solid #C8CEDF;" alt="AI Avatar">
+            </div>
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <span style="font-size:0.725rem;font-weight:600;color:var(--text-muted);margin-right:0.375rem;">جاري المراجعة...</span>
+            </div>
+          </div>
+        </ng-container>
+
+    </div><!-- /messages-viewport -->
+
+    <!-- ── Sticky Footer Input ── -->
+    <footer class="chat-footer" *ngIf="aiMode !== null">
+
+      <!-- Suggestion chips -->
+      <div class="suggestions-row">
+        <span class="suggestions-label">اقتراحات:</span>
+        <button
+          *ngFor="let label of ['دهان غرفة 4×5م', 'سباكة حمام 3×2م', 'جدار فاصل 6×3م']"
+          (click)="appendSuggestion(label)"
+          class="suggestion-chip"
+        >{{ label }}</button>
+      </div>
+
+      <!-- ── Script.io-style gradient-border input card ── -->
+      <div class="input-card-wrap">
+        <div class="input-card-inner">
+
+          <!-- Top row: textarea + send -->
+          <div class="input-textarea-row">
+            <textarea
+              [(ngModel)]="description"
+              (keydown.enter)="$event.preventDefault(); sendMessage()"
+              placeholder="صف مشروعك هنا مع المقاسات..."
+              class="message-textarea"
+              rows="1"
+              [disabled]="loading"
+            ></textarea>
+            <button
+              class="send-btn"
+              (click)="sendMessage()"
+              [disabled]="loading || !description.trim()"
+              title="إرسال"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Bottom toolbar -->
+          <div class="input-toolbar">
+            <button class="toolbar-btn" type="button">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+              </svg>
+              إرفاق
+            </button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn" type="button">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+              </svg>
+              رسالة صوتية
+            </button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn" type="button">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="9" y1="21" x2="9" y2="9"/>
+              </svg>
+              اقتراحات
+            </button>
+            <span class="toolbar-count">{{ description.length }} / 3,000</span>
+          </div>
+
+        </div>
+      </div>
+
+    </footer>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PANEL 3 ▸ RIGHT BOQ PANEL / WORKERS LIST                              -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <aside class="ws-boq-panel">
+
+    <!-- Mode A: Survey / Estimation / Null Mode -->
+    <ng-container *ngIf="aiMode === 'survey' || aiMode === null">
+      <div class="boq-header">
+        <span class="boq-header-title">كشف الكميات (BOQ)</span>
+        <div *ngIf="activeEstimation" class="boq-status-badge">
+          <span class="boq-status-dot"></span>
+          حصر معتمد
+        </div>
+        <!-- item count chip -->
+        <span *ngIf="!activeEstimation" style="font-size:0.7rem;font-weight:600;background:var(--bg-page);border:1px solid var(--border-default);padding:0.2rem 0.6rem;border-radius:999px;color:var(--text-muted);">
+          {{ historyList.length || 0 }} مشروع
+        </span>
+      </div>
+
+      <div class="boq-content">
+        <!-- ── EMPTY STATE ── -->
+        <div *ngIf="!activeEstimation" class="boq-empty">
+          <div class="boq-empty-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h3 class="boq-empty-title">في انتظار حصر البيانات</h3>
+          <p class="boq-empty-text">
+            تجري الحسابات الهندسية فور استكمال تفاصيل وأبعاد مشروعك.
+          </p>
+
+          <!-- Recent Projects Placeholder Cards -->
+          <div *ngIf="historyList.length > 0" style="width:100%;display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;">
+            <p style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-align:right;margin:0 0 0.25rem;">المشاريع الأخيرة</p>
+            <button
+              *ngFor="let item of historyList.slice(0, 5)"
+              (click)="selectHistoryItem(item)"
+              style="width:100%;background:var(--bg-panel);border:1px solid var(--border-subtle);border-right:3px solid var(--brand-navy);border-radius:var(--radius-md);padding:0.75rem 1rem;text-align:right;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:0.25rem;"
+              onmouseover="this.style.boxShadow='var(--shadow-md)'"
+              onmouseout="this.style.boxShadow='none'"
+            >
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.6rem;font-weight:700;color:var(--brand-navy);background:rgba(27,43,110,0.08);padding:0.1rem 0.4rem;border-radius:4px;">{{ getServiceLabel(item.serviceType) }}</span>
+                <span style="font-size:0.625rem;color:var(--text-muted);">{{ item.createdAt | date:'d/M' }}</span>
+              </div>
+              <span style="font-size:0.75rem;font-weight:600;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.description }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── ESTIMATION RESULTS ── -->
+        <ng-container *ngIf="activeEstimation">
+          <!-- Stats -->
+          <div class="boq-stats-grid">
+            <div class="boq-stat-card">
+              <span class="boq-stat-label">المساحة المقدرة</span>
+              <span class="boq-stat-value">{{ activeEstimation.estimatedArea }}</span>
+              <span style="font-size:0.65rem;color:var(--text-muted);font-weight:600;">م²</span>
+            </div>
+            <div class="boq-stat-card">
+              <span class="boq-stat-label">زمن التنفيذ</span>
+              <span class="boq-stat-value">{{ activeEstimation.laborHours }}</span>
+              <span style="font-size:0.65rem;color:var(--text-muted);font-weight:600;">ساعة</span>
+            </div>
+          </div>
+
+          <!-- Commentary -->
+          <div class="boq-commentary">
+            <p class="boq-commentary-title">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              ملاحظات هندسية
+            </p>
+            <p class="boq-commentary-text">{{ activeEstimation.executionCommentary }}</p>
+          </div>
+
+          <!-- BOQ Table -->
+          <div style="display:flex;flex-direction:column;gap:0.625rem;">
+            <h4 style="font-size:0.75rem;font-weight:800;color:var(--text-primary);margin:0;display:flex;align-items:center;gap:0.4rem;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--text-muted)">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+              </svg>
+              جدول المواد والخامات
+            </h4>
+
+            <div class="boq-table-wrap">
+              <table class="boq-table">
+                <thead>
+                  <tr>
+                    <th>الخامة</th>
+                    <th>الكمية</th>
+                    <th>الوحدة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of activeEstimation.materials">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.unit }}</td>
+                  </tr>
+                  <tr *ngIf="activeEstimation.materials?.length === 0">
+                    <td colspan="3" style="text-align:center;color:var(--text-muted);padding:1.5rem 1rem;font-size:0.75rem;">لا توجد مواد مطلوبة.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CTA Footer -->
+          <div class="boq-cta">
+            <div>
+              <span class="boq-cta-label">القيمة التقريبية للمقايسة</span>
+              <span class="boq-cta-value">شاملة نسب الهالك</span>
+            </div>
+            <button class="boq-cta-btn">
+              طلب تنفيذ
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <!-- Mode B: Recommendations Mode -->
+    <ng-container *ngIf="aiMode === 'recommendations'">
+      <div class="boq-header">
+        <span class="boq-header-title">الفنيين المرشحين</span>
+        <span style="font-size:0.7rem;font-weight:600;background:#ECFDF5;border:1px solid #A7F3D0;padding:0.2rem 0.6rem;border-radius:999px;color:#047857;">
+          {{ recommendedWorkers.length || 0 }} مرشح
+        </span>
+      </div>
+
+      <!-- Workers List content -->
+      <div class="boq-content" style="padding: 1.25rem;">
+        
+        <!-- Empty State / Waiting for request -->
+        <div *ngIf="recommendedWorkers.length === 0" class="boq-empty" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0.875rem; padding: 2rem;">
+          <div class="boq-empty-icon" style="background: rgba(16, 185, 129, 0.08); color: #10B981 !important; border: 1px solid #A7F3D0; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="boq-empty-title">بانتظار تفاصيل طلبك</h3>
+          <p class="boq-empty-text">
+            اكتب المشكلة التي تواجهك وسنقوم بترشيح أفضل الفنيين المتخصصين في منطقتك فوراً هنا.
+          </p>
+        </div>
+
+        <!-- Workers List -->
+        <div *ngIf="recommendedWorkers.length > 0" style="display: flex; flex-direction: column; gap: 1rem;">
+          
+          <!-- Detected City and specialization info -->
+          <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); border-right: 3px solid #10B981; border-radius: 0.75rem; padding: 0.875rem 1rem;">
+            <span style="font-size: 0.7rem; font-weight: 800; color: #065F46; display: block; margin-bottom: 0.25rem;">تحليل الذكاء الاصطناعي:</span>
+            <p style="font-size: 0.775rem; color: #047857; margin: 0; font-weight: 600; line-height: 1.5; text-align: right;">
+              التخصص المكتشف: {{ getServiceLabel(detectedAnalysis?.detectedService) }}
+              <span *ngIf="detectedAnalysis?.detectedCity"><br>المدينة المكتشفة: {{ detectedAnalysis?.detectedCity }}</span>
+            </p>
+          </div>
+
+          <p style="font-size: 0.75rem; font-weight: 700; color: #4B5563; text-align: right; margin: 0 0 0.25rem;">الفنيين المرشحين لك ({{ recommendedWorkers.length }}):</p>
+          
+          <!-- Worker Profiles loop -->
+          <div
+            *ngFor="let worker of recommendedWorkers"
+            style="background: #FFFFFF; border: 1px solid #E8EAF0; border-radius: 0.75rem; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+          >
+            <!-- Worker Header Info -->
+            <div style="display: flex; gap: 0.75rem; align-items: center; direction: rtl;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #EFF1F6; border: 1.5px solid #C8CEDF; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #1B2B6E; font-weight: 700; flex-shrink: 0;">
+                {{ worker.user?.name ? worker.user.name[0] : 'ف' }}
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.15rem; text-align: right; flex: 1;">
+                <span style="font-size: 0.825rem; font-weight: 800; color: #111827;">{{ worker.user?.name || 'فني منصة معلم' }}</span>
+                <span style="font-size: 0.65rem; font-weight: 600; color: #10B981; background: #ECFDF5; padding: 0.1rem 0.4rem; border-radius: 4px; align-self: flex-start;">
+                  {{ getServiceLabel(worker.specializations) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Location and Stats -->
+            <div style="display: flex; flex-direction: column; gap: 0.4rem; border-top: 1px dashed #E5E7EB; padding-top: 0.625rem; font-size: 0.725rem; color: #4B5563; text-align: right;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; direction: rtl;">
+                <span>📍</span>
+                <span>المنطقة: {{ worker.location?.city || 'متاح بكافة الأنحاء' }}</span>
+              </div>
+              <div *ngIf="worker.experienceYears" style="display: flex; align-items: center; gap: 0.35rem; direction: rtl;">
+                <span>💼</span>
+                <span>الخبرة: {{ worker.experienceYears }} سنوات</span>
+              </div>
+            </div>
+
+            <!-- Call to action contact -->
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+              <a
+                href="tel:{{ worker.user?.phone || '' }}"
+                style="flex: 1; text-align: center; text-decoration: none; padding: 0.45rem; background: #1B2B6E; color: #FFFFFF; font-size: 0.7rem; font-weight: 700; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 0.35rem; transition: background 0.2s;"
+                onmouseover="this.style.background='#142258'"
+                onmouseout="this.style.background='#1B2B6E'"
+              >
+                <span>📞 اتصل بالفني</span>
+              </a>
+              <button
+                (click)="startDirectChat(worker)"
+                style="flex: 1; border: 1.5px solid #DDE0EB; background: #FFFFFF; color: #374151; font-size: 0.7rem; font-weight: 700; border-radius: 6px; padding: 0.45rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-family: inherit;"
+                onmouseover="this.style.background='#F9FAFB'"
+                onmouseout="this.style.background='#FFFFFF'"
+              >
+                <span>💬 دردشة فورية</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+
+  </aside>
+
+  </div> <!-- /workspace-outer-content -->
+</div> <!-- /qscale-workspace -->

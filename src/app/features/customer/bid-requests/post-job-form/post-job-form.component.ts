@@ -64,7 +64,7 @@ export class PostJobFormComponent {
       return (this.title || '').trim().length >= 10 && (this.description || '').trim().length >= 20;
     }
     if (step === 2) {
-      return this.budget >= 1 && !!(this.address || '').trim();
+      return this.budget >= 100 && !!(this.address || '').trim();
     }
     return true;
   }
@@ -95,8 +95,8 @@ export class PostJobFormComponent {
       return true;
     }
     if (step === 2) {
-      if (this.budget <= 0) {
-        this.toast.error('يرجى تحديد ميزانية تقديرية أكبر من أو تساوي 1 EGP.');
+      if (this.budget < 100) {
+        this.toast.error('يرجى تحديد ميزانية تقديرية لا تقل عن 100 EGP.');
         return false;
       }
       if (!(this.address || '').trim()) {

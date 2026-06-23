@@ -110,16 +110,16 @@
           <label class="text-xs font-bold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">الميزانية التقريبية (EGP)</label>
           <input 
             type="number" 
-            min="1"
+            min="100"
             placeholder="مثال: 350" 
             class="custom-number-input"
             [(ngModel)]="budget"
             (keydown)="blockMinusKey($event)"
             style="font-family: 'Cairo', var(--font-arabic);"
           />
-          <div class="flex justify-between items-center mt-1" *ngIf="budget < 1">
+          <div class="flex justify-between items-center mt-1" *ngIf="budget > 0 && budget < 100">
             <span class="validator-warning">
-              يرجى تحديد ميزانية لا تقل عن 1 EGP
+              يرجى تحديد ميزانية لا تقل عن 100 EGP
             </span>
           </div>
         </div>

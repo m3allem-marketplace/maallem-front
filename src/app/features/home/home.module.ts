@@ -8,6 +8,7 @@ import { MapPickerComponent } from '../../shared/components/map-picker/map-picke
 import { HomePageComponent } from './home-page/home-page.component';
 import { TestApiComponent } from './test-api/test-api.component';
 import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
+import { QScaleWorkspaceComponent } from './qscale-workspace/qscale-workspace.component';
 import { HeroComponent } from './hero/hero.component';
 import { CategoryGridComponent } from './category-grid/category-grid.component';
 import { FeaturedWorkersComponent } from './featured-workers/featured-workers.component';
@@ -18,6 +19,7 @@ import { HowItWorksComponent } from './how-it-works/how-it-works.component';
     HomePageComponent,
     TestApiComponent,
     AiAssistantComponent,
+    QScaleWorkspaceComponent,
     HeroComponent,
     CategoryGridComponent,
     FeaturedWorkersComponent,

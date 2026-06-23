@@ -20,11 +20,25 @@
       
       <!-- Timeline Header -->
       <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
-        <div class="flex items-center gap-2 mb-6 border-b pb-4">
-          <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7" />
-          </svg>
-          <h2 class="text-base font-extrabold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">تتبع حالة الحجز</h2>
+        <div class="flex items-center justify-between mb-6 border-b pb-4">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7" />
+            </svg>
+            <h2 class="text-base font-extrabold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">تتبع حالة الحجز</h2>
+          </div>
+          <!-- Refresh Button -->
+          <button
+            (click)="refreshBooking()"
+            [disabled]="refreshing"
+            class="flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-primary transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-100"
+            style="font-family: 'Cairo', var(--font-arabic);"
+          >
+            <svg class="w-3.5 h-3.5" [class.animate-spin]="refreshing" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>{{ refreshing ? 'جاري التحديث...' : 'تحديث الحالة' }}</span>
+          </button>
         </div>
         <app-booking-timeline [currentStatus]="booking.status"></app-booking-timeline>
       </div>
@@ -69,40 +83,60 @@
       </div>
 
       <!-- Action Footer (For Active Escrow States) -->
-      <div *ngIf="['pending_payment', 'paid', 'delivered', 'disputed'].includes(booking.status) || booking.status === 'in-progress' || booking.status === 'confirmed' || booking.status === 'pending'" class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <p class="text-xs font-semibold text-gray-500 max-w-md" style="font-family: 'Cairo', var(--font-arabic);">
-          <span *ngIf="booking.status === 'pending_payment'">بانتظار سداد ميزانية الخدمة للحساب الوسيط الآمن بالمنصة لبدء العمل.</span>
-          <span *ngIf="booking.status === 'paid' || booking.status === 'in-progress'">المبلغ مؤمن في الضمان والعمل جاري حالياً. يمكنك فتح نزاع عند الحاجة.</span>
-          <span *ngIf="booking.status === 'delivered'">أكد الحرفي انتهاء العمل. يرجى مراجعة الجودة وتأكيد الاستلام لتحرير المستحقات.</span>
-          <span *ngIf="booking.status === 'disputed'">تم تجميد هذا الحجز وتحويله للدعم الفني للمراجعة والتحكيم بين الطرفين.</span>
-          <span *ngIf="booking.status === 'confirmed'">تم تأكيد الحجز وبانتظار بدء العمل. يمكنك طلب الإلغاء إذا لزم الأمر.</span>
-          <span *ngIf="booking.status === 'pending'">تم قبول عرض السعر وبانتظار بدء العمل.</span>
-        </p>
-        <div class="flex gap-3 shrink-0">
-          <!-- Dispute/Cancel Button -->
-          <app-button *ngIf="booking.status === 'paid' || booking.status === 'delivered' || booking.status === 'in-progress'" variant="danger" (click)="disputeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
-            <span class="flex items-center gap-1.5">
-              <span>فتح نزاع / إلغاء الحجز</span>
-            </span>
-          </app-button>
-          
+      <div *ngIf="['pending_payment', 'paid', 'in-progress', 'delivered', 'disputed', 'confirmed', 'pending'].includes(booking.status)" class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right flex flex-col gap-4">
+
+        <!-- Status Context Message -->
+        <div class="flex items-start gap-3">
+          <!-- Delivered Alert Banner -->
+          <div *ngIf="booking.status === 'delivered'" class="w-full flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+            <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-sm font-bold text-amber-800" style="font-family: 'Cairo', var(--font-arabic);">أعلن الحرفي إنجاز العمل — راجع الجودة وأكد الاستلام لتحرير المستحقات.</p>
+          </div>
+          <p *ngIf="booking.status !== 'delivered'" class="text-xs font-semibold text-gray-500 max-w-md" style="font-family: 'Cairo', var(--font-arabic);">
+            <span *ngIf="booking.status === 'pending_payment'">بانتظار سداد ميزانية الخدمة للحساب الوسيط الآمن بالمنصة لبدء العمل.</span>
+            <span *ngIf="booking.status === 'paid' || booking.status === 'in-progress'">المبلغ مؤمن في الضمان والعمل جاري حالياً. يمكنك فتح نزاع عند الحاجة.</span>
+            <span *ngIf="booking.status === 'disputed'">تم تجميد هذا الحجز وتحويله للدعم الفني للمراجعة والتحكيم بين الطرفين.</span>
+            <span *ngIf="booking.status === 'confirmed'">تم تأكيد الحجز وبانتظار بدء العمل. يمكنك طلب الإلغاء إذا لزم الأمر.</span>
+            <span *ngIf="booking.status === 'pending'">تم قبول عرض السعر وبانتظار بدء العمل.</span>
+          </p>
+        </div>
+
+        <!-- Action Buttons Row -->
+        <div class="flex gap-3 flex-wrap justify-end shrink-0">
+          <!-- Cancel Button (only before payment or after confirmation) -->
           <app-button *ngIf="booking.status === 'pending_payment' || booking.status === 'confirmed' || booking.status === 'pending'" variant="danger" (click)="cancelBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
               <span>إلغاء الحجز</span>
             </span>
           </app-button>
 
-          <!-- Pay Button -->
-          <app-button *ngIf="booking.status === 'pending_payment'" variant="primary" (click)="payBooking()" style="font-family: 'Cairo', var(--font-arabic);">
+          <!-- Dispute Button (during active execution) -->
+          <app-button *ngIf="booking.status === 'paid' || booking.status === 'in-progress'" variant="danger" (click)="disputeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
-              <span>سداد الميزانية والبدء 💳</span>
+              <span>فتح نزاع / إلغاء الحجز</span>
             </span>
           </app-button>
 
-          <!-- Approve / Complete Button -->
+          <!-- Pay Button -->
+          <app-button *ngIf="booking.status === 'pending_payment'" variant="primary" (click)="payBooking()" style="font-family: 'Cairo', var(--font-arabic);">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+              <span>سداد الميزانية والبدء</span>
+            </span>
+          </app-button>
+
+          <!-- Approve / Complete Button (shown for delivered AND in-progress as fallback) -->
           <app-button *ngIf="booking.status === 'delivered' || booking.status === 'in-progress'" variant="primary" (click)="completeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
-              <span>تأكيد اكتمال الخدمة 🎉</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>تأكيد اكتمال الخدمة وتحرير الدفع</span>
             </span>
           </app-button>
         </div>

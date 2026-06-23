@@ -11,4 +11,12 @@ export class AiService {
   analyzeTask(payload: { serviceType: string; description: string }): Observable<any> {
     return this.api.post<any>('/ai/analyze', payload);
   }
+
+  getRecommendations(payload: { story: string }): Observable<any> {
+    return this.api.post<any>('/ai/recommendations', payload);
+  }
+
+  getHistory(): Observable<any> {
+    return this.api.get<any>('/ai/history');
+  }
 }
