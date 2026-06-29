@@ -51,6 +51,14 @@ export class WorkerDetailComponent implements OnInit {
         this.loadProfile();
       }
     });
+
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams['book'] === 'true') {
+        setTimeout(() => {
+          this.openBookingModal();
+        }, 800);
+      }
+    });
   }
 
   loadProfile(): void {

@@ -1,108 +1,105 @@
-<div class="workers-list-wrapper max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
-  
-  <!-- Hero Section -->
-  <div class="hero-banner mb-8 p-8 rounded-3xl text-right text-white relative overflow-hidden shadow-lg">
-    <div class="hero-overlay absolute inset-0 z-0"></div>
-    <div class="relative z-10 max-w-2xl font-arabic">
-      <span class="text-xs font-bold text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">دليل الحرفيين والعمال</span>
-      <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-2" style="font-family: 'Cairo', var(--font-arabic);">تصفح أمهر المعلمين والحرفيين</h1>
-      <p class="text-sm md:text-base text-gray-200 leading-relaxed font-light">تواصل مباشرة مع حرفيين موثوقين ومقيمين لإنجاز صيانة منزلك باحترافية وسرعة.</p>
+<div class="workers-page">
+
+  <!-- ══ CINEMATIC HERO BANNER ══ -->
+  <div class="hero-banner">
+    <div class="hero-banner-bg"></div>
+    <div class="hero-banner-content">
+      <div class="hero-badge">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        دليل الحرفيين المعتمدين
+      </div>
+      <h1 class="hero-title">تصفح أمهر المعلمين والحرفيين</h1>
+      <p class="hero-subtitle">تواصل مباشرةً مع حرفيين موثوقين ومُقيَّمين لإنجاز صيانة منزلك باحترافية وسرعة.</p>
     </div>
   </div>
 
-  <!-- Filter Card -->
-  <div class="filter-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm mb-8 text-right font-arabic">
-    <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2" style="font-family: 'Cairo', var(--font-arabic);">
-      🔍 تصفية وتحديد البحث
-    </h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-      <!-- City Filter -->
-      <div class="flex flex-col gap-1.5">
-        <label class="text-xs font-bold text-gray-500">المحافظة</label>
-        <select 
-          [(ngModel)]="selectedCity" 
-          (change)="onFilterChange()"
-          class="filter-select px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 outline-none transition-all cursor-pointer"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          <option *ngFor="let city of cities" [value]="city.value">{{ city.label }}</option>
-        </select>
+  <div class="max-w-7xl mx-auto px-4 md:px-8 py-10" style="direction: rtl;">
+
+    <!-- ══ FILTER CARD ══ -->
+    <div class="filter-card mb-8">
+      <div class="filter-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        تصفية وتحديد البحث
       </div>
 
-      <!-- Specialization Filter -->
-      <div class="flex flex-col gap-1.5">
-        <label class="text-xs font-bold text-gray-500">التخصص / المهنة</label>
-        <select 
-          [(ngModel)]="selectedSpecialization" 
-          (change)="onFilterChange()"
-          class="filter-select px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 outline-none transition-all cursor-pointer"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          <option *ngFor="let spec of specializations" [value]="spec.value">{{ spec.label }}</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Active Filter Chips -->
-  <div *ngIf="selectedCity || selectedSpecialization" class="flex flex-wrap gap-2.5 items-center mb-6 font-arabic text-right">
-    <span class="text-xs font-bold text-gray-500">الفلاتر النشطة:</span>
-    
-    <span *ngIf="selectedSpecialization" class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold rounded-full">
-      التخصص: {{ selectedSpecialization }}
-      <button (click)="selectedSpecialization = ''; onFilterChange();" class="hover:text-red-500 cursor-pointer border-none bg-transparent p-0 text-[10px] leading-none">✕</button>
-    </span>
-
-    <span *ngIf="selectedCity" class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200 text-blue-800 text-xs font-bold rounded-full">
-      المحافظة: {{ selectedCity }}
-      <button (click)="selectedCity = ''; onFilterChange();" class="hover:text-red-500 cursor-pointer border-none bg-transparent p-0 text-[10px] leading-none">✕</button>
-    </span>
-
-    <button 
-      (click)="selectedCity = ''; selectedSpecialization = ''; onFilterChange();"
-      class="text-xs font-bold text-red-500 hover:text-red-700 bg-transparent border-none cursor-pointer underline font-arabic"
-    >
-      مسح الكل
-    </button>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
-    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري البحث عن المعلمين...</p>
-  </div>
-
-  <!-- Workers Output -->
-  <div *ngIf="!loading">
-    
-    <!-- Empty State -->
-    <div *ngIf="workers.length === 0" class="my-12">
-      <div class="text-center p-12 bg-gray-50 border border-dashed border-gray-200 rounded-3xl max-w-xl mx-auto">
-        <span class="text-4xl">👷</span>
-        <h4 class="text-lg font-bold text-gray-700 mt-4 mb-2" style="font-family: 'Cairo', var(--font-arabic);">لا يوجد عمال يطابقون خيارات التصفية</h4>
-        <p class="text-sm text-gray-400 leading-relaxed mb-6">يرجى تغيير خيارات البحث أو التصفية للعثور على حرفيين في محافظتك.</p>
-        <button 
-          (click)="selectedCity = ''; selectedSpecialization = ''; onFilterChange();"
-          class="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          إعادة تعيين الفلاتر
-        </button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- City -->
+        <div class="flex flex-col">
+          <label class="filter-label">المحافظة</label>
+          <select [(ngModel)]="selectedCity" (change)="onFilterChange()" class="filter-select">
+            <option *ngFor="let city of cities" [value]="city.value">{{ city.label }}</option>
+          </select>
+        </div>
+        <!-- Specialization -->
+        <div class="flex flex-col">
+          <label class="filter-label">التخصص / المهنة</label>
+          <select [(ngModel)]="selectedSpecialization" (change)="onFilterChange()" class="filter-select">
+            <option *ngFor="let spec of specializations" [value]="spec.value">{{ spec.label }}</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <!-- Workers Grid -->
-    <div *ngIf="workers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-      <app-worker-card 
-        *ngFor="let worker of workers" 
-        [worker]="worker"
-        class="w-full max-w-[360px]"
-      ></app-worker-card>
+    <!-- ══ ACTIVE FILTER CHIPS ══ -->
+    <div *ngIf="selectedCity || selectedSpecialization" class="filter-chips mb-6">
+      <span class="filter-chips-label">الفلاتر النشطة:</span>
+
+      <span *ngIf="selectedSpecialization" class="chip chip--amber">
+        التخصص: {{ selectedSpecialization }}
+        <button class="chip-remove" (click)="selectedSpecialization = ''; onFilterChange()">✕</button>
+      </span>
+
+      <span *ngIf="selectedCity" class="chip chip--blue">
+        المحافظة: {{ selectedCity }}
+        <button class="chip-remove" (click)="selectedCity = ''; onFilterChange()">✕</button>
+      </span>
+
+      <button class="chip-clear-all" (click)="selectedCity = ''; selectedSpecialization = ''; onFilterChange()">
+        مسح الكل
+      </button>
+    </div>
+
+    <!-- ══ LOADING ══ -->
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-24 gap-4">
+      <div class="loading-ring"></div>
+      <p style="font-family:'Cairo',sans-serif; font-size:0.88rem; font-weight:600; color:#8892a4;">جاري البحث عن المعلمين...</p>
+    </div>
+
+    <!-- ══ RESULTS ══ -->
+    <div *ngIf="!loading">
+
+      <!-- Empty State -->
+      <div *ngIf="workers.length === 0" class="my-12">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1B2B6E" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <h4 class="empty-title">لا يوجد عمال يطابقون خيارات التصفية</h4>
+          <p class="empty-sub">يرجى تغيير خيارات البحث أو التصفية للعثور على حرفيين في محافظتك.</p>
+          <button class="empty-reset-btn" (click)="selectedCity = ''; selectedSpecialization = ''; onFilterChange()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            إعادة تعيين الفلاتر
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Header + Grid -->
+      <div *ngIf="workers.length > 0">
+        <div class="results-header mb-6">
+          <span class="results-count">تم العثور على <strong>{{ workers.length }}</strong> حرفي</span>
+        </div>
+
+        <div class="workers-grid">
+          <app-worker-card
+            *ngFor="let worker of workers"
+            [worker]="worker"
+          ></app-worker-card>
+        </div>
+      </div>
+
     </div>
 
   </div>
-
 </div>

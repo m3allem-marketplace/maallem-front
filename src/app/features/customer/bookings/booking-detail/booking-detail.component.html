@@ -73,12 +73,53 @@
               </p>
             </div>
             <div>
-              <h4 class="text-xs font-bold text-gray-400 mb-1" style="font-family: 'Cairo', var(--font-arabic);">الميزانية المقدرة</h4>
-              <p class="text-sm font-extrabold text-primary" style="color: var(--color-primary-700);">
+              <h4 class="text-xs font-bold text-gray-400 mb-1" style="font-family: 'Cairo', var(--font-arabic);">الميزانية الإجمالية للحجز</h4>
+              <p class="text-base font-extrabold text-primary" style="color: var(--color-primary-700);">
                 {{ booking.budget | currencyFormat }}
               </p>
             </div>
           </div>
+
+          <!-- Escrow Financial Breakdown & 10% Commission Rules -->
+          <div class="mt-4 p-4 bg-slate-50 border border-slate-200/80 rounded-2xl flex flex-col gap-3 font-arabic">
+            <div class="flex items-center justify-between border-b border-slate-200/60 pb-2.5">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span>🛡️ نظام محفظة الضمان (Escrow Protection)</span>
+              </span>
+              <span class="text-[11px] font-extrabold text-amber-700 bg-amber-100/80 px-2.5 py-0.5 rounded-full">عمولة المنصة 10%</span>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="flex flex-col bg-white p-2.5 rounded-xl border border-slate-100 shadow-2xs">
+                <span class="text-[10px] font-bold text-gray-400">إجمالي إيداع العميل:</span>
+                <span class="text-sm font-extrabold text-slate-800 mt-0.5">{{ booking.budget | currencyFormat }}</span>
+              </div>
+              <div class="flex flex-col bg-white p-2.5 rounded-xl border border-slate-100 shadow-2xs">
+                <span class="text-[10px] font-bold text-gray-400">صافي مستحقات الحرفي (90%):</span>
+                <span class="text-sm font-extrabold text-emerald-600 mt-0.5">{{ (booking.budget * 0.9) | currencyFormat }}</span>
+              </div>
+              <div class="flex flex-col bg-white p-2.5 rounded-xl border border-slate-100 shadow-2xs">
+                <span class="text-[10px] font-bold text-gray-400">رسوم خدمة المنصة (10%):</span>
+                <span class="text-sm font-extrabold text-amber-600 mt-0.5">{{ (booking.budget * 0.1) | currencyFormat }}</span>
+              </div>
+            </div>
+
+            <!-- Partial Release Progress Tracker -->
+            <div *ngIf="['paid', 'in-progress', 'delivered', 'completed'].includes(booking.status)" class="flex flex-col gap-1.5 mt-1 pt-2 border-t border-slate-200/50">
+              <div class="flex justify-between items-center text-xs font-bold">
+                <span class="text-emerald-700">المبلغ المحرر للحرفي: {{ releasedAmount | currencyFormat }}</span>
+                <span class="text-slate-500">المتبقي بالمحفظة: {{ (booking.budget - releasedAmount) | currencyFormat }}</span>
+              </div>
+              <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 transition-all duration-500" [style.width.%]="(releasedAmount / booking.budget) * 100"></div>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-slate-500 leading-relaxed m-0 pt-1 border-t border-slate-200/40">
+              💡 <strong>قواعد تحرير الأموال:</strong> تم إيداع المبلغ في محفظة الحجز. يمكنك تحرير جزء من المبلغ أو كامل المبلغ للحرفي وقتما تشاء بناءً على مراحل الإنجاز.
+            </p>
+          </div>
+
         </div>
       </div>
 
@@ -92,12 +133,12 @@
             <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <p class="text-sm font-bold text-amber-800" style="font-family: 'Cairo', var(--font-arabic);">أعلن الحرفي إنجاز العمل — راجع الجودة وأكد الاستلام لتحرير المستحقات.</p>
+            <p class="text-sm font-bold text-amber-800" style="font-family: 'Cairo', var(--font-arabic);">أعلن الحرفي إنجاز الخدمة — يمكنك الآن تحرير المبلغ المتبقي بالمحفظة للحرفي.</p>
           </div>
           <p *ngIf="booking.status !== 'delivered'" class="text-xs font-semibold text-gray-500 max-w-md" style="font-family: 'Cairo', var(--font-arabic);">
-            <span *ngIf="booking.status === 'pending_payment'">بانتظار سداد ميزانية الخدمة للحساب الوسيط الآمن بالمنصة لبدء العمل.</span>
-            <span *ngIf="booking.status === 'paid' || booking.status === 'in-progress'">المبلغ مؤمن في الضمان والعمل جاري حالياً. يمكنك فتح نزاع عند الحاجة.</span>
-            <span *ngIf="booking.status === 'disputed'">تم تجميد هذا الحجز وتحويله للدعم الفني للمراجعة والتحكيم بين الطرفين.</span>
+            <span *ngIf="booking.status === 'pending_payment'">قم بإيداع ميزانية الحجز في محفظة الضمان الآمنة لبدء تنفيذ الخدمة فوراً.</span>
+            <span *ngIf="booking.status === 'paid' || booking.status === 'in-progress'">المبلغ محفوظ بأمان في محفظة الحجز. يمكنك تحرير أي مبلغ للحرفي وقتما تشاء حسب الاتفاق.</span>
+            <span *ngIf="booking.status === 'disputed'">تم تجميد هذا الحجز وتدخل فريق الدعم والتحكيم لمراجعة محفظة الضمان.</span>
             <span *ngIf="booking.status === 'confirmed'">تم تأكيد الحجز وبانتظار بدء العمل. يمكنك طلب الإلغاء إذا لزم الأمر.</span>
             <span *ngIf="booking.status === 'pending'">تم قبول عرض السعر وبانتظار بدء العمل.</span>
           </p>
@@ -105,38 +146,45 @@
 
         <!-- Action Buttons Row -->
         <div class="flex gap-3 flex-wrap justify-end shrink-0">
-          <!-- Cancel Button (only before payment or after confirmation) -->
+          <!-- Cancel Button -->
           <app-button *ngIf="booking.status === 'pending_payment' || booking.status === 'confirmed' || booking.status === 'pending'" variant="danger" (click)="cancelBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
               <span>إلغاء الحجز</span>
             </span>
           </app-button>
 
-          <!-- Dispute Button (during active execution) -->
+          <!-- Dispute Button -->
           <app-button *ngIf="booking.status === 'paid' || booking.status === 'in-progress'" variant="danger" (click)="disputeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
-              <span>فتح نزاع / إلغاء الحجز</span>
+              <span>فتح نزاع / طلب استرداد</span>
             </span>
           </app-button>
 
-          <!-- Pay Button -->
+          <!-- Pay Deposit Button -->
           <app-button *ngIf="booking.status === 'pending_payment'" variant="primary" (click)="payBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                <line x1="1" y1="10" x2="23" y2="10"/>
+                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="12" cy="15" r="2"/>
               </svg>
-              <span>سداد الميزانية والبدء</span>
+              <span>إيداع الميزانية في محفظة الحجز والبدء</span>
             </span>
           </app-button>
 
-          <!-- Approve / Complete Button (shown for delivered AND in-progress as fallback) -->
+          <!-- Custom Partial Release Button -->
+          <button *ngIf="(['paid', 'in-progress', 'delivered'].includes(booking.status)) && (booking.budget - releasedAmount) > 0" (click)="openReleaseModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-1.5 border-none cursor-pointer" style="font-family: 'Cairo', var(--font-arabic);">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+            </svg>
+            <span>تحرير جزء من المبلغ للحرفي 💸</span>
+          </button>
+
+          <!-- Approve / Complete Full Booking Button -->
           <app-button *ngIf="booking.status === 'delivered' || booking.status === 'in-progress'" variant="primary" (click)="completeBooking()" style="font-family: 'Cairo', var(--font-arabic);">
             <span class="flex items-center gap-1.5">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              <span>تأكيد اكتمال الخدمة وتحرير الدفع</span>
+              <span>تأكيد الإكتمال وتحرير الباقي ({{ (booking.budget - releasedAmount) | currencyFormat }})</span>
             </span>
           </app-button>
         </div>
@@ -259,3 +307,83 @@
 
   </div>
 </div>
+
+<!-- ══ RELEASE CUSTOM AMOUNT MODAL ══ -->
+<div *ngIf="showReleaseModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-arabic" style="direction: rtl;">
+  <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 flex flex-col gap-5 relative animate-in fade-in zoom-in-95 duration-200">
+    
+    <!-- Close Button -->
+    <button (click)="closeReleaseModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm border-none cursor-pointer">✕</button>
+
+    <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+      <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0">💸</div>
+      <div>
+        <h3 class="text-base font-extrabold text-slate-900 m-0">تحرير دفعة مالية للحرفي</h3>
+        <p class="text-xs text-slate-400 m-0 mt-0.5">اختر المبلغ المراد تحريره من محفظة الحجز لحساب الحرفي</p>
+      </div>
+    </div>
+
+    <!-- Escrow Wallet Status Summary -->
+    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60 flex flex-col gap-2 text-xs">
+      <div class="flex justify-between items-center">
+        <span class="text-slate-500">إجمالي ميزانية الحجز:</span>
+        <span class="font-extrabold text-slate-800">{{ booking?.budget | currencyFormat }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-slate-500">المبلغ المحرر سابقاً:</span>
+        <span class="font-extrabold text-emerald-600">{{ releasedAmount | currencyFormat }}</span>
+      </div>
+      <div class="flex justify-between items-center pt-1.5 border-t border-slate-200/50">
+        <span class="font-bold text-slate-700">المتبقي بالمحفظة الآن:</span>
+        <span class="font-extrabold text-primary text-sm">{{ ((booking?.budget || 0) - releasedAmount) | currencyFormat }}</span>
+      </div>
+    </div>
+
+    <!-- Custom Input -->
+    <div class="flex flex-col gap-2">
+      <div class="flex justify-between items-center text-xs font-bold text-slate-700">
+        <span>المبلغ المراد تحريره الآن (ج.م)</span>
+        <span *ngIf="releaseInputAmount && booking?.budget" class="text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-md">
+          تعادل {{ ((releaseInputAmount / booking.budget) * 100) | number:'1.0-1' }}% من إجمالي الميزانية
+        </span>
+      </div>
+      <div class="relative">
+        <input 
+          type="number" 
+          [(ngModel)]="releaseInputAmount" 
+          [max]="(booking?.budget || 0) - releasedAmount"
+          min="1"
+          class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-lg font-extrabold text-slate-900 outline-none focus:border-emerald-500 focus:bg-white transition-all text-center"
+        >
+      </div>
+    </div>
+
+    <!-- Live Commission Breakdown calculation -->
+    <div *ngIf="releaseInputAmount && releaseInputAmount > 0" class="p-3 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col gap-1.5 text-xs">
+      <div class="flex justify-between items-center text-slate-700 font-semibold text-[11px]">
+        <span>نسبة الدفعة للمحفظة:</span>
+        <span class="font-bold text-slate-900">{{ ((releaseInputAmount / (booking?.budget || 1)) * 100) | number:'1.0-1' }}%</span>
+      </div>
+      <div class="flex justify-between items-center text-emerald-900 font-bold">
+        <span>صافي تحويل للحرفي (90%):</span>
+        <span class="text-sm font-extrabold">{{ (releaseInputAmount * 0.9) | currencyFormat }}</span>
+      </div>
+      <div class="flex justify-between items-center text-amber-800 font-semibold text-[11px]">
+        <span>رسوم المنصة المستقطعة (10%):</span>
+        <span>{{ (releaseInputAmount * 0.1) | currencyFormat }}</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3 mt-2">
+      <button (click)="closeReleaseModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border-none cursor-pointer transition-all">
+        إلغاء
+      </button>
+      <button (click)="processReleaseMoney()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl border-none cursor-pointer shadow-md hover:shadow-lg transition-all">
+        تأكيد تحرير المبلغ 🚀
+      </button>
+    </div>
+
+  </div>
+</div>
+

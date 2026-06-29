@@ -41,6 +41,18 @@ export class BookingService {
     return this.api.post<any>(`/bookings/${id}/approve`, {});
   }
 
+  getReleases(id: string): Observable<any> {
+    return this.api.get<any>(`/bookings/${id}/releases`);
+  }
+
+  createReleases(id: string, releases: Array<{ name: string; amount: number; dueDate?: string }>): Observable<any> {
+    return this.api.post<any>(`/bookings/${id}/releases`, { releases });
+  }
+
+  deliverRelease(id: string, releaseId: string): Observable<any> {
+    return this.api.post<any>(`/bookings/${id}/releases/${releaseId}/deliver`, {});
+  }
+
   disputeBooking(id: string): Observable<any> {
     return this.api.post<any>(`/bookings/${id}/dispute`, {});
   }

@@ -13,7 +13,7 @@ export class AiService {
   }
 
   getRecommendations(payload: { story: string }): Observable<any> {
-    return this.api.post<any>('/ai/recommendations', payload);
+    return this.api.post<any>('/ai-recommendations', payload);
   }
 
   getHistory(): Observable<any> {

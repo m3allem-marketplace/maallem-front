@@ -58,6 +58,11 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
   electricalInputMode: 'area' | 'dimensions' = 'area';
 
   ngOnInit(): void {
+    // 0. Collapse sidebar by default on mobile/medium viewports
+    if (window.innerWidth < 992) {
+      this.sidebarCollapsed = true;
+    }
+
     // 1. Check user authentication
     this.isLoggedIn = this.userContext.isLoggedIn;
     
@@ -225,21 +230,33 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
     this.clearDimensionInputs();
 
     if (this.aiMode === 'recommendations') {
-      this.aiService.getRecommendations({ story: userText }).subscribe({
+      const combinedStory = this.messages
+        .filter(m => m.sender === 'user')
+        .map(m => m.text)
+        .join(' ');
+
+      this.aiService.getRecommendations({ story: combinedStory }).subscribe({
         next: (res) => {
           this.loading = false;
           if (res?.success && res?.data) {
             const data = res.data;
             this.detectedAnalysis = data.analysis;
             this.recommendedWorkers = data.recommendations || [];
-            this.activeMobileTab = 'results';
+            
+            if (data.analysis?.isExtractionComplete && this.recommendedWorkers.length > 0) {
+              this.activeMobileTab = 'results';
+              this.toast.success('تم العثور على ترشيحات مناسبة');
+            } else if (data.analysis?.isExtractionComplete && this.recommendedWorkers.length === 0) {
+              this.toast.info('تم تحديد طلبك ولكن لم نجد فنيين مسجلين في منطقتك حالياً.');
+            } else {
+              this.toast.info('يرجى استكمال تفاصيل الطلب');
+            }
             
             this.messages.push({
               sender: 'assistant',
-              text: data.analysis?.messageAr || 'تم ترشيح أفضل الفنيين لطلبك بناءً على تخصص العمل والمدينة المكتشفة. يمكنك رؤية القائمة والتواصل معهم في اللوحة الجانبية.'
+              text: data.analysis?.messageAr || 'تم ترشيح أفضل الفنيين لطلبك بناءً على تخصص العمل والمدينة المكتشفة.'
             });
             
-            this.toast.success('تم العثور على ترشيحات مناسبة');
             this.saveLocalSession();
           } else {
             this.messages.push({
@@ -258,7 +275,7 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
           }
           this.messages.push({
             sender: 'assistant',
-            text: `⚠️ خطأ: ${errorMsg}`
+            text: `خطأ في الاتصال: ${errorMsg}`
           });
           this.toast.error('حدث خطأ أثناء جلب الترشيحات');
           this.scrollToBottom();
@@ -285,7 +302,7 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
               isExtractionComplete: false,
               showDimensionsForm: true
             });
-            this.toast.info('💡 يرجى استكمال أبعاد وتفاصيل العمل');
+            this.toast.info('يرجى استكمال أبعاد وتفاصيل العمل');
           } else {
             // Success response: push report and update active BOQ
             this.activeEstimation = aiData;
@@ -323,7 +340,7 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
         }
         this.messages.push({
           sender: 'assistant',
-          text: `⚠️ خطأ خادم: ${errorMsg}`,
+          text: `خطأ: ${errorMsg}`,
           isExtractionComplete: false
         });
         this.toast.error('فشل معالجة الطلب من الخادم');
@@ -446,5 +463,9 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
 
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  goHome(): void {
+    this.router.navigate(['/']);
   }
 }

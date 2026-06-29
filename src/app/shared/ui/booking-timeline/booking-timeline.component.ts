@@ -13,10 +13,10 @@ export class BookingTimelineComponent implements OnChanges {
   @Input() currentStatus: string = 'pending';
 
   steps = [
-    { key: 'pending_payment', label: 'بانتظار الدفع', desc: 'بانتظار سداد ميزانية الحجز' },
-    { key: 'paid', label: 'مؤكد / بدأ العمل', desc: 'تم تأكيد الحجز والاتفاق' },
-    { key: 'delivered', label: 'تم التسليم', desc: 'تأكيد إنجاز الحرفي للعمل' },
-    { key: 'completed', label: 'مكتمل', desc: 'تم تحرير الدفع وتقييم الخدمة' }
+    { key: 'pending_payment', label: 'إيداع بالمحفظة', desc: 'تأمين الميزانية في محفظة الضمان' },
+    { key: 'paid', label: 'جاري التنفيذ', desc: 'العمل قيد الإنجاز وتأمين المستحقات' },
+    { key: 'delivered', label: 'تم الإنجاز', desc: 'الحرفي أعلن إنهاء الخدمة' },
+    { key: 'completed', label: 'تحرير المستحقات', desc: 'تحويل المبلغ للحرفي وتقييم الخدمة' }
   ];
 
   activeStepIndex = 0;

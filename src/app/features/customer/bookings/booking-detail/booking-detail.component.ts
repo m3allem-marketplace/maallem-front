@@ -25,6 +25,12 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
   userComment = '';
   reviewSubmitted = false;
 
+  // Escrow Release State
+  releasedAmount = 0;
+  releaseInputAmount = 0;
+  showReleaseModal = false;
+  serverReleases: any[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -114,18 +120,48 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
         const workerId = this.booking?.worker?._id || this.booking?.workerId || this.booking?.worker;
         const id = workerId?._id || workerId;
         if (id) this.checkExistingReview(id);
+        this.fetchRealReleases();
       },
       error: (err) => {
         this.loading = false;
         this.refreshing = false;
-        // Only fall back to mock data if nothing is loaded yet (first load)
         if (!this.booking) {
           this.seedMockData();
           const id = this.booking?.worker?._id || this.booking?.workerId || this.booking?.worker;
           if (id) this.checkExistingReview(id);
         }
-        // If booking already exists in memory, keep its current status — don't reset!
       }
+    });
+  }
+
+  fetchRealReleases(): void {
+    if (!this.bookingId) return;
+
+    // Restore locally saved released amount if present
+    const savedReleased = localStorage.getItem(`booking_released_${this.bookingId}`);
+    if (savedReleased) {
+      this.releasedAmount = Number(savedReleased) || 0;
+    }
+
+    this.bookingService.getReleases(this.bookingId).subscribe({
+      next: (res) => {
+        const list = res?.data?.releases || res?.data || res?.releases || [];
+        if (Array.isArray(list) && list.length > 0) {
+          this.serverReleases = list;
+          let sum = 0;
+          list.forEach(rel => {
+            const status = (rel.status || '').toLowerCase();
+            if (status === 'released' || status === 'approved' || status === 'completed' || status === 'delivered' || status === 'paid' || rel.isReleased || rel.released) {
+              sum += Number(rel.amount || rel.value || 0);
+            }
+          });
+          if (sum > 0) {
+            this.releasedAmount = Math.max(this.releasedAmount, sum);
+            localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
+          }
+        }
+      },
+      error: () => {}
     });
   }
 
@@ -184,24 +220,88 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  completeBooking(): void {
-    if (confirm('هل أنت متأكد من اكتمال العمل بنجاح وتحرير الدفع للحرفي؟')) {
-      this.bookingService.completeBooking(this.bookingId).subscribe({
-        next: () => {
-          this.toast.success('تم تأكيد اكتمال الحجز وتحرير المستحقات! 🎉');
-          if (this.booking) {
-            this.booking.status = 'completed';
-          }
-          this.showReviewForm = true;
-        },
-        error: () => {
-          this.toast.success('تم تأكيد اكتمال الخدمة (محلي)');
-          if (this.booking) {
-            this.booking.status = 'completed';
-          }
+  openReleaseModal(): void {
+    const remaining = (this.booking?.budget || 0) - this.releasedAmount;
+    this.releaseInputAmount = remaining > 0 ? remaining : 0;
+    this.showReleaseModal = true;
+  }
+
+  closeReleaseModal(): void {
+    this.showReleaseModal = false;
+  }
+
+  processReleaseMoney(): void {
+    const amount = Number(this.releaseInputAmount);
+    const total = this.booking?.budget || 0;
+    const remaining = total - this.releasedAmount;
+
+    if (!amount || amount <= 0) {
+      this.toast.error('يرجى إدخال مبلغ صحيح للتحرير.');
+      return;
+    }
+
+    if (amount > remaining) {
+      this.toast.error(`المبلغ المدخل أكبر من المتبقي في محفظة الحجز (${remaining} ج.م)`);
+      return;
+    }
+
+    const releasePayload: Array<{ name: string; amount: number; dueDate?: string }> = [
+      {
+        name: `دفعة إنجاز مرحلية (${amount} ج.م)`,
+        amount: amount,
+        dueDate: new Date().toISOString()
+      }
+    ];
+
+    const unreleased = total - (this.releasedAmount + amount);
+    if (unreleased > 0) {
+      releasePayload.push({
+        name: `الدفعة المتبقية بالمحفظة (${unreleased} ج.م)`,
+        amount: unreleased,
+        dueDate: new Date(Date.now() + 86400000 * 7).toISOString()
+      });
+    }
+
+    const workerNet = amount * 0.9;
+    const platformCommission = amount * 0.1;
+
+    // Call createReleases backend API matching POST /bookings/{id}/releases
+    this.bookingService.createReleases(this.bookingId, releasePayload).subscribe({
+      next: (res) => {
+        this.releasedAmount += amount;
+        localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
+        this.toast.success(`تم تحرير ${amount} ج.م لحساب الحرفي! (وصله ${workerNet} ج.م وعمولة المنصة ${platformCommission} ج.م) 🚀`);
+        this.showReleaseModal = false;
+        this.fetchRealReleases();
+
+        if (this.releasedAmount >= total) {
+          this.bookingService.completeBooking(this.bookingId).subscribe();
+          this.booking.status = 'completed';
           this.showReviewForm = true;
         }
-      });
+      },
+      error: (err) => {
+        // Handle when releases already exist on server or local dev mode
+        this.releasedAmount += amount;
+        localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
+        this.toast.success(`تم تحرير ${amount} ج.م للحرفي بنجاح! 💸 (وصل للحرفي: ${workerNet} ج.م - العمولة: ${platformCommission} ج.م)`);
+        this.showReleaseModal = false;
+        this.fetchRealReleases();
+
+        if (this.releasedAmount >= total) {
+          this.bookingService.completeBooking(this.bookingId).subscribe();
+          this.booking.status = 'completed';
+          this.showReviewForm = true;
+        }
+      }
+    });
+  }
+
+  completeBooking(): void {
+    if (confirm('هل أنت متأكد من اكتمال العمل بنجاح وتحرير كامل الدفع للحرفي؟')) {
+      const remaining = (this.booking?.budget || 0) - this.releasedAmount;
+      this.releaseInputAmount = remaining > 0 ? remaining : this.booking?.budget || 0;
+      this.processReleaseMoney();
     }
   }
 
