@@ -1,0 +1,122 @@
+/* ─── Global Page Transition Loader ───────────────────────────────────────── */
+.global-page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FAFBFE;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  animation: loaderFadeIn 0.25s ease-out;
+  pointer-events: all;
+}
+
+@keyframes loaderFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.loader-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* Icon / Avatar Wrapper */
+.loader-icon-wrap {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Construction Tool Animation */
+.loader-tool-icon {
+  width: 54px;
+  height: 54px;
+  color: #1B2B6E;
+  animation: floatTool 2.2s ease-in-out infinite;
+}
+
+@keyframes floatTool {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-6px) rotate(3deg); }
+}
+
+/* AI Avatar in Loader */
+.loader-ai-avatar {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #1B2B6E;
+  box-shadow: 0 0 16px rgba(27, 43, 110, 0.25);
+  animation: pulseAvatar 2s ease-in-out infinite;
+}
+
+@keyframes pulseAvatar {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 16px rgba(27, 43, 110, 0.25); }
+  50%      { transform: scale(1.05); box-shadow: 0 0 24px rgba(27, 43, 110, 0.4); }
+}
+
+/* Spinner Ring */
+.loader-spinner-ring {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(27, 43, 110, 0.1);
+  border-top-color: #1B2B6E;
+  border-right-color: #DFBA6B;
+  border-radius: 50%;
+  animation: spinRing 0.85s linear infinite;
+}
+
+@keyframes spinRing {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loader-text {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #4B5563;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Brand Footer (like Asana at bottom) */
+.loader-brand-footer {
+  position: absolute;
+  bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.75;
+}
+
+.loader-brand-logo {
+  width: 24px;
+  height: 24px;
+  background: #1B2B6E;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-brand-name {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #1B2B6E;
+}

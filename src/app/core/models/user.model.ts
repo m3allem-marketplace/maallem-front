@@ -50,6 +50,7 @@ export interface WorkerProfile {
   location?:          Location;
   phone?:             string;
   portfolioImages?:   string[];
+  idCard?:            string;
   isProfileComplete?: boolean;
   availabilities?:    WorkerAvailabilitySlot[];
   hourlyRate?:        number;

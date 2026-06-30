@@ -1,395 +1,407 @@
-<!-- Top Bar -->
-<div class="hidden md:block w-full text-xs" style="background: linear-gradient(135deg, var(--color-primary-800), var(--color-primary-900)); color: var(--color-primary-100); border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-radius: 0 0 24px 24px; overflow: hidden; direction: ltr; font-family: 'Cairo', var(--font-arabic);">
-  <div class="flex items-center justify-between px-8 py-2.5 max-w-7xl mx-auto">
-    <div class="flex items-center gap-8">
-      <span class="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity duration-200">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-       نخدم جميع محافظات مصر
-      </span>
-      <span class="w-px h-3 opacity-20" style="background: var(--color-primary-400); display:inline-block;"></span>
-      <a href="mailto:support@m3allem.com" class="flex items-center gap-2 opacity-80 hover:opacity-100 text-inherit no-underline transition-opacity duration-200">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        support&#64;m3allem.com
-      </a>
-    </div>
-    <div class="flex items-center gap-5">
-      <span class="flex items-center gap-2 opacity-80">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        دعم فني متاح 24/7
-      </span>
-      <span class="w-px h-3 opacity-20" style="background: var(--color-primary-400); display:inline-block;"></span>
-      <div class="flex items-center gap-3">
-        <a href="#" class="opacity-60 hover:opacity-100 hover:text-[var(--color-accent)] transition-all duration-200" style="color:white">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
-        <a href="#" class="opacity-60 hover:opacity-100 hover:text-[var(--color-accent)] transition-all duration-200" style="color:white">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
-        </a>
-        <a href="#" class="opacity-60 hover:opacity-100 hover:text-[var(--color-accent)] transition-all duration-200" style="color:white">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════════════
+     MAIN NAVBAR — Premium Light Edition (Mostaql Style)
+══════════════════════════════════════════════════ -->
+<nav class="nb-root" [class.nb-scrolled]="isScrolled" style="direction: ltr;">
+  <div class="nb-inner">
 
-<!-- Main Navbar -->
-<nav
-  class="navbar-main sticky top-0 w-full z-50 animate-fade-in"
-  [class.scrolled]="isScrolled"
-  style="direction: ltr;"
->
-  <div class="flex items-center justify-between px-8 max-w-7xl mx-auto" style="height: var(--navbar-height);">
-
-    <!-- Logo -->
-    <a routerLink="/" class="logo-wrap order-3 flex items-center gap-2.5 no-underline shrink-0 group">
-      <!-- Geometric Hexagonal emblem with M path -->
-      <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#0d153a] border border-[#DFBA6B]/30 group-hover:border-[#DFBA6B] transition-colors duration-300 shadow-md logo-icon">
-        <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="#1B2B6E" stroke="url(#logoGoldGrad)" stroke-width="5" stroke-linejoin="round"/>
-          <path d="M30 68V32L50 51L70 32V68" stroke="url(#logoGoldGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- ── Logo ── -->
+    <a routerLink="/" class="nb-logo" aria-label="معلّم — الصفحة الرئيسية">
+      <div class="nb-logo-emblem">
+        <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,5 90,28 90,72 50,95 10,72 10,28"
+                   fill="#1B2B6E" stroke="url(#ng)" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M30 68V32L50 51L70 32V68"
+                stroke="url(#ng)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
           <defs>
-            <linearGradient id="logoGoldGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#DFBA6B" />
-              <stop offset="100%" stop-color="#B99343" />
+            <linearGradient id="ng" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FFB400"/>
+              <stop offset="100%" stop-color="#DFBA6B"/>
             </linearGradient>
           </defs>
         </svg>
       </div>
-      <!-- Stacked Arabic typography next to the emblem -->
-      <div class="flex flex-col text-right font-arabic">
-        <span class="text-lg lg:text-xl font-black text-[#1B2B6E] tracking-wide leading-tight group-hover:text-[#DFBA6B] transition-colors duration-300">مَعْلَم</span>
-        <span class="text-[9px] text-[#B99343] font-bold uppercase leading-none hidden lg:block mt-0.5 opacity-90">منصة الحرفيين</span>
+      <div class="nb-logo-text">
+        <span class="nb-logo-name">مَعْلَم</span>
+        <span class="nb-logo-tagline">منصة الحرفيين</span>
       </div>
     </a>
 
-    <!-- Desktop Links -->
-    <div class="hidden lg:flex order-2 items-center gap-2" style="direction: rtl;">
-      <a routerLink="/" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">الرئيسية</a>
-      <a routerLink="/workers" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">تصفح العمال</a>
-
-
+    <!-- ── Desktop Nav Links (center) ── -->
+    <div class="nb-links hidden lg:flex" style="direction: rtl;">
+      <a routerLink="/" class="nb-link" lang="ar"
+         routerLinkActive="nb-link--active" [routerLinkActiveOptions]="{exact: true}">
+        <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        الرئيسية
+      </a>
+      <a routerLink="/workers" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+        <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="17" cy="7" r="4"/><path d="M10.5 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2"/><circle cx="7" cy="11" r="4"/><path d="M1 21v-2a4 4 0 0 1 4-4h2"/></svg>
+        تصفح الحرفيين
+      </a>
 
       <ng-container *ngIf="isUser">
-        <a routerLink="/customer/dashboard" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">لوحة التحكم</a>
-        <a routerLink="/customer/bookings" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">خدماتي</a>
-        <a routerLink="/customer/bid-requests" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">مزاداتي</a>
+        <a routerLink="/customer/dashboard" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          لوحتي
+        </a>
+        <a routerLink="/customer/bookings" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          خدماتي
+        </a>
+        <a routerLink="/customer/bid-requests" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          مزاداتي
+        </a>
       </ng-container>
 
       <ng-container *hasRole="['worker', 'company']">
-        <a routerLink="/worker/direct-offers" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">خدماتي</a>
-        <a routerLink="/worker/open-jobs" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">تصفح المزادات</a>
-        <a routerLink="/worker/my-bids" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">عروضي</a>
-        <a routerLink="/worker/dashboard" class="nav-link px-4 py-2 text-sm font-semibold no-underline arabic-text" lang="ar" routerLinkActive="active">لوحة التحكم</a>
+        <a routerLink="/worker/direct-offers" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          خدماتي
+        </a>
+        <a routerLink="/worker/open-jobs" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          المزادات
+        </a>
+        <a routerLink="/worker/my-bids" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          عروضي
+        </a>
+        <a routerLink="/worker/dashboard" class="nb-link" lang="ar" routerLinkActive="nb-link--active">
+          <svg class="nb-link-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          لوحتي
+        </a>
       </ng-container>
     </div>
 
-    <!-- Left side: CTAs and user menus (order-1) -->
-    <div class="hidden lg:flex order-1 items-center gap-4 min-w-0">
+    <!-- ── Right side: Actions ── -->
+    <div class="nb-actions">
 
-      <!-- Guest Layout -->
+      <!-- ══ GUEST ══ -->
       <ng-container *ngIf="isGuest">
-        <a routerLink="/auth/register" class="cta-btn flex-row-reverse no-underline arabic-text font-arabic" lang="ar">
-          <div class="cta-btn-text-wrapper">
-            <span class="cta-btn-text">ابحث عن عامل</span>
-            <span class="cta-btn-text hover-text">ابحث عن عامل</span>
-          </div>
-          <div class="cta-arrow">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 12H7m5-5l-5 5 5 5"/>
-            </svg>
-          </div>
-        </a>
-
-        <a routerLink="/auth/login"
-           class="login-btn text-sm font-bold no-underline px-5 py-2.5 rounded-xl border arabic-text font-arabic" lang="ar"
-           style="color: var(--color-primary); border-color: var(--color-primary-muted);">
-          تسجيل الدخول
-        </a>
-
-        <div class="flex flex-row-reverse items-center gap-3 pr-5 border-r" style="border-color: var(--border-color);">
-          <div class="phone-ring flex items-center justify-center w-11 h-11 rounded-full border-2 cursor-pointer" style="border-color: var(--color-accent); color: var(--color-accent); background: rgba(255, 180, 0, 0.04);">
-            <svg width="18" height="18" viewBox="0 0 100 100" fill="currentColor">
-              <path d="M94.92,56.91a2.83,2.83,0,0,1-2.81,2.72l-.17,0a2.81,2.81,0,0,1-2-.92,2.74,2.74,0,0,1-.72-2.06c.55-11.66-2.56-22.24-9-30.56S64.33,12.1,52.9,9.74a2.85,2.85,0,0,1-1.84-1.21,2.77,2.77,0,0,1-.39-2.13,2.84,2.84,0,0,1,2.78-2.29,2.38,2.38,0,0,1,.56.07c12.81,2.62,23.45,9,30.73,18.37S95.58,43.84,94.92,56.91Z"/>
-              <path d="M80,55.05a2.85,2.85,0,0,1-2.85,2.71H77a2.89,2.89,0,0,1-2.68-3C74.68,47,72.78,40.14,68.75,35S58.6,26.22,51,24.68a2.84,2.84,0,0,1,.56-5.63,1.91,1.91,0,0,1,.56.06c9,1.8,16.31,6.09,21.19,12.35S80.44,45.91,80,55.05Z"/>
-              <path d="M65,53.28a2.85,2.85,0,0,1-2.85,2.65H62a2.87,2.87,0,0,1-2.69-3c.27-3.86-.42-7-2-9S52.86,40.4,49,39.68A2.86,2.86,0,0,1,49.56,34a3.43,3.43,0,0,1,.55.06c5.21,1,9.24,3.18,11.66,6.29S65.31,48,65,53.28Z"/>
+        <!-- Phone -->
+        <div class="nb-phone hidden lg:flex">
+          <div class="nb-phone-icon" title="اتصل بنا">
+            <svg width="15" height="15" viewBox="0 0 100 100" fill="currentColor">
               <path d="M83.29,90c-3.44,3.8-9.27,6-16,6a30.77,30.77,0,0,1-5.14-.45C47.23,94.16,31.64,82.89,16,62.09c-9.93-14.87-16.25-35.74-1.64-46a20.15,20.15,0,0,1,10-2.82c4,0,5.28,1.61,5.64,2.92l5,18.05c.55,3.73-1.15,6.94-5.11,9.6-2.17,1.54-2.85,3.4-2,5.47,2.78,4.62,15.4,20.4,22.54,24.2,2.65,1.41,4,.69,5.83-1a15.62,15.62,0,0,0,1.21-1.31c2.55-3.14,5-4.48,7.34-4.09C77.2,70.08,84.11,72.34,85.36,74a9.9,9.9,0,0,1,1.37,4.52C87.19,83.09,86.05,87,83.29,90Z"/>
             </svg>
           </div>
-          <div>
-            <div class="text-[10px] font-bold uppercase tracking-wider font-arabic" style="color: var(--color-accent);"> محتاج مساعدة؟</div>
-            <a href="tel:199916" class="text-sm font-extrabold no-underline hover:text-[var(--color-accent)] transition-colors duration-200 font-arabic" style="color: var(--color-primary-dark);">
-              199916
-            </a>
+          <div class="nb-phone-text">
+            <span class="nb-phone-label">محتاج مساعدة؟</span>
+            <a href="tel:199916" class="nb-phone-number">199916</a>
           </div>
         </div>
+
+        <div class="nb-divider hidden lg:block"></div>
+
+        <a routerLink="/auth/login" class="nb-btn-ghost hidden lg:flex" lang="ar">
+          تسجيل الدخول
+        </a>
+        <a routerLink="/auth/register" class="nb-btn-gold" lang="ar">
+          <span>ابحث عن حرفي</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </ng-container>
 
-      <!-- Authenticated Layout -->
+      <!-- ══ AUTHENTICATED — Desktop ══ -->
       <ng-container *ngIf="isDesktop && !isGuest">
-        <!-- Avatar Menu Dropdown -->
-        <div
-          class="avatar-wrap relative min-w-0"
-          appClickOutside
-          (clickOutside)="isDropdownOpen = false"
-        >
-          <button class="dropdown-btn flex items-center gap-2.5 border bg-transparent cursor-pointer px-3 py-1.5 rounded-xl transition-all min-w-0" style="border-color: transparent;" (click)="toggleDropdown()">
-            <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="sm" />
-            <div class="text-right hidden sm:block min-w-0 font-arabic">
-              <div class="text-sm font-bold tracking-tight truncate max-w-[110px]" style="color: var(--text-primary);">{{ currentUser?.name }}</div>
-              <div class="text-[10px] font-bold uppercase tracking-wider truncate max-w-[110px]" style="color: var(--text-secondary);">{{ currentUserRoleLabel }}</div>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform duration-300" [class.rotate-180]="isDropdownOpen" style="color: var(--text-secondary);"><polyline points="6 9 12 15 18 9"/></svg>
+
+        <!-- Chat button (Borderless, container-less) -->
+        <div class="nb-icon-wrap" appClickOutside (clickOutside)="isChatOpen = false">
+          <button class="nb-icon-btn-clean" (click)="toggleChatDropdown()" aria-label="المحادثات">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span *ngIf="unreadChatCount > 0" class="nb-badge">
+              {{ unreadChatCount > 99 ? '99+' : unreadChatCount }}
+            </span>
           </button>
 
-          <div class="dropdown-menu arabic-text absolute top-full mt-2 rounded-2xl overflow-hidden shadow-2xl" [class.show]="isDropdownOpen" lang="ar" style="background: var(--bg-surface); z-index: var(--z-dropdown); border: 1px solid var(--border-color); left: 0; right: auto; inset-inline-start: 0; inset-inline-end: auto; transform-origin: top left; min-width: 14rem; max-width: calc(100vw - 1.5rem); width: max-content; direction: rtl; text-align: right;">
-            <div class="px-5 py-4 border-b flex flex-col gap-0.5" style="border-color: var(--border-color); background: linear-gradient(135deg, var(--color-primary-subtle), rgba(27,43,110,0.02)); direction: rtl; text-align: right;">
-              <div class="text-xs font-semibold" style="color: var(--color-primary); font-family: 'Cairo', var(--font-arabic);">مسجل باسم</div>
-              <div class="text-sm font-extrabold tracking-tight" style="color: var(--color-primary); font-family: 'Cairo', var(--font-arabic);">{{ currentUser?.name }}</div>
-              <div class="text-xs truncate" style="color: var(--text-secondary); font-family: 'Cairo', var(--font-arabic);">{{ currentUser?.email }}</div>
+          <!-- Chat dropdown -->
+          <div *ngIf="isChatOpen" class="nb-dropdown nb-chat-drop" style="direction: rtl;">
+            <div class="nb-drop-header">
+              <span>الرسائل الأخيرة</span>
+              <a routerLink="/chat" (click)="isChatOpen = false" class="nb-drop-view-all">عرض الكل</a>
             </div>
-            <div class="py-1.5 font-arabic">
-              <a routerLink="/profile" class="dropdown-item flex items-center gap-3 px-5 py-2.5 text-sm font-medium no-underline arabic-text" lang="ar" style="color: var(--text-body);" (click)="closeDropdown()">
+            <div class="nb-chat-list">
+              <div *ngFor="let conv of previewConversations"
+                   (click)="navigateToConversation(conv)"
+                   class="nb-chat-row">
+                <app-avatar [name]="getParticipantName(conv)" size="sm"></app-avatar>
+                <div class="nb-chat-info">
+                  <div class="nb-chat-name">{{ getParticipantName(conv) }}</div>
+                  <p class="nb-chat-preview">{{ conv.lastMessage?.content || 'لا توجد رسائل' }}</p>
+                </div>
+                <span *ngIf="getUnreadCount(conv) > 0" class="nb-chat-dot"></span>
+              </div>
+              <div *ngIf="previewConversations.length === 0" class="nb-empty-state">
+                لا توجد رسائل جديدة
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification bell (Borderless, container-less) -->
+        <div class="nb-icon-wrap" appClickOutside (clickOutside)="isNotificationOpen = false">
+          <button class="nb-icon-btn-clean" (click)="toggleNotifications()" aria-label="الإشعارات">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span *ngIf="unreadNotificationsCount > 0" class="nb-badge nb-badge--pulse"></span>
+          </button>
+          <div *ngIf="isNotificationOpen" class="nb-dropdown" style="right: 0; left: auto; transform-origin: top right;">
+            <app-notification />
+          </div>
+        </div>
+
+        <div class="nb-divider"></div>
+
+        <!-- Avatar / Profile dropdown -->
+        <div class="nb-avatar-wrap" appClickOutside (clickOutside)="isDropdownOpen = false">
+          <button class="nb-avatar-btn" (click)="toggleDropdown()">
+            <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="sm" />
+            <div class="nb-user-info">
+              <span class="nb-user-name">{{ currentUser?.name }}</span>
+              <span class="nb-user-role">{{ currentUserRoleLabel }}</span>
+            </div>
+            <svg class="nb-chevron" [class.nb-chevron--open]="isDropdownOpen"
+                 width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+          <!-- Profile dropdown -->
+          <div class="nb-dropdown nb-profile-drop" [class.nb-dropdown--open]="isDropdownOpen" style="direction: rtl;">
+            <div class="nb-drop-user-header">
+              <div class="nb-drop-user-label">مسجل باسم</div>
+              <div class="nb-drop-user-name">{{ currentUser?.name }}</div>
+              <div class="nb-drop-user-email">{{ currentUser?.email }}</div>
+            </div>
+            <div class="nb-drop-items">
+              <a routerLink="/profile" class="nb-drop-item" (click)="closeDropdown()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-               الملف الشخصي
+                الملف الشخصي
               </a>
-              <a routerLink="/settings" class="dropdown-item flex items-center gap-3 px-5 py-2.5 text-sm font-medium no-underline arabic-text" lang="ar" style="color: var(--text-body);" (click)="closeDropdown()">
+              <a routerLink="/settings" class="nb-drop-item" (click)="closeDropdown()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 الإعدادات
               </a>
-              <hr class="my-1.5" style="border-color: var(--border-color);" />
-              <button class="dropdown-item dropdown-logout flex items-center gap-3 w-full px-5 py-2.5 text-sm font-semibold border-none bg-transparent cursor-pointer text-right arabic-text" lang="ar" style="color: var(--color-error);" (click)="logout()">
+              <div class="nb-drop-sep"></div>
+              <button class="nb-drop-item nb-drop-item--danger" (click)="logout()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 تسجيل الخروج
               </button>
             </div>
           </div>
         </div>
+      </ng-container>
 
-        <!-- Notification Bell Dropdown -->
-        <div
-          class="notification-wrap relative"
-          appClickOutside
-          (clickOutside)="isNotificationOpen = false"
-        >
-          <button
-            class="bell-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all"
-            style="background: var(--color-primary-subtle); color: var(--color-primary);"
-            aria-label="الإشعارات"
-            (click)="toggleNotifications()"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      <!-- ══ AUTHENTICATED — Mobile icons ══ -->
+      <ng-container *ngIf="!isDesktop && !isGuest">
+        <!-- Chat -->
+        <div class="nb-icon-wrap" appClickOutside (clickOutside)="isChatOpen = false">
+          <button class="nb-icon-btn-clean" (click)="toggleChatDropdown()" aria-label="المحادثات">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            <span *ngIf="unreadNotificationsCount > 0"
-              class="pulse-dot absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full border-2 border-white"
-              style="background: var(--color-error);"
-            ></span>
+            <span *ngIf="unreadChatCount > 0" class="nb-badge">{{ unreadChatCount > 99 ? '99+' : unreadChatCount }}</span>
           </button>
-          <div *ngIf="isNotificationOpen" class="absolute top-full left-0 mt-4 z-[9999]">
-              <app-notification />
+          <div *ngIf="isChatOpen" class="nb-dropdown nb-chat-drop" style="direction: rtl; right: 0; left: auto;">
+            <div class="nb-drop-header">
+              <span>الرسائل الأخيرة</span>
+              <a routerLink="/chat" (click)="isChatOpen = false" class="nb-drop-view-all">عرض الكل</a>
+            </div>
+            <div class="nb-chat-list">
+              <div *ngFor="let conv of previewConversations"
+                   (click)="navigateToConversation(conv)"
+                   class="nb-chat-row">
+                <app-avatar [name]="getParticipantName(conv)" size="sm"></app-avatar>
+                <div class="nb-chat-info">
+                  <div class="nb-chat-name">{{ getParticipantName(conv) }}</div>
+                  <p class="nb-chat-preview">{{ conv.lastMessage?.content || 'لا توجد رسائل' }}</p>
+                </div>
+                <span *ngIf="getUnreadCount(conv) > 0" class="nb-chat-dot"></span>
+              </div>
+              <div *ngIf="previewConversations.length === 0" class="nb-empty-state">لا توجد رسائل جديدة</div>
+            </div>
           </div>
         </div>
 
-        <!-- Chat Icon Dropdown -->
-        <div
-          class="chat-wrap relative"
-          appClickOutside
-          (clickOutside)="isChatOpen = false"
-        >
-          <button
-            class="chat-icon-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all"
-            style="background: var(--color-primary-subtle); color: var(--color-primary);"
-            aria-label="المحادثات"
-            (click)="toggleChatDropdown()"
-          >
-            <!-- Chat bubble SVG -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            <!-- Live unread badge -->
-            <span *ngIf="unreadChatCount > 0"
-              class="chat-badge absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-extrabold border-2 border-white"
-              style="background: var(--color-error); color: white; padding: 0 4px;"
-            >{{ unreadChatCount > 99 ? '99+' : unreadChatCount }}</span>
+        <!-- Avatar -->
+        <div class="nb-avatar-wrap" appClickOutside (clickOutside)="isDropdownOpen = false">
+          <button class="nb-avatar-btn nb-avatar-btn--compact" (click)="toggleDropdown()">
+            <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="sm" />
+            <svg class="nb-chevron" [class.nb-chevron--open]="isDropdownOpen" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-
-          <!-- Chat Quick Preview Dropdown Menu -->
-          <div *ngIf="isChatOpen" class="absolute top-full left-0 mt-2 z-[9999] w-80 rounded-2xl bg-white border border-gray-100 shadow-2xl p-4 text-right font-arabic" style="direction: rtl; left: 0; right: auto;">
-            <div class="flex justify-between items-center pb-2 mb-3 border-b border-gray-100">
-              <span class="text-sm font-bold text-gray-800">الرسائل الأخيرة</span>
-              <a routerLink="/chat" (click)="isChatOpen = false" class="text-xs font-semibold text-primary hover:underline">عرض الكل</a>
+          <div class="nb-dropdown nb-profile-drop" [class.nb-dropdown--open]="isDropdownOpen" style="direction: rtl; right: 0; left: auto;">
+            <div class="nb-drop-user-header">
+              <div class="nb-drop-user-name">{{ currentUser?.name }}</div>
+              <div class="nb-drop-user-email">{{ currentUser?.email }}</div>
             </div>
-            
-            <!-- Quick list of conversations with unread messages -->
-            <div class="flex flex-col gap-2.5 max-h-60 overflow-y-auto">
-              <div *ngFor="let conv of previewConversations" 
-                   (click)="navigateToConversation(conv)"
-                   class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors"
-              >
-                <app-avatar [name]="getParticipantName(conv)" size="sm"></app-avatar>
-                <div class="flex-1 min-w-0">
-                  <div class="flex justify-between items-baseline mb-0.5">
-                    <span class="text-xs font-bold text-gray-900 truncate max-w-[120px]">{{ getParticipantName(conv) }}</span>
-                    <span class="text-[9px] text-gray-400 shrink-0">{{ conv.lastMessageAt | date:'shortTime' }}</span>
-                  </div>
-                  <p class="text-xs text-gray-500 truncate">{{ conv.lastMessage?.content || 'لا توجد رسائل جديدة' }}</p>
-                </div>
-                <span *ngIf="getUnreadCount(conv) > 0" class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
-              </div>
-              
-              <div *ngIf="previewConversations.length === 0" class="py-6 text-center text-xs text-gray-400">
-                لا توجد رسائل جديدة
-              </div>
+            <div class="nb-drop-items">
+              <a routerLink="/profile" class="nb-drop-item" (click)="closeDropdown()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                الملف الشخصي
+              </a>
+              <a routerLink="/settings" class="nb-drop-item" (click)="closeDropdown()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                الإعدادات
+              </a>
+              <div class="nb-drop-sep"></div>
+              <button class="nb-drop-item nb-drop-item--danger" (click)="logout()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                تسجيل الخروج
+              </button>
             </div>
           </div>
         </div>
       </ng-container>
 
+      <!-- ── Hamburger Menu Button (Available on all screens, Mostaql style) ── -->
+      <button class="nb-hamburger" (click)="toggleMenu()" [class.nb-hamburger--open]="isMenuOpen" aria-label="القائمة الجانبية">
+        <span class="nb-bar"></span>
+        <span class="nb-bar"></span>
+        <span class="nb-bar"></span>
+      </button>
+
     </div>
-
-    <!-- Mobile User Actions (visible on < lg) -->
-    <div *ngIf="!isDesktop && !isGuest" class="flex lg:hidden order-2 items-center gap-3 min-w-0">
-      <!-- Chat Icon Dropdown (Mobile) -->
-      <div
-        class="chat-wrap relative"
-        appClickOutside
-        (clickOutside)="isChatOpen = false"
-      >
-        <button
-          class="chat-icon-btn relative flex items-center justify-center w-10 h-10 rounded-full border-none cursor-pointer transition-all"
-          style="background: var(--color-primary-subtle); color: var(--color-primary);"
-          aria-label="المحادثات"
-          (click)="toggleChatDropdown()"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <!-- Live unread badge -->
-          <span *ngIf="unreadChatCount > 0"
-            class="chat-badge absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-extrabold border-2 border-white"
-            style="background: var(--color-error); color: white; padding: 0 4px;"
-          >{{ unreadChatCount > 99 ? '99+' : unreadChatCount }}</span>
-        </button>
-
-        <!-- Chat Quick Preview Dropdown Menu -->
-        <div *ngIf="isChatOpen" class="absolute top-full left-0 mt-2 z-[9999] w-80 rounded-2xl bg-white border border-gray-100 shadow-2xl p-4 text-right font-arabic" style="direction: rtl; left: 0; right: auto;">
-          <div class="flex justify-between items-center pb-2 mb-3 border-b border-gray-100">
-            <span class="text-sm font-bold text-gray-800">الرسائل الأخيرة</span>
-            <a routerLink="/chat" (click)="isChatOpen = false" class="text-xs font-semibold text-primary hover:underline">عرض الكل</a>
-          </div>
-          
-          <!-- Quick list of conversations with unread messages -->
-          <div class="flex flex-col gap-2.5 max-h-60 overflow-y-auto">
-            <div *ngFor="let conv of previewConversations" 
-                 (click)="navigateToConversation(conv)"
-                 class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors"
-            >
-              <app-avatar [name]="getParticipantName(conv)" size="sm"></app-avatar>
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-baseline mb-0.5">
-                  <span class="text-xs font-bold text-gray-900 truncate max-w-[120px]">{{ getParticipantName(conv) }}</span>
-                  <span class="text-[9px] text-gray-400 shrink-0">{{ conv.lastMessageAt | date:'shortTime' }}</span>
-                </div>
-                <p class="text-xs text-gray-500 truncate">{{ conv.lastMessage?.content || 'لا توجد رسائل جديدة' }}</p>
-              </div>
-              <span *ngIf="getUnreadCount(conv) > 0" class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
-            </div>
-            
-            <div *ngIf="previewConversations.length === 0" class="py-6 text-center text-xs text-gray-400">
-              لا توجد رسائل جديدة
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Avatar Menu Dropdown (Mobile) -->
-      <div
-        class="avatar-wrap relative min-w-0"
-        appClickOutside
-        (clickOutside)="isDropdownOpen = false"
-      >
-        <button class="dropdown-btn flex items-center justify-center border bg-transparent cursor-pointer p-0.5 rounded-xl transition-all min-w-0" style="border-color: transparent;" (click)="toggleDropdown()">
-          <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="sm" />
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform duration-300" [class.rotate-180]="isDropdownOpen" style="color: var(--text-secondary);"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-
-        <div class="dropdown-menu arabic-text absolute top-full mt-2 rounded-2xl overflow-hidden shadow-2xl" [class.show]="isDropdownOpen" lang="ar" style="background: var(--bg-surface); z-index: var(--z-dropdown); left: 0; right: auto; inset-inline-start: 0; inset-inline-end: auto; transform-origin: top left; min-width: 14rem; max-width: calc(100vw - 1.5rem); width: max-content; direction: rtl; text-align: right;">
-          <div class="px-5 py-4 border-b flex flex-col gap-0.5" style="border-color: var(--border-color); background: linear-gradient(135deg, var(--color-primary-subtle), rgba(27,43,110,0.02)); direction: rtl; text-align: right;">
-            <div class="text-xs font-semibold" style="color: var(--color-primary); font-family: 'Cairo', var(--font-arabic);">مسجل باسم</div>
-            <div class="text-sm font-extrabold tracking-tight" style="color: var(--color-primary); font-family: 'Cairo', var(--font-arabic);">{{ currentUser?.name }}</div>
-            <div class="text-xs truncate" style="color: var(--text-secondary); font-family: 'Cairo', var(--font-arabic);">{{ currentUser?.email }}</div>
-          </div>
-          <div class="py-1.5 font-arabic">
-            <a routerLink="/profile" class="dropdown-item flex items-center gap-3 px-5 py-2.5 text-sm font-medium no-underline arabic-text" lang="ar" style="color: var(--text-body);" (click)="closeDropdown()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-             الملف الشخصي
-            </a>
-            <a routerLink="/settings" class="dropdown-item flex items-center gap-3 px-5 py-2.5 text-sm font-medium no-underline arabic-text" lang="ar" style="color: var(--text-body);" (click)="closeDropdown()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              الإعدادات
-            </a>
-            <hr class="my-1.5" style="border-color: var(--border-color);" />
-            <button class="dropdown-item dropdown-logout flex items-center gap-3 w-full px-5 py-2.5 text-sm font-semibold border-none bg-transparent cursor-pointer text-right arabic-text" lang="ar" style="color: var(--color-error);" (click)="logout()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              تسجيل الخروج
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Menu Hamburger Button -->
-    <button class="flex lg:hidden order-1 flex-col gap-1.5 border-none bg-transparent cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors" (click)="toggleMenu()" aria-label="فتح القائمة">
-      <span class="menu-bar block w-6 h-0.5 rounded-full" [class.rotate-45]="isMenuOpen" [class.translate-y-2]="isMenuOpen" style="background: var(--color-primary);"></span>
-      <span class="menu-bar block w-6 h-0.5 rounded-full" [class.opacity-0]="isMenuOpen" style="background: var(--color-primary);"></span>
-      <span class="menu-bar block w-4 h-0.5 rounded-full" [class.-rotate-45]="isMenuOpen" [class.-translate-y-2]="isMenuOpen" [class.w-6]="isMenuOpen" style="background: var(--color-primary);"></span>
-    </button>
-
   </div>
+
+  <!-- ── Gold accent line at bottom ── -->
+  <div class="nb-accent-line"></div>
 </nav>
 
-<!-- Mobile Menu Drawer overlay -->
-<div class="mobile-menu fixed left-0 right-0 flex flex-col lg:hidden" [class.show]="isMenuOpen" style="top: var(--navbar-height); background: var(--color-neutral-0); z-index: 40; box-shadow: var(--shadow-xl); border-top: 1px solid var(--border-color); direction: ltr;">
-  <div class="px-6 py-5 flex flex-col gap-1.5 font-arabic">
-    <a routerLink="/" class="px-4 py-3 text-sm font-bold no-underline rounded-xl arabic-text" lang="ar" style="color: var(--color-accent); background: var(--color-accent-subtle);" (click)="toggleMenu()">الرئيسية</a>
-    <a routerLink="/workers" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors animate-fade-in arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">تصفح العمال</a>
-    <a *ngIf="!isGuest" routerLink="/chat" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text flex items-center gap-2" lang="ar" style="color: var(--text-body);" (click)="toggleMenu(); clearUnreadChat()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      المحادثات
-      <span *ngIf="unreadChatCount > 0" class="mr-auto min-w-[20px] h-5 flex items-center justify-center rounded-full text-[10px] font-extrabold" style="background: var(--color-error); color: white; padding: 0 5px;">{{ unreadChatCount > 99 ? '99+' : unreadChatCount }}</span>
-    </a>
-    
-    <ng-container *ngIf="isUser">
-      <a routerLink="/customer/dashboard" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">لوحة التحكم</a>
-      <a routerLink="/customer/bookings" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">خدماتي</a>
-      <a routerLink="/customer/bid-requests" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">مزاداتي</a>
-    </ng-container>
+<!-- ══════════════════════════════════════════════
+     MOSTAQL STYLE SIDE DRAWER (Sliding Right Sidebar)
+══════════════════════════════════════════════════ -->
+<div class="nb-sidebar-drawer" [class.nb-sidebar-drawer--open]="isMenuOpen" style="direction: rtl;">
+  <div class="nb-sd-header">
+    <div class="nb-sd-logo">
+      <span class="nb-sd-title">مَعْلَم</span>
+      <span class="nb-sd-sub">قائمة التنقل</span>
+    </div>
+    <button class="nb-sd-close" (click)="toggleMenu()" aria-label="إغلاق">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
 
-    <ng-container *ngIf="isWorker">
-      <a routerLink="/worker/direct-offers" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">خدماتي</a>
-      <a routerLink="/worker/open-jobs" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">تصفح المزادات</a>
-      <a routerLink="/worker/my-bids" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">عروضي</a>
-      <a routerLink="/worker/dashboard" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">لوحة التحكم</a>
-    </ng-container>
+  <div class="nb-sd-content">
+    <!-- Search Bar inside Mostaql sidebar -->
+    <div class="nb-sd-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="ابحث عن حرفي أو خدمة..." />
+    </div>
 
-    <ng-container *ngIf="isGuest">
-      <hr class="my-2.5" style="border-color: var(--border-color);" />
-      <a routerLink="/auth/login" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">تسجيل الدخول</a>
-      <a routerLink="/auth/register" class="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-extrabold no-underline rounded-xl mt-2 transition-all active:scale-95 arabic-text" lang="ar" style="background: var(--color-primary-dark); color: var(--color-neutral-0);" (click)="toggleMenu()">
-        ابحث عن عامل
-        <span class="text-base">→</span>
+    <!-- User card at top if logged in -->
+    <div *ngIf="!isGuest" class="nb-sd-user">
+      <app-avatar [imageUrl]="currentUser?.avatar" [name]="currentUser?.name ?? ''" size="md" />
+      <div class="nb-sd-user-info">
+        <div class="nb-sd-user-name">{{ currentUser?.name }}</div>
+        <div class="nb-sd-user-role">{{ currentUserRoleLabel }}</div>
+      </div>
+    </div>
+
+    <!-- Main Navigation List (Mostaql style with icons) -->
+    <div class="nb-sd-section">
+      <div class="nb-sd-section-title">التنقل السريع</div>
+      
+      <a routerLink="/" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <span>الرئيسية</span>
       </a>
-    </ng-container>
 
-    <ng-container *ngIf="!isGuest">
-      <hr class="my-2.5" style="border-color: var(--border-color);" />
-      <a routerLink="/profile" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">الملف الشخصي</a>
-      <a routerLink="/settings" class="px-4 py-3 text-sm font-semibold no-underline rounded-xl hover:bg-gray-50 transition-colors arabic-text" lang="ar" style="color: var(--text-body);" (click)="toggleMenu()">الإعدادات</a>
-      <button class="w-full text-right px-4 py-3 text-sm font-semibold border-none bg-transparent text-red-400 cursor-pointer arabic-text" lang="ar" (click)="logout(); toggleMenu()">
-        تسجيل الخروج
-      </button>
-    </ng-container>
+      <a routerLink="/workers" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="17" cy="7" r="4"/><path d="M10.5 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2"/><circle cx="7" cy="11" r="4"/><path d="M1 21v-2a4 4 0 0 1 4-4h2"/></svg></div>
+        <span>تصفح الحرفيين والعمال</span>
+      </a>
+
+      <ng-container *ngIf="!isGuest">
+        <a routerLink="/chat" class="nb-sd-item" (click)="toggleMenu(); clearUnreadChat()">
+          <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <span>المحادثات والرسائل</span>
+          <span *ngIf="unreadChatCount > 0" class="nb-sd-badge">{{ unreadChatCount > 99 ? '99+' : unreadChatCount }}</span>
+        </a>
+      </ng-container>
+    </div>
+
+    <!-- Customer specific section -->
+    <div *ngIf="isUser" class="nb-sd-section">
+      <div class="nb-sd-section-title">إدارة طلباتي</div>
+
+      <a routerLink="/customer/dashboard" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+        <span>لوحة التحكم</span>
+      </a>
+
+      <a routerLink="/customer/bookings" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <span>خدماتي وحجوزاتي</span>
+      </a>
+
+      <a routerLink="/customer/bid-requests" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span>مزاداتي وقائماتي</span>
+      </a>
+    </div>
+
+    <!-- Worker specific section -->
+    <div *ngIf="isWorker" class="nb-sd-section">
+      <div class="nb-sd-section-title">إدارة أعمالي</div>
+
+      <a routerLink="/worker/direct-offers" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <span>خدماتي المسندة</span>
+      </a>
+
+      <a routerLink="/worker/open-jobs" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span>تصفح المزادات والطلبات</span>
+      </a>
+
+      <a routerLink="/worker/my-bids" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <span>عروضي المقدمة</span>
+      </a>
+
+      <a routerLink="/worker/dashboard" class="nb-sd-item" (click)="toggleMenu()">
+        <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+        <span>لوحة التحكم الرئيسية</span>
+      </a>
+    </div>
+
+    <!-- Account section -->
+    <div class="nb-sd-section">
+      <div class="nb-sd-section-title">الحساب والتفضيلات</div>
+
+      <ng-container *ngIf="isGuest">
+        <a routerLink="/auth/login" class="nb-sd-item" (click)="toggleMenu()">
+          <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
+          <span>تسجيل الدخول</span>
+        </a>
+        <a routerLink="/auth/register" class="nb-sd-cta" (click)="toggleMenu()">
+          <span>ابحث عن حرفي الآن</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="!isGuest">
+        <a routerLink="/profile" class="nb-sd-item" (click)="toggleMenu()">
+          <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <span>الملف الشخصي</span>
+        </a>
+        <a routerLink="/settings" class="nb-sd-item" (click)="toggleMenu()">
+          <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          <span>إعدادات الحساب</span>
+        </a>
+        <button class="nb-sd-item nb-sd-item--danger" (click)="logout(); toggleMenu()">
+          <div class="nb-sd-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+          <span>تسجيل الخروج</span>
+        </button>
+      </ng-container>
+    </div>
+
   </div>
 </div>
+
+<!-- Drawer backdrop -->
+<div class="nb-backdrop" [class.nb-backdrop--show]="isMenuOpen" (click)="toggleMenu()"></div>

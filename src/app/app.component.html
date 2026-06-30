@@ -1,3 +1,34 @@
+<!-- ── Global Page Transition Loader ── -->
+<div class="global-page-loader" *ngIf="isLoadingPage">
+  <div class="loader-center-content">
+    
+    <!-- Icon / Avatar above spinner -->
+    <div class="loader-icon-wrap">
+      <img *ngIf="isAiPage" src="assets/ai-avatar.png" class="loader-ai-avatar" alt="AI Avatar">
+      <svg *ngIf="!isAiPage" class="loader-tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="#1B2B6E" fill-opacity="0.15"/>
+      </svg>
+    </div>
+
+    <!-- Spinner ring below icon -->
+    <div class="loader-spinner-ring"></div>
+
+    <!-- Message -->
+    <p class="loader-text">{{ loadingMessage }}</p>
+  </div>
+
+  <!-- Brand footer at bottom (like Asana) -->
+  <div class="loader-brand-footer">
+    <div class="loader-brand-logo">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    <span class="loader-brand-name">معلّم — منصة الحرفيين</span>
+  </div>
+</div>
+
 <app-navbar *ngIf="showLayout"></app-navbar>
 <main [class.main-content]="showLayout">
   <router-outlet></router-outlet>

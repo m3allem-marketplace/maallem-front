@@ -1,24 +1,146 @@
-.profile-summary-card {
-  border-radius: var(--radius-3xl, 24px);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+/* Profile Settings Premium Dashboard Stylesheet */
+
+.profile-dashboard-container {
+  font-family: var(--font-arabic), 'Cairo', sans-serif;
+  direction: rtl;
 }
 
+/* Card Foundations with Elevation */
+.profile-summary-card,
 .settings-card {
-  border-radius: var(--radius-3xl, 24px);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(27, 43, 110, 0.05);
+  box-shadow: 0 4px 20px -2px rgba(27, 43, 110, 0.03);
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.profile-summary-card:hover,
+.settings-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -4px rgba(27, 43, 110, 0.08);
+}
+
+/* Inputs & Form Controls styling */
 .form-control {
-  border-color: var(--color-neutral-200, #e5e7eb);
-  transition: all 0.3s ease;
+  border: 1.5px solid var(--color-neutral-200, #e5e7eb);
+  border-radius: 12px;
+  color: var(--color-neutral-900, #212529);
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .form-control:focus {
-  border-color: var(--color-primary);
-  background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(27, 43, 110, 0.06);
+  border-color: var(--color-primary, #1B2B6E);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(27, 43, 110, 0.1);
 }
 
 .form-control::placeholder {
   color: var(--color-neutral-400, #9ca3af);
+}
+
+/* Custom Dropdown select indicator */
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231B2B6E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: left 1rem center;
+  background-size: 1.2em;
+  padding-left: 2.5rem;
+}
+
+/* Textarea override */
+textarea.form-control {
+  line-height: 1.6;
+}
+
+/* High-End File Upload Zones */
+.file-upload-zone {
+  border: 2px dashed rgba(27, 43, 110, 0.15);
+  background: rgba(248, 249, 250, 0.6);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.file-upload-zone:hover {
+  border-color: var(--color-primary, #1B2B6E);
+  background: rgba(27, 43, 110, 0.02);
+  transform: scale(1.005);
+}
+
+.file-upload-zone input[type="file"] {
+  height: 100%;
+  width: 100%;
+}
+
+/* Specific Portfolio Hover style */
+.file-upload-zone:has(input[type="file"]:hover) {
+  border-color: var(--color-accent, #FFB400);
+}
+
+/* Portfolio grid animations */
+.grid > div {
+  animation: slideInUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Image Hover Actions (delete button, scale) */
+.group img {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.group:hover img {
+  transform: scale(1.08);
+}
+
+.group button {
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.group button:hover {
+  transform: scale(1.15);
+  background-color: #dc2626 !important;
+}
+
+/* Custom verification badges and glow */
+.pulse-verification {
+  animation: subtlePulse 2s infinite ease-in-out;
+}
+
+@keyframes subtlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Accent Buttons */
+button[type="submit"] {
+  border: none;
+  background-color: var(--color-accent, #FFB400);
+  color: var(--color-primary-900, #0d153a);
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 12px rgba(255, 180, 0, 0.2);
+}
+
+button[type="submit"]:hover:not([disabled]) {
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px rgba(255, 180, 0, 0.4);
+  background-color: var(--color-accent-light, #ffd54f);
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

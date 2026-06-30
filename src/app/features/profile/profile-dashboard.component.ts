@@ -35,12 +35,34 @@ export class ProfileDashboardComponent implements OnInit {
   avatarPreview: string | null = null;
   avatarFile: File | null = null;
 
+  // National ID Card upload states
+  idCardPreview: string | null = null;
+  idCardFile: File | null = null;
+
+  // Portfolio image upload states
+  newPortfolioImages: Array<{ file: File; preview: string }> = [];
+  removePortfolioImagesList: string[] = [];
+
   // Leaflet Map Picker Location states
   selectedLocation: any = null;
   currentLat = 30.0444;
   currentLng = 31.2357;
 
   cities = ['القاهرة', 'الجيزة', 'الإسكندرية', 'القليوبية', 'المنوفية', 'الغربية'];
+
+  availableCategories = [
+    { value: 'plumbing', label: 'سباكة (Plumbing)' },
+    { value: 'electricity', label: 'كهرباء (Electrical)' },
+    { value: 'painting', label: 'دهانات (Painting)' },
+    { value: 'carpentry', label: 'نجارة (Carpentry)' },
+    { value: 'tiling', label: 'سيراميك وبلاط (Tiling)' },
+    { value: 'hvac', label: 'تكييف وتبريد (HVAC)' },
+    { value: 'cleaning', label: 'تنظيف ونظافة (Cleaning)' },
+    { value: 'welding', label: 'حدادة وألوميتال (Welding)' },
+    { value: 'moving', label: 'نقل عفش وأثاث (Moving)' }
+  ];
+
+  selectedCategory = 'plumbing';
 
   constructor(
     private userContext: UserContextService,
@@ -74,10 +96,23 @@ export class ProfileDashboardComponent implements OnInit {
           this.hasWorkerProfile = true;
           this.bio = p.bio || '';
           this.experience = p.experience || '';
-          this.specializations = p.specializations?.join(', ') || '';
+          
+          if (p.category) {
+            this.selectedCategory = p.category;
+          } else if (Array.isArray(p.specializations) && p.specializations.length > 0) {
+            this.selectedCategory = p.specializations[0];
+          } else if (typeof p.specializations === 'string' && p.specializations) {
+            this.selectedCategory = p.specializations.split(',')[0].trim();
+          }
+
           this.address = p.location?.address || '';
           this.city = p.location?.city || 'القاهرة';
           this.avatarPreview = p.avatar || this.avatarPreview;
+          this.idCardPreview = p.idCard || null;
+
+          this.idCardFile = null;
+          this.newPortfolioImages = [];
+          this.removePortfolioImagesList = [];
 
           if (p.location?.lat) {
             this.currentLat = p.location.lat;
@@ -103,6 +138,10 @@ export class ProfileDashboardComponent implements OnInit {
       error: (err) => {
         // 404 means profile doesn't exist yet, which is fine (we will let them create it)
         this.hasWorkerProfile = false;
+        this.idCardPreview = null;
+        this.idCardFile = null;
+        this.newPortfolioImages = [];
+        this.removePortfolioImagesList = [];
         const localImagesStr = localStorage.getItem(`worker_portfolio_images_${this.currentUser?._id}`);
         if (localImagesStr) {
           try {
@@ -135,23 +174,71 @@ export class ProfileDashboardComponent implements OnInit {
     this.avatarPreview = null;
   }
 
+  onIdCardSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file  = input?.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      this.toast.error('حجم صورة البطاقة يجب أن لا يتجاوز 5 ميجابايت');
+      return;
+    }
+    this.idCardFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => { this.idCardPreview = e.target?.result as string; };
+    reader.readAsDataURL(file);
+  }
+
+  removeIdCard(): void {
+    this.idCardFile = null;
+    this.idCardPreview = null;
+  }
+
   onLocationChange(loc: any): void {
     this.selectedLocation = loc;
     this.address = loc.address;
     this.city = loc.city;
   }
 
-  addPortfolioImage(): void {
-    if (this.portfolioUrl.trim() && this.portfolioUrl.startsWith('http')) {
-      this.portfolioImagesList.push(this.portfolioUrl.trim());
-      this.portfolioUrl = '';
-    } else {
-      this.toast.error('يرجى إدخال رابط صورة صحيح يبدأ بـ http');
+  onPortfolioFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input?.files;
+    if (!files || files.length === 0) return;
+
+    const currentTotal = this.portfolioImagesList.length + this.newPortfolioImages.length;
+    if (currentTotal + files.length > 10) {
+      this.toast.error('الحد الأقصى لعدد صور معرض الأعمال هو 10 صور فقط');
+      return;
     }
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > 5 * 1024 * 1024) {
+        this.toast.error(`الملف ${file.name} يتجاوز الحجم المسموح به (5 ميجابايت)`);
+        continue;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.newPortfolioImages.push({
+          file: file,
+          preview: e.target?.result as string
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+    input.value = '';
   }
 
-  removePortfolioImage(index: number): void {
-    this.portfolioImagesList.splice(index, 1);
+  removePortfolioImage(index: number, isNew: boolean): void {
+    if (isNew) {
+      this.newPortfolioImages.splice(index, 1);
+    } else {
+      const removedUrl = this.portfolioImagesList[index];
+      this.portfolioImagesList.splice(index, 1);
+      if (removedUrl) {
+        this.removePortfolioImagesList.push(removedUrl);
+      }
+    }
   }
 
   saveProfile(): void {
@@ -160,32 +247,56 @@ export class ProfileDashboardComponent implements OnInit {
       return;
     }
 
-    this.saving = true;
+    if ((this.role === 'worker' || this.role === 'company') && !this.selectedCategory) {
+      this.toast.error('يرجى اختيار التخصص الحرفي.');
+      return;
+    }
 
-    // Build payload
-    const specArray = this.specializations
-      ? this.specializations.split(',').map(s => s.trim()).filter(Boolean)
-      : [];
+    // Require ID Card only for new worker profiles
+    if ((this.role === 'worker' || this.role === 'company') && !this.hasWorkerProfile && !this.idCardFile) {
+      this.toast.error('صورة بطاقة الرقم القومي مطلوبة لإنشاء الملف الشخصي.');
+      return;
+    }
+
+    this.saving = true;
 
     if (this.role === 'worker' || this.role === 'company') {
       const formData = new FormData();
       formData.append('bio', this.bio);
       formData.append('experience', this.experience);
       formData.append('phone', this.phone);
-      specArray.forEach(s => formData.append('specializations[]', s));
+      
+      formData.append('category', this.selectedCategory);
+      formData.append('specializations', JSON.stringify([this.selectedCategory]));
 
-      if (this.selectedLocation) {
-        formData.append('location[lat]',     String(this.selectedLocation.lat));
-        formData.append('location[lng]',     String(this.selectedLocation.lng));
-        formData.append('location[address]', this.selectedLocation.address);
-        formData.append('location[city]',    this.selectedLocation.city);
-      } else {
-        formData.append('location[address]', this.address);
-        formData.append('location[city]',    this.city);
-      }
+      const lat = this.selectedLocation?.lat || this.currentLat;
+      const lng = this.selectedLocation?.lng || this.currentLng;
+      const locationObj = {
+        address: this.selectedLocation?.address || this.address,
+        city: this.selectedLocation?.city || this.city,
+        lat: lat,
+        lng: lng,
+        coordinates: {
+          type: 'Point',
+          coordinates: [Number(lng), Number(lat)] // MongoDB coordinates format: [longitude, latitude]
+        }
+      };
+      formData.append('location', JSON.stringify(locationObj));
 
       if (this.avatarFile) {
         formData.append('avatar', this.avatarFile);
+      }
+
+      if (this.idCardFile) {
+        formData.append('idCard', this.idCardFile);
+      }
+
+      this.newPortfolioImages.forEach(img => {
+        formData.append('portfolioImages', img.file);
+      });
+
+      if (this.removePortfolioImagesList.length > 0) {
+        formData.append('removePortfolioImages', JSON.stringify(this.removePortfolioImagesList));
       }
 
       const request$ = this.hasWorkerProfile
@@ -198,25 +309,31 @@ export class ProfileDashboardComponent implements OnInit {
           this.hasWorkerProfile = true;
           this.toast.success('تم حفظ وتحديث ملف الحرفي بنجاح! 🎉');
 
-          // Save portfolio images locally keyed by both user ID and profile ID
-          if (this.currentUser?._id) {
-            localStorage.setItem(`worker_portfolio_images_${this.currentUser._id}`, JSON.stringify(this.portfolioImagesList));
-          }
           const profile = res?.data?.profile || res?.data;
+          const finalPortfolioList = profile?.portfolioImages || this.portfolioImagesList;
+
+          if (this.currentUser?._id) {
+            localStorage.setItem(`worker_portfolio_images_${this.currentUser._id}`, JSON.stringify(finalPortfolioList));
+          }
           if (profile?._id) {
-            localStorage.setItem(`worker_portfolio_images_${profile._id}`, JSON.stringify(this.portfolioImagesList));
+            localStorage.setItem(`worker_portfolio_images_${profile._id}`, JSON.stringify(finalPortfolioList));
           }
           this.loadWorkerProfile();
         },
         error: (err) => {
           this.saving = false;
-          // fallback simulate success
           this.hasWorkerProfile = true;
           this.toast.success('تم تحديث البيانات بنجاح (وضع محاكاة) 🎉');
 
+          const simulatedUrls = [
+            ...this.portfolioImagesList,
+            ...this.newPortfolioImages.map(img => img.preview)
+          ];
+
           if (this.currentUser?._id) {
-            localStorage.setItem(`worker_portfolio_images_${this.currentUser._id}`, JSON.stringify(this.portfolioImagesList));
+            localStorage.setItem(`worker_portfolio_images_${this.currentUser._id}`, JSON.stringify(simulatedUrls));
           }
+          this.loadWorkerProfile();
         }
       });
     } else {

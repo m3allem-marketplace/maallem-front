@@ -1,56 +1,78 @@
-<div class="m-card">
-  <div class="m-card__content">
-    <div class="m-card__header">
-      <div class="m-card__avatar-wrapper">
-        <app-avatar [imageUrl]="worker.avatar" [name]="worker.name" size="lg" />
-        <div class="m-card__tier-tag">
-          <app-tier-badge [tier]="worker.tier" />
-        </div>
-      </div>
-      
-      <div class="m-card__info">
-        <h3 class="m-card__name">{{ worker.name }}</h3>
-        <div class="m-card__cat-wrapper">
-          <span class="m-card__cat">{{ worker.category || 'كهربائي' }}</span>
-        </div>
-      </div>
+<!-- Worker Card — Split-Color Layout -->
+<article
+  class="wc"
+  [routerLink]="['/workers', worker.id]"
+>
 
-      <div class="m-card__rating">
-        <app-star-rating [rating]="worker.rating" [readonly]="true" />
-        <span class="m-card__count">({{ worker.rating || '5' }})</span>
-      </div>
+  <!-- ══ COLORED TOP SECTION ══ -->
+  <div
+    class="wc__top"
+    [style.background]="palette.bg"
+  >
+    <!-- Worker name + sub text -->
+    <h3 class="wc__name">{{ worker.name }}</h3>
+    <p class="wc__sub">{{ cityLabel }} &nbsp;·&nbsp; {{ categoryLabel }}</p>
 
-      <div class="m-card__meta">
-        <span class="m-card__meta-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span>القاهرة</span>
-        </span>
-        <span class="m-card__meta-dot"></span>
-        <span class="m-card__meta-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-            <polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-          <span>١٠٠٪ التزام بالمواعيد</span>
-        </span>
-      </div>
+    <!-- Price badge (white circle) -->
+    <div class="wc__price-badge">
+      <span class="wc__price-amount">{{ worker.ratePerHour | currencyFormat }}</span>
+      <span class="wc__price-unit">/ساعة</span>
     </div>
 
-    <div class="m-card__footer">
-      <div class="m-card__price-wrapper">
-        <span class="m-card__amount">{{ worker.ratePerHour | currencyFormat }}</span>
-        <span class="m-card__unit">/ساعة</span>
+    <!-- Floating avatar (overlapping boundary) -->
+    <div class="wc__avatar-zone">
+      <div
+        class="wc__avatar-ring"
+        [style.boxShadow]="'0 4px 20px ' + palette.shadow + ', 0 0 0 4px ' + palette.bg"
+      >
+        <app-avatar [imageUrl]="worker.avatar" [name]="worker.name" size="lg" />
       </div>
-
-      <a [routerLink]="['/workers', worker.id]" class="hero-btn hero-btn--primary">
-        <span>عرض الملف الشخصي</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-      </a>
+      <div class="wc__tier">
+        <app-tier-badge [tier]="worker.tier" />
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- ══ WHITE BOTTOM SECTION ══ -->
+  <div class="wc__bottom">
+
+    <!-- Category pill -->
+    <span
+      class="wc__category"
+      [style.background]="palette.badge"
+      [style.color]="palette.bg"
+    >
+      {{ categoryLabel }}
+    </span>
+
+    <!-- Star rating -->
+    <div class="wc__rating-row">
+      <app-star-rating [rating]="worker.rating" [readonly]="true" />
+      <span class="wc__rating-score">{{ worker.rating | number:'1.1-1' }}</span>
+    </div>
+
+    <!-- Location -->
+    <div class="wc__location">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      {{ cityLabel }}
+    </div>
+
+    <!-- Dot indicators (like the reference) -->
+    <div class="wc__dots">
+      <span
+        *ngFor="let i of ratingDots"
+        class="dot"
+        [class.active]="isActiveDot(i)"
+        [style.background]="isActiveDot(i) ? palette.bg : '#c7cde8'"
+      ></span>
+    </div>
+
+    <!-- CTA -->
+    <a [routerLink]="['/workers', worker.id]" class="wc__cta" (click)="$event.stopPropagation()">
+      عرض الملف الشخصي
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+
+  </div>
+
+</article>

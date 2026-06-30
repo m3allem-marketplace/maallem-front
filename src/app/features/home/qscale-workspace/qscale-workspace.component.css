@@ -31,6 +31,58 @@
   font-family: 'Cairo', 'Inter', sans-serif;
   background-color: var(--bg-page);
   color: var(--text-primary);
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* Clickable logo / home link in sidebar */
+.sidebar-home-link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.sidebar-home-link:hover {
+  opacity: 0.8;
+}
+
+/* Sidebar Backdrop Overlay on Mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(17, 24, 39, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 999;
+    animation: sidebarFadeIn 0.2s ease;
+  }
+}
+
+@keyframes sidebarFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ─── LEFT SIDEBAR ─────────────────────────────────────────────────────────── */
@@ -1081,6 +1133,15 @@
 *:focus { outline: none; }
 
 /* Onboarding Mode Selection */
+.onboarding-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 1rem;
+}
+
 .mode-select-card {
   display: flex;
   flex-direction: column;
@@ -1194,43 +1255,67 @@
   color: var(--brand-navy);
 }
 
+@media (max-width: 1024px) {
+  .qscale-workspace {
+    height: 100vh;
+  }
+}
+
 @media (max-width: 992px) {
+  .qscale-workspace {
+    height: 100vh;
+  }
+
   .mobile-tabs-bar {
     display: flex;
   }
 
-  /* Make sidebar an absolute overlay drawer */
+  /* Make sidebar a full-screen height overlay drawer */
   .ws-sidebar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 260px !important;
-    height: 100%;
-    z-index: 999;
-    transform: translateX(0);
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 280px !important;
+    max-width: 85vw !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    transform: translateX(0) !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    box-shadow: -4px 0 25px rgba(27, 43, 110, 0.15);
+    box-shadow: -4px 0 25px rgba(27, 43, 110, 0.2) !important;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
   .ws-sidebar.collapsed {
-    transform: translateX(270px) !important;
+    transform: translateX(100%) !important;
+    opacity: 0 !important;
     pointer-events: none !important;
-    width: 260px !important;
   }
 
   /* Adjust headers on mobile */
-  .chat-header,
+  .chat-header {
+    display: none !important;
+  }
+  
+  .chat-header.has-mode {
+    display: flex !important;
+    height: 44px !important;
+    padding: 0 1rem !important;
+  }
+
   .boq-header {
-    height: 50px !important;
+    height: 44px !important;
     padding: 0 1rem !important;
   }
   
-  .chat-header-title,
   .boq-header-title {
     font-size: 0.8rem !important;
+  }
+
+  .chat-header-title,
+  .toggle-sidebar-btn {
+    display: none !important;
   }
 
   /* Toggle Panel display based on active tab state */
@@ -1255,17 +1340,37 @@
   }
   
   .welcome-title {
-    font-size: 1.25rem !important;
+    font-size: 1.35rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .messages-viewport {
+    padding: 1rem !important;
+  }
+  .chat-footer {
+    padding: 0.75rem !important;
+  }
+
+  /* Onboarding Grid single column on tablet/mobile */
+  .onboarding-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    max-width: 380px !important;
+  }
+
+  .mode-select-card {
+    padding: 1.25rem 1rem !important;
+  }
+  
+  .mode-icon-wrap {
+    margin-bottom: 0.75rem !important;
+    width: 44px !important;
+    height: 44px !important;
   }
 }
 
 @media (max-width: 580px) {
-  /* Onboarding Grid single column */
-  .onboarding-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.875rem !important;
-  }
-  
   /* Quick actions grid single column */
   .quick-action-grid {
     grid-template-columns: 1fr !important;

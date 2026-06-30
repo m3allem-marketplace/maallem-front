@@ -1,31 +1,72 @@
+<!-- Premium Booking Timeline -->
 <div class="booking-timeline" [class.is-cancelled]="isCancelled">
-  <div class="timeline-track-wrapper">
+
+  <!-- Progress track (sits between circles) -->
+  <div class="timeline-track-wrapper" aria-hidden="true">
     <div class="timeline-track">
       <div class="timeline-progress" [style.width.%]="(activeStepIndex / (steps.length - 1)) * 100"></div>
     </div>
   </div>
 
+  <!-- Steps -->
   <div class="timeline-steps">
-    <div 
-      *ngFor="let step of steps; let i = index" 
-      class="timeline-step" 
+    <div
+      *ngFor="let step of steps; let i = index"
+      class="timeline-step"
       [class.active]="i <= activeStepIndex"
       [class.current]="i === activeStepIndex"
+      [class.completed]="i < activeStepIndex"
       [class.cancelled]="isCancelled && i === activeStepIndex"
     >
+      <!-- Circle icon -->
       <div class="step-icon-wrap">
-        <span class="step-number" *ngIf="!isCancelled || i !== activeStepIndex">
-          <svg *ngIf="i < activeStepIndex" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span *ngIf="i >= activeStepIndex">{{ i + 1 }}</span>
-        </span>
-        <span class="step-number cancel-symbol" *ngIf="isCancelled && i === activeStepIndex">✕</span>
+
+        <!-- Cancelled state -->
+        <svg *ngIf="isCancelled && i === activeStepIndex" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+
+        <!-- Completed past steps: checkmark -->
+        <svg *ngIf="!isCancelled && i < activeStepIndex" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+
+        <!-- Step 0: Vault / Wallet Deposit -->
+        <svg *ngIf="!isCancelled && i === 0 && i >= activeStepIndex" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="12" cy="15" r="2"/>
+        </svg>
+
+        <!-- Step 1: Shield / Work In Progress & Protected Escrow -->
+        <svg *ngIf="!isCancelled && i === 1 && i >= activeStepIndex" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+
+        <!-- Step 2: Check Circle / Delivered -->
+        <svg *ngIf="!isCancelled && i === 2 && i >= activeStepIndex" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+
+        <!-- Step 3: Unlock Money / Release Funds -->
+        <svg *ngIf="!isCancelled && i === 3 && i >= activeStepIndex" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+        </svg>
+
       </div>
+
+      <!-- Step number badge (below circle) -->
+      <div class="step-number-badge">{{ i + 1 }}</div>
+
+      <!-- Step text content -->
       <div class="step-content">
-        <div class="step-label">{{ isCancelled && i === activeStepIndex ? 'ملغي' : step.label }}</div>
-        <div class="step-desc">{{ isCancelled && i === activeStepIndex ? 'تم إلغاء هذا الطلب' : step.desc }}</div>
+        <div class="step-label">
+          {{ isCancelled && i === activeStepIndex ? 'ملغي' : step.label }}
+        </div>
+        <div class="step-desc">
+          {{ isCancelled && i === activeStepIndex ? 'تم إلغاء هذا الطلب' : step.desc }}
+        </div>
       </div>
+
     </div>
   </div>
+
 </div>

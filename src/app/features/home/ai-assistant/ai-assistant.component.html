@@ -92,14 +92,14 @@
         </div>
 
         <!-- Q-Scale Logo as assistant avatar -->
-        <div class="qscale-logo-wrapper mb-3 relative flex items-center justify-center" style="width:140px; height:140px;">
+        <div class="qscale-logo-wrapper mb-3 relative flex items-center justify-center" style="width:140px; height:140px; border-radius:50%; overflow:hidden;">
           <!-- Animated glow ring behind logo -->
           <div class="logo-glow-ring"></div>
           <img 
-            src="assets/qscale-logo.png" 
-            alt="Maallem Q-Scale" 
+            src="assets/ai-avatar.png" 
+            alt="Maallem AI Avatar" 
             class="qscale-logo-img relative z-10"
-            style="width:120px; height:120px; object-fit:contain; border-radius:16px;"
+            style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid #1B2B6E; box-shadow:0 0 16px rgba(27,43,110,0.35); box-sizing:border-box; background:transparent;"
           />
           <!-- Loading spinner overlay when thinking -->
           <div *ngIf="loading" class="absolute inset-0 flex items-center justify-center z-20">

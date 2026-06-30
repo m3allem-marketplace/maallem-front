@@ -6,4 +6,5 @@ export interface WorkerSummary {
   rating:      number; // 0-5
   tier:        'bronze' | 'silver' | 'gold' | 'master';
   ratePerHour: number;
+  city?:       string;
 }

@@ -1,13 +1,9 @@
-<div class="w-full" style="direction: ltr;">
+<div class="search-bar-root w-full" style="direction: ltr;">
 
-  <div
-    class="flex items-center gap-3 rounded-full p-1.5"
-    style="background: var(--input-bg);"
-  >
+  <div class="search-bar-container flex items-center gap-3 rounded-full p-1.5">
 
     <span
-      class="flex items-center shrink-0 pl-4"
-      style="color: var(--text-secondary);"
+      class="search-bar__icon flex items-center shrink-0 pl-4"
     >
       <svg
         width="20"
@@ -31,19 +27,11 @@
       [formControl]="control"
       type="text"
       autocomplete="off"
-      style="
-        color: var(--text-body);
-        font-family: var(--font-sans);
-      "
     />
 
     <button
       *ngIf="hasValue"
-      class="flex items-center justify-center w-7 h-7 rounded-full text-xs shrink-0 cursor-pointer border-none"
-      style="
-        background: var(--color-neutral-100);
-        color: var(--text-secondary);
-      "
+      class="search-bar__clear flex items-center justify-center w-7 h-7 rounded-full text-xs shrink-0 cursor-pointer border-none"
       (click)="clear()"
       type="button"
       aria-label="مسح"
@@ -53,15 +41,10 @@
 
     <button
       class="search-bar__btn flex items-center gap-2 h-11 px-7 rounded-full text-base font-bold shrink-0 whitespace-nowrap border-none cursor-pointer"
-      style="
-        background-color: var(--color-accent);
-        color: var(--color-primary-dark);
-        font-family: var(--font-sans);
-      "
       type="button"
     >
       بحث
-      <span class="btn-arrow text-lg">→</span>
+      <span class="btn-arrow text-lg">←</span>
     </button>
 
   </div>
