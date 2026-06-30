@@ -134,34 +134,42 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  getStatusLabel(status: string): string {
+    if (!status) return 'تم التحرير';
+    switch (status.toLowerCase()) {
+      case 'pending': return 'قيد الانتظار';
+      case 'delivered': return 'تم التسليم من الحرفي';
+      case 'released':
+      case 'approved':
+      case 'paid':
+      case 'completed':
+        return 'تم الصرف للحرفي';
+      default: return status;
+    }
+  }
+
   fetchRealReleases(): void {
     if (!this.bookingId) return;
-
-    // Restore locally saved released amount if present
-    const savedReleased = localStorage.getItem(`booking_released_${this.bookingId}`);
-    if (savedReleased) {
-      this.releasedAmount = Number(savedReleased) || 0;
-    }
 
     this.bookingService.getReleases(this.bookingId).subscribe({
       next: (res) => {
         const list = res?.data?.releases || res?.data || res?.releases || [];
-        if (Array.isArray(list) && list.length > 0) {
+        if (Array.isArray(list)) {
           this.serverReleases = list;
           let sum = 0;
           list.forEach(rel => {
-            const status = (rel.status || '').toLowerCase();
-            if (status === 'released' || status === 'approved' || status === 'completed' || status === 'delivered' || status === 'paid' || rel.isReleased || rel.released) {
-              sum += Number(rel.amount || rel.value || 0);
-            }
+            sum += Number(rel.amount || rel.value || 0);
           });
-          if (sum > 0) {
-            this.releasedAmount = Math.max(this.releasedAmount, sum);
-            localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
-          }
+          this.releasedAmount = sum;
+          localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
         }
       },
-      error: () => {}
+      error: () => {
+        const savedReleased = localStorage.getItem(`booking_released_${this.bookingId}`);
+        if (savedReleased) {
+          this.releasedAmount = Number(savedReleased) || 0;
+        }
+      }
     });
   }
 
@@ -245,22 +253,14 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const nextPhase = (this.serverReleases?.length || 0) + 1;
     const releasePayload: Array<{ name: string; amount: number; dueDate?: string }> = [
       {
-        name: `دفعة إنجاز مرحلية (${amount} ج.م)`,
+        name: `دفعة إنجاز مرحلية رقم ${nextPhase} (${amount} ج.م)`,
         amount: amount,
         dueDate: new Date().toISOString()
       }
     ];
-
-    const unreleased = total - (this.releasedAmount + amount);
-    if (unreleased > 0) {
-      releasePayload.push({
-        name: `الدفعة المتبقية بالمحفظة (${unreleased} ج.م)`,
-        amount: unreleased,
-        dueDate: new Date(Date.now() + 86400000 * 7).toISOString()
-      });
-    }
 
     const workerNet = amount * 0.9;
     const platformCommission = amount * 0.1;
@@ -268,29 +268,33 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
     // Call createReleases backend API matching POST /bookings/{id}/releases
     this.bookingService.createReleases(this.bookingId, releasePayload).subscribe({
       next: (res) => {
-        this.releasedAmount += amount;
-        localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
         this.toast.success(`تم تحرير ${amount} ج.م لحساب الحرفي! (وصله ${workerNet} ج.م وعمولة المنصة ${platformCommission} ج.م) 🚀`);
         this.showReleaseModal = false;
         this.fetchRealReleases();
 
-        if (this.releasedAmount >= total) {
+        // Check if fully released
+        const newTotalReleased = this.releasedAmount + amount;
+        if (newTotalReleased >= total) {
           this.bookingService.completeBooking(this.bookingId).subscribe();
-          this.booking.status = 'completed';
+          if (this.booking) {
+            this.booking.status = 'completed';
+          }
           this.showReviewForm = true;
         }
       },
       error: (err) => {
-        // Handle when releases already exist on server or local dev mode
+        // Fallback for mock or local dev mode if server is unavailable
         this.releasedAmount += amount;
         localStorage.setItem(`booking_released_${this.bookingId}`, this.releasedAmount.toString());
-        this.toast.success(`تم تحرير ${amount} ج.م للحرفي بنجاح! 💸 (وصل للحرفي: ${workerNet} ج.م - العمولة: ${platformCommission} ج.م)`);
+        this.toast.success(`تم تحرير ${amount} ج.م للحرفي بنجاح! 💸 (وصل للحرفي: ${workerNet} ج.م - العمولة: ${platformCommission} ج.m)`);
         this.showReleaseModal = false;
         this.fetchRealReleases();
 
         if (this.releasedAmount >= total) {
           this.bookingService.completeBooking(this.bookingId).subscribe();
-          this.booking.status = 'completed';
+          if (this.booking) {
+            this.booking.status = 'completed';
+          }
           this.showReviewForm = true;
         }
       }
