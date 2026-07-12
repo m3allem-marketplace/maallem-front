@@ -6,6 +6,7 @@ import { BookingDetailComponent } from './bookings/booking-detail/booking-detail
 import { BidRequestsComponent } from './bid-requests/bid-requests.component';
 import { PostJobFormComponent } from './bid-requests/post-job-form/post-job-form.component';
 import { BidOffersListComponent } from './bid-requests/bid-offers-list/bid-offers-list.component';
+import { FlatRenovationComponent } from './flat-renovation/flat-renovation.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: CustomerDashboardComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'bid-requests', component: BidRequestsComponent },
   { path: 'bid-requests/post', component: PostJobFormComponent },
   { path: 'bid-requests/:projectId/offers', component: BidOffersListComponent },
+  { path: 'flat-renovation', component: FlatRenovationComponent },
 ];
 
 @NgModule({

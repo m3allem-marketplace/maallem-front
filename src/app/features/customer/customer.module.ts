@@ -10,6 +10,7 @@ import { BidRequestsComponent } from './bid-requests/bid-requests.component';
 import { PostJobFormComponent } from './bid-requests/post-job-form/post-job-form.component';
 import { BidOffersListComponent } from './bid-requests/bid-offers-list/bid-offers-list.component';
 import { SharedModule } from '../../shared/shared.module';
+import { FlatRenovationComponent } from './flat-renovation/flat-renovation.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SharedModule } from '../../shared/shared.module';
     BookingDetailComponent,
     BidRequestsComponent,
     PostJobFormComponent,
-    BidOffersListComponent
+    BidOffersListComponent,
+    FlatRenovationComponent
   ],
   imports: [
     CommonModule,

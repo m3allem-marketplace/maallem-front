@@ -115,6 +115,31 @@
               </div>
             </div>
 
+            <!-- Releases List (Mostaql Style) -->
+            <div *ngIf="serverReleases && serverReleases.length > 0" class="flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/50">
+              <span class="text-[11px] font-bold text-slate-600 block mb-1">سجل الدفعات والمراحل المحررة:</span>
+              <div class="flex flex-col gap-1.5 max-h-[160px] overflow-y-auto pr-1">
+                <div *ngFor="let rel of serverReleases; let idx = index" class="flex justify-between items-center bg-white border border-slate-100 p-2.5 rounded-xl shadow-xs text-[11px]">
+                  <div class="flex flex-col gap-0.5">
+                    <span class="font-bold text-slate-800">{{ rel.name }}</span>
+                    <span class="text-[9px] text-slate-400" *ngIf="rel.createdAt">{{ rel.createdAt | date:'yyyy-MM-dd HH:mm' }}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-extrabold text-emerald-600">{{ rel.amount | currencyFormat }}</span>
+                    <span class="px-2 py-0.5 rounded-md text-[9px] font-bold" 
+                          [ngClass]="{
+                            'bg-emerald-50 text-emerald-700': ['released', 'approved', 'paid', 'completed'].includes((rel.status || '').toLowerCase()),
+                            'bg-amber-50 text-amber-700': (rel.status || '').toLowerCase() === 'pending',
+                            'bg-blue-50 text-blue-700': (rel.status || '').toLowerCase() === 'delivered',
+                            'bg-slate-100 text-slate-600': !rel.status
+                          }">
+                      {{ getStatusLabel(rel.status) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <p class="text-[11px] text-slate-500 leading-relaxed m-0 pt-1 border-t border-slate-200/40">
               💡 <strong>قواعد تحرير الأموال:</strong> تم إيداع المبلغ في محفظة الحجز. يمكنك تحرير جزء من المبلغ أو كامل المبلغ للحرفي وقتما تشاء بناءً على مراحل الإنجاز.
             </p>
@@ -386,4 +411,13 @@
 
   </div>
 </div>
+
+<!-- Mock Payment Modal -->
+<app-mock-payment-modal
+  [isOpen]="showMockPaymentModal"
+  [amount]="booking?.budget || 0"
+  [bookingId]="bookingId"
+  (paymentSuccess)="onPaymentSuccess()"
+  (cancel)="onPaymentCancel()"
+></app-mock-payment-modal>
 

@@ -1,0 +1,460 @@
+<div class="storefront-container">
+
+  <!-- ═══════════════════ PREMIUM HERO (Full Viewport) ═══════════════════ -->
+  <section class="sf-hero-section">
+
+    <!-- Background with Ken Burns -->
+    <div class="sf-hero-bg" [style.backgroundImage]="'url(' + currentHeroBg + ')'"></div>
+
+    <!-- Dark Overlay -->
+    <div class="sf-hero-overlay" aria-hidden="true"></div>
+
+    <!-- Gradient Spotlight Glows -->
+    <div class="sf-hero-spotlight sf-hero-spotlight--left" aria-hidden="true"></div>
+    <div class="sf-hero-spotlight sf-hero-spotlight--right" aria-hidden="true"></div>
+
+    <!-- Floating Particles -->
+    <div class="sf-hero-particles" aria-hidden="true">
+      <span class="sf-particle sf-p1"></span>
+      <span class="sf-particle sf-p2"></span>
+      <span class="sf-particle sf-p3"></span>
+      <span class="sf-particle sf-p4"></span>
+      <span class="sf-particle sf-p5"></span>
+      <span class="sf-particle sf-p6"></span>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="sf-hero-container">
+      <div class="sf-hero-body">
+
+        <!-- Title -->
+        <div class="sf-hero-headline-wrap">
+          <h1 class="sf-hero-headline">
+            <span class="sf-brand-name">مَعْلَم</span>
+            <span class="sf-title-category" [class.transitioning]="titleTransitioning">{{ currentHeroTitle }}</span>
+          </h1>
+          <p class="sf-hero-sub">حل متكامل لتشطيب بيتك، صيانة وتوفير منتجات وخدمات عالية الجودة — كل ذلك في مكان واحد!</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="sf-hero-search-wrap">
+          <div class="sf-hero-search-inner" [class.focused]="searchFocused">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="sf-search-icon">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input
+              type="text"
+              [formControl]="searchControl"
+              placeholder="ابحث عن مواد البناء، الأدوات الكهربائية، السباكة..."
+              class="sf-search-input"
+              (focus)="searchFocused = true"
+              (blur)="searchFocused = false"
+            >
+            <button class="sf-search-btn" type="button">بحث</button>
+          </div>
+        </div>
+
+        <!-- Premium Stats Row -->
+        <div class="sf-hero-stats">
+          <div class="sf-stat-card">
+            <div class="sf-stat-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                <line x1="12" y1="12" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <div class="sf-stat-text">
+              <span class="sf-stat-number">+500</span>
+              <span class="sf-stat-label">منتج متاح</span>
+            </div>
+          </div>
+          <div class="sf-stat-sep"></div>
+          <div class="sf-stat-card">
+            <div class="sf-stat-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                <rect x="2" y="3" width="7" height="7" rx="1"/>
+                <rect x="15" y="3" width="7" height="7" rx="1"/>
+                <rect x="2" y="14" width="7" height="7" rx="1"/>
+                <rect x="15" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </div>
+            <div class="sf-stat-text">
+              <span class="sf-stat-number">7</span>
+              <span class="sf-stat-label">أقسام رئيسية</span>
+            </div>
+          </div>
+          <div class="sf-stat-sep"></div>
+          <div class="sf-stat-card">
+            <div class="sf-stat-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                <rect x="1" y="3" width="15" height="13" rx="2"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+            <div class="sf-stat-text">
+              <span class="sf-stat-number">48h</span>
+              <span class="sf-stat-label">توصيل سريع</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════ KEY BENEFITS ═══════════════════ -->
+  <section class="benefits-section">
+    <div class="benefits-grid">
+
+      <!-- Card 1: Fast Delivery -->
+      <div class="benefit-card benefit-card--delivery">
+        <div class="benefit-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="benefit-svg">
+            <rect x="1" y="3" width="15" height="13" rx="2"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <div class="benefit-info">
+          <h4 class="benefit-title">توصيل سريع</h4>
+          <p class="benefit-desc">استلم طلبك خلال 48 ساعة</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Returns -->
+      <div class="benefit-card benefit-card--returns">
+        <div class="benefit-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="benefit-svg">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+        </div>
+        <div class="benefit-info">
+          <h4 class="benefit-title">قابل للإرجاع</h4>
+          <p class="benefit-desc">يمكن الإرجاع خلال 14 يوماً</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Coverage -->
+      <div class="benefit-card benefit-card--coverage">
+        <div class="benefit-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="benefit-svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+        </div>
+        <div class="benefit-info">
+          <h4 class="benefit-title">تغطية كاملة</h4>
+          <p class="benefit-desc">لحد باب بيتك في جميع المحافظات</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Offers -->
+      <div class="benefit-card benefit-card--offers">
+        <div class="benefit-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="benefit-svg">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="benefit-info">
+          <h4 class="benefit-title">عروض حالية</h4>
+          <p class="benefit-desc">عروض ضخمة ومستمرة على جميع الأقسام</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SPINNER ═══════════════════ -->
+  <div class="spinner-container" *ngIf="isLoading">
+    <app-spinner size="lg" color="#dfba6b"></app-spinner>
+    <p class="loading-text">جاري تحميل المنتجات...</p>
+  </div>
+
+  <!-- ═══════════════════ ERROR STATE ═══════════════════ -->
+  <div class="error-state" *ngIf="!isLoading && hasError">
+    <div class="error-icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="error-svg">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h3 class="error-title">تعذّر تحميل المنتجات</h3>
+    <p class="error-text">تأكد من اتصالك بالإنترنت أو حاول مرة أخرى</p>
+    <button class="retry-btn" (click)="loadProducts()" id="retry-btn">
+      إعادة المحاولة
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !hasError">
+
+    <!-- ═══════════════════ CATEGORIES FILTER BLOCK ═══════════════════ -->
+    <section class="store-filter-section" id="store-filter-section">
+      <div class="filter-container">
+        <h2 class="filter-section-title">تصفح مواد البناء والتشطيب حسب القسم</h2>
+        <div class="filter-chips-wrapper">
+          <button 
+            class="filter-chip-card" 
+            [class.active]="selectedCategory === 'الكل'"
+            (click)="selectCategory('الكل')"
+          >
+            <span class="chip-label">جميع الأقسام</span>
+          </button>
+          
+          <button 
+            *ngFor="let card of categoryCards" 
+            class="filter-chip-card" 
+            [class.active]="selectedCategory === card.label"
+            (click)="selectCategory(card.label)"
+          >
+            <span class="chip-label">{{ card.label }}</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FEATURED PRODUCTS ═══════════════════ -->
+    <section class="featured-section" *ngIf="featuredProducts.length > 0 && selectedCategory === 'الكل'">
+      <div class="section-header-row">
+        <h2 class="section-title-alt">أبرز العروض والمنتجات المميزة</h2>
+        <a class="show-all-link" (click)="selectCategory('الكل')">إظهار الكل</a>
+      </div>
+
+      <div class="products-grid">
+        <div
+          *ngFor="let product of featuredProducts"
+          class="product-card featured"
+          (click)="goToDetail(product._id)"
+          [attr.id]="'featured-card-' + product._id"
+        >
+          <div class="product-img-wrap">
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <div *ngIf="!product.imageUrl" class="product-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
+                <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
+              </svg>
+            </div>
+            <!-- Discount Badge -->
+            <span class="discount-badge">20% خصم</span>
+            <button class="wishlist-btn" (click)="$event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="heart-icon">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <span class="product-cat-label">{{ getCategoryArabic(product.category) }}</span>
+            <h3 class="product-title">{{ product.title }}</h3>
+            <!-- Rating -->
+            <div class="rating-stars">
+              <svg *ngFor="let star of [1,2,3,4,5]" viewBox="0 0 24 24" fill="#fbbf24" stroke="none" width="12" height="12">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="price-row">
+              <span class="current-price">{{ product.price }} <small>ج.م</small></span>
+              <span class="old-price">{{ product.price * 1.25 | number:'1.0-0' }} ج.م</span>
+            </div>
+            <button
+              class="add-to-cart-action-btn"
+              (click)="addToCart($event, product)"
+              [disabled]="product.stockQuantity === 0"
+              [attr.id]="'featured-cart-' + product._id"
+            >
+              أضف إلى السلة
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ SHOPS BY CATEGORY ═══════════════════ -->
+    <section class="shops-section" *ngIf="filteredCategoryShops.length > 0">
+      <div class="section-header-row">
+        <h2 class="section-title-alt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" style="vertical-align: middle; margin-left: 0.5rem;">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          تصفح المحلات
+        </h2>
+      </div>
+
+      <div *ngFor="let catShops of filteredCategoryShops" class="shop-category-group">
+        <!-- Category Header -->
+        <div class="shop-cat-header">
+          <div class="shop-cat-header-right">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shop-cat-icon">
+              <path *ngFor="let p of getCategoryIcon(catShops.categoryEnglish)" [attr.d]="p"/>
+            </svg>
+            <h3 class="shop-cat-title">{{ catShops.categoryArabic }}</h3>
+            <span class="shop-cat-count">{{ catShops.shops.length }} محل</span>
+          </div>
+        </div>
+
+        <!-- Shops in this category -->
+        <div class="shops-grid">
+          <div *ngFor="let shop of catShops.shops" class="shop-card" [attr.id]="'shop-card-' + shop.shopId">
+            <!-- Shop Header (clickable to expand) -->
+            <div class="shop-card-header" (click)="toggleShop(shop.shopId)">
+              <div class="shop-avatar-wrapper">
+                <div class="shop-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                </div>
+                <div class="shop-avatar-glow"></div>
+              </div>
+              <div class="shop-meta">
+                <h4 class="shop-name">{{ shop.nameAr }}</h4>
+                <div class="shop-badges">
+                  <span class="premium-badge shop-address" *ngIf="shop.address">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    {{ shop.address }}
+                  </span>
+                  <span class="premium-badge shop-rating" *ngIf="shop.rating">
+                    <svg viewBox="0 0 24 24" fill="#fbbf24" stroke="none" width="13" height="13"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    {{ shop.rating }}
+                  </span>
+                  <span class="premium-badge shop-delivery" *ngIf="shop.deliveryTime">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="1" y="3" width="15" height="13" rx="2" ry="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    {{ shop.deliveryTime }}
+                  </span>
+                </div>
+              </div>
+              <div class="shop-action-area">
+                <div class="shop-stats">
+                  <span class="stat-value">{{ shop.products.length }}</span>
+                  <span class="stat-label">منتج</span>
+                </div>
+                <div class="expand-btn-wrapper" [class.expanded]="isShopExpanded(shop.shopId)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20" class="toggle-arrow">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shop Products (expandable) -->
+            <div class="shop-products-wrap" *ngIf="isShopExpanded(shop.shopId)">
+              <div class="shop-products-grid">
+                <div *ngFor="let product of shop.products" class="shop-product-card" (click)="goToDetail(product._id)">
+                  <div class="sp-img-wrap">
+                    <div class="sp-placeholder">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="sp-placeholder-svg">
+                        <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="sp-info">
+                    <h5 class="sp-title">{{ product.title }}</h5>
+                    <span class="sp-brand" *ngIf="product.brand">{{ product.brand }}</span>
+                    <div class="sp-price-row">
+                      <span class="sp-price">{{ product.price }} <small>{{ product.currency || 'ج.م' }}</small></span>
+                      <span class="sp-unit" *ngIf="product.unit">/ {{ product.unit }}</span>
+                    </div>
+                    <button class="sp-cart-btn" (click)="addToCart($event, product)" [disabled]="product.stockQuantity === 0">
+                      {{ product.stockQuantity > 0 ? 'أضف للسلة' : 'نفد' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ ALL PRODUCTS ═══════════════════ -->
+    <section class="all-products-section" id="all-products-section">
+      <div class="section-header-row">
+        <h2 class="section-title-alt">
+          <span *ngIf="selectedCategory === 'الكل'">كل المنتجات</span>
+          <span *ngIf="selectedCategory !== 'الكل'">منتجات {{ selectedCategory }}</span>
+        </h2>
+        <span class="results-count-badge">{{ filteredProducts.length }} منتج متاح</span>
+      </div>
+
+      <!-- Products grid -->
+      <div class="products-grid" *ngIf="filteredProducts.length > 0">
+        <div
+          *ngFor="let product of filteredProducts"
+          class="product-card"
+          (click)="goToDetail(product._id)"
+          [attr.id]="'product-card-' + product._id"
+        >
+          <div class="product-img-wrap">
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <div *ngIf="!product.imageUrl" class="product-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
+                <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
+              </svg>
+            </div>
+            <span class="stock-badge" [ngClass]="getStockBadgeClass(product.stockQuantity)">
+              {{ getStockBadgeText(product.stockQuantity) }}
+            </span>
+            <button class="wishlist-btn" (click)="$event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="heart-icon">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="product-info">
+            <span class="product-cat-label">{{ getCategoryArabic(product.category) }}</span>
+            <h3 class="product-title">{{ product.title }}</h3>
+            <!-- Rating -->
+            <div class="rating-stars">
+              <svg *ngFor="let star of [1,2,3,4,5]" viewBox="0 0 24 24" fill="#fbbf24" stroke="none" width="12" height="12">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="price-row">
+              <span class="current-price">{{ product.price }} <small>ج.م</small></span>
+              <span class="old-price" *ngIf="product.stockQuantity > 0">{{ product.price * 1.2 | number:'1.0-0' }} ج.م</span>
+            </div>
+            <button
+              class="add-to-cart-action-btn"
+              (click)="addToCart($event, product)"
+              [disabled]="product.stockQuantity === 0"
+              [attr.id]="'add-to-cart-btn-' + product._id"
+            >
+              {{ product.stockQuantity > 0 ? 'أضف إلى السلة' : 'نفد المخزون' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="filteredProducts.length === 0">
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-svg">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <h3 class="empty-title">لا توجد نتائج</h3>
+        <p class="empty-text">لم نجد منتجات تطابق بحثك الحالي</p>
+        <button class="reset-btn" (click)="searchControl.setValue(''); selectCategory('الكل')" id="reset-filters-btn">
+          إعادة تعيين الفلتر
+        </button>
+      </div>
+    </section>
+
+  </div><!-- /!isLoading -->
+
+  <!-- Cart Drawer -->
+  <app-cart-drawer
+    [isOpen]="isCartOpen"
+    (closed)="closeCart()"
+    (checkoutClicked)="goToCheckout()"
+  ></app-cart-drawer>
+
+</div>
