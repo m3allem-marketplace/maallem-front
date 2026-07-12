@@ -48,6 +48,17 @@
       ></app-stats-card>
     </div>
 
+    <!-- Flat Renovation Banner -->
+    <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-md text-right">
+      <div>
+        <h3 class="text-lg font-black" style="font-family: 'Cairo', var(--font-arabic);">📋 مفكرة تشطيب شقتك الخاصة</h3>
+        <p class="text-sm text-amber-50 mt-1 leading-relaxed" style="font-family: 'Cairo', var(--font-arabic);">أصبح بإمكانك الآن متابعة وتخطيط كافة بنود تشطيب شقتك (كهرباء، سباكة، نجارة) وتحديد ميزانيتها والعمالة والمواد المطلوبة لكل بند لتسجيل كل التفاصيل في مكان واحد.</p>
+      </div>
+      <a routerLink="/customer/flat-renovation" class="inline-flex items-center bg-white text-gray-900 hover:bg-gray-100 font-bold px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm no-underline whitespace-nowrap" style="font-family: 'Cairo', var(--font-arabic);">
+        <span>ابدأ التخطيط الآن</span>
+      </a>
+    </div>
+
     <!-- Main Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
@@ -124,6 +135,15 @@
               <span class="text-sm font-bold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">بدء مزاد جديد</span>
               <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+            <button 
+              class="w-full text-right p-3 rounded-xl border border-amber-100 bg-amber-50 hover:bg-amber-100 flex items-center justify-between cursor-pointer"
+              routerLink="/customer/flat-renovation"
+            >
+              <span class="text-sm font-bold text-amber-900" style="font-family: 'Cairo', var(--font-arabic);">📋 مخطط تشطيب الشقة (مفكرتي)</span>
+              <svg class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </button>
             <button 

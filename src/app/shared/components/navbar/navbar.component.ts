@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import * as AuthActions from '../../../../store/auth/auth.actions';
 import { NotificationsActions } from '../../../store/notifications/notifications.actions';
 import { selectUnreadCount } from '../../../store/notifications/notifications.selectors';
+import { EcommerceService } from '../../../features/store/ecommerce/services/ecommerce.service';
 
 // Standalone Navbar Component
 
@@ -132,11 +133,17 @@ import { selectUnreadCount } from '../../../store/notifications/notifications.se
        DESKTOP NAV LINKS
     ════════════════════════════════════════════════ */
     .nb-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex: 1;
-      justify-content: center;
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .nb-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        justify-content: center;
+      }
     }
 
     .nb-link {
@@ -687,6 +694,12 @@ import { selectUnreadCount } from '../../../store/notifications/notifications.se
       transition: all 200ms ease;
     }
 
+    @media (min-width: 1024px) {
+      .nb-hamburger {
+        display: none;
+      }
+    }
+
     .nb-hamburger:hover {
       background: #f1f5f9;
       border-color: rgba(27, 43, 110, 0.2);
@@ -984,9 +997,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private readonly chatService = inject(ChatService);
   private readonly pusherService = inject(PusherService);
   private readonly router = inject(Router);
+  private readonly ecommerceService = inject(EcommerceService, { optional: true });
   private userSub?: Subscription;
   private pusherSub?: Subscription;
   private notificationsSub?: Subscription;
+  private cartSub?: Subscription;
+
+  cartCount = 0;
 
   currentUser: any = null;
   isMenuOpen     = false;
@@ -1011,6 +1028,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkViewport();
+    
+    // Subscribe to cart count if EcommerceService is available
+    if (this.ecommerceService) {
+      this.cartSub = this.ecommerceService.cartCount$.subscribe(count => {
+        this.cartCount = count;
+      });
+    }
     // Subscribe to unread notification count
     this.notificationsSub = this.store.select(selectUnreadCount).subscribe(count => {
       this.unreadNotificationsCount = count;
@@ -1075,6 +1099,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.userSub?.unsubscribe();
     this.pusherSub?.unsubscribe();
     this.notificationsSub?.unsubscribe();
+    this.cartSub?.unsubscribe();
   }
 
   /** Load total unread message count and latest conversations for preview dropdown */
@@ -1180,5 +1205,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   toggleNotifications(): void {
     this.isDropdownOpen = false;
     this.isNotificationOpen = !this.isNotificationOpen;
+  }
+
+  get showCartButton(): boolean {
+    return !!this.ecommerceService && this.router.url.includes('/store');
+  }
+
+  openStoreCart(): void {
+    if (this.ecommerceService) {
+      this.ecommerceService.isCartDrawerOpen$.next(true);
+    }
   }
 }

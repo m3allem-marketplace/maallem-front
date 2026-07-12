@@ -1,0 +1,57 @@
+.flat-renovation-container {
+  font-family: 'Cairo', var(--font-arabic), system-ui, -apple-system, sans-serif;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(243, 244, 246, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.05);
+}
+
+.renovation-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(243, 244, 246, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.renovation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.08);
+}
+
+.status-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: left 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  padding-left: 2rem !important;
+  transition: all 0.2s ease;
+}
+
+.status-select:hover {
+  filter: brightness(0.96);
+}
+
+.status-select:focus {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}

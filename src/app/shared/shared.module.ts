@@ -31,6 +31,7 @@ import { PriceSummaryCardComponent } from './ui/price-summary-card/price-summary
 import { StepWizardComponent } from './ui/step-wizard/step-wizard.component';
 import { StatsCardComponent } from './ui/stats-card/stats-card.component';
 import { MapPickerComponent } from './components/map-picker/map-picker.component';
+import { MockPaymentModalComponent } from './ui/mock-payment-modal/mock-payment-modal.component';
 
 // ── UI Kit ────────────────────────────────────────────────────────────────────
 import {
@@ -52,7 +53,7 @@ const COMPONENTS = [
   GlobalAiAssistantComponent,
   StatusChipComponent, BookingTimelineComponent, ConfirmModalComponent,
   EmptyStateComponent, PriceSummaryCardComponent, StepWizardComponent, StatsCardComponent,
-  MapPickerComponent
+  MapPickerComponent, MockPaymentModalComponent
 ];
 const UI_KIT = [
   ButtonComponent, InputComponent, ModalComponent,
