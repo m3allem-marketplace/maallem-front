@@ -52,7 +52,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   showBookingOptionsModal = false;
 
   navigateToStore(): void {
-    window.location.href = 'http://localhost:4201';
+    this.router.navigate(['/store/storefront']);
   }
 
   // Direct Selection Modal States

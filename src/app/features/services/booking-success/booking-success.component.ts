@@ -16,6 +16,8 @@ export class BookingSuccessComponent implements OnInit, OnDestroy {
   bookingStatus: string = 'pending_payment';
   paying = false;
   loading = false;
+  bookingAmount = 0;
+  showMockPaymentModal = false;
 
   private destroy$ = new Subject<void>();
 
@@ -66,6 +68,7 @@ export class BookingSuccessComponent implements OnInit, OnDestroy {
       next: (res) => {
         const raw = res.data?.booking || res.data;
         const status = raw?.status || 'pending_payment';
+        this.bookingAmount = raw?.price || raw?.budget || 0;
         this.applyStatus(status);
         this.loading = false;
       },
@@ -104,6 +107,11 @@ export class BookingSuccessComponent implements OnInit, OnDestroy {
 
   payNow(): void {
     if (!this.bookingId || this.paying || !this.canPay) return;
+    this.showMockPaymentModal = true;
+  }
+
+  onPaymentSuccess(): void {
+    this.showMockPaymentModal = false;
     this.paying = true;
     this.bookingService.payBooking(this.bookingId).subscribe({
       next: () => {
@@ -118,6 +126,10 @@ export class BookingSuccessComponent implements OnInit, OnDestroy {
         this.toast.success('تم تأمين ميزانية الحجز وبدء تنفيذ الخدمة! 💳');
       }
     });
+  }
+
+  onPaymentCancel(): void {
+    this.showMockPaymentModal = false;
   }
 
   goToBookingDetail(): void {

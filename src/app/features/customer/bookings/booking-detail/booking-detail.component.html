@@ -412,3 +412,12 @@
   </div>
 </div>
 
+<!-- Mock Payment Modal -->
+<app-mock-payment-modal
+  [isOpen]="showMockPaymentModal"
+  [amount]="booking?.budget || 0"
+  [bookingId]="bookingId"
+  (paymentSuccess)="onPaymentSuccess()"
+  (cancel)="onPaymentCancel()"
+></app-mock-payment-modal>
+

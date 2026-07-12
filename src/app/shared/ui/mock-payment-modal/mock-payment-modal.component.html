@@ -1,0 +1,362 @@
+<div *ngIf="isOpen" class="pm-overlay" (click)="onCancel()">
+  <div class="pm-sheet" (click)="$event.stopPropagation()">
+
+
+    <!-- ── HEADER ─────────────────────────────────────────────────── -->
+    <div class="pm-header">
+      <div class="pm-header__brand">
+        <!-- Shield Icon -->
+        <div class="pm-header__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="pm-header__title">بوابة الدفع الآمنة</h2>
+          <span class="pm-header__sub">محفظة ضمان مشفرة · Escrow Protected</span>
+        </div>
+      </div>
+      <button class="pm-close-btn" (click)="onCancel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── AMOUNT BANNER ──────────────────────────────────────────── -->
+    <div class="pm-amount-banner">
+      <div class="pm-amount-banner__info">
+        <span class="pm-amount-banner__label">المبلغ المراد إيداعه في محفظة الضمان</span>
+        <span class="pm-amount-banner__value">{{ amount | number:'1.0-0' }} <span class="pm-amount-banner__currency">جنيه مصري</span></span>
+      </div>
+      <div class="pm-escrow-badge">
+        <span class="pm-escrow-badge__dot"></span>
+        <span>Escrow Active</span>
+      </div>
+    </div>
+
+    <!-- ── ERROR ALERT ─────────────────────────────────────────────── -->
+    <div *ngIf="validationError" class="pm-error-alert">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>{{ validationError }}</span>
+    </div>
+
+    <!-- ── STEP INDICATOR ─────────────────────────────────────────── -->
+    <div *ngIf="step <= 2" class="pm-steps">
+      <div class="pm-step" [class.pm-step--active]="step === 1" [class.pm-step--done]="step > 1">
+        <span class="pm-step__num">
+          <svg *ngIf="step > 1" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span *ngIf="step <= 1">١</span>
+        </span>
+        <span class="pm-step__label">وسيلة الدفع</span>
+      </div>
+      <div class="pm-step__connector"></div>
+      <div class="pm-step" [class.pm-step--active]="step === 2">
+        <span class="pm-step__num">٢</span>
+        <span class="pm-step__label">بيانات الحساب</span>
+      </div>
+    </div>
+
+    <!-- ── SCROLLABLE CONTENT ─────────────────────────────────────── -->
+    <div class="pm-content">
+
+      <!-- ═══ STEP 1: METHOD SELECTION ═══════════════════════════════ -->
+      <div *ngIf="step === 1" class="pm-step-body">
+        <p class="pm-section-label">اختر وسيلة الدفع:</p>
+        <div class="pm-methods-grid">
+
+          <!-- Wallet -->
+          <button (click)="selectMethod('wallet')" class="pm-method-card">
+            <div class="pm-method-card__logos">
+              <img src="assets/payment/vodafone-cash.png" alt="Vodafone Cash" class="pm-provider-logo">
+              <img src="assets/payment/orange-cash.png" alt="Orange Cash" class="pm-provider-logo">
+              <img src="assets/payment/etisalat-cash.png" alt="اتصالات كاش" class="pm-provider-logo">
+            </div>
+            <span class="pm-method-card__name">المحافظ الإلكترونية</span>
+            <span class="pm-method-card__sub">فودافون كاش · أورنج · اتصالات</span>
+            <div class="pm-method-card__arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- InstaPay -->
+          <button (click)="selectMethod('instapay')" class="pm-method-card">
+            <div class="pm-method-card__logos">
+              <img src="assets/payment/instapay.png" alt="InstaPay" class="pm-provider-logo pm-provider-logo--single">
+            </div>
+            <span class="pm-method-card__name">إنستا باي</span>
+            <span class="pm-method-card__sub">تحويل بنكي فوري · مجاني</span>
+            <div class="pm-method-card__arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Bank Card -->
+          <button (click)="selectMethod('card')" class="pm-method-card">
+            <div class="pm-method-card__icon pm-method-card__icon--indigo">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <span class="pm-method-card__name">بطاقة بنكية</span>
+            <span class="pm-method-card__sub">Visa · Mastercard · Meeza</span>
+            <div class="pm-method-card__arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+              </svg>
+            </div>
+          </button>
+
+        </div>
+
+        <!-- Security Line -->
+        <div class="pm-security-line">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>مشفر بالكامل بمعايير PCI-DSS · 256-bit SSL</span>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 2: INPUT DETAILS ═══════════════════════════════════ -->
+      <div *ngIf="step === 2" class="pm-step-body">
+        <button (click)="goBack()" class="pm-back-btn">
+          <svg class="pm-back-btn__arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          <span>العودة لاختيار الوسيلة</span>
+        </button>
+
+        <!-- WALLET FORM -->
+        <div *ngIf="method === 'wallet'" class="pm-form">
+          <div class="pm-form__group">
+            <label class="pm-form__label">مزود الخدمة</label>
+            <div class="pm-provider-tabs">
+              <button type="button" (click)="walletProvider = 'vodafone'"
+                class="pm-provider-tab"
+                [class.pm-provider-tab--active]="walletProvider === 'vodafone'">
+                <img src="assets/payment/vodafone-cash.png" alt="Vodafone Cash" class="pm-tab-logo">
+                <span>فودافون</span>
+              </button>
+              <button type="button" (click)="walletProvider = 'orange'"
+                class="pm-provider-tab"
+                [class.pm-provider-tab--active]="walletProvider === 'orange'">
+                <img src="assets/payment/orange-cash.png" alt="Orange Cash" class="pm-tab-logo">
+                <span>أورنج</span>
+              </button>
+              <button type="button" (click)="walletProvider = 'etisalat'"
+                class="pm-provider-tab"
+                [class.pm-provider-tab--active]="walletProvider === 'etisalat'">
+                <img src="assets/payment/etisalat-cash.png" alt="اتصالات" class="pm-tab-logo">
+                <span>اتصالات</span>
+              </button>
+            </div>
+          </div>
+          <div class="pm-form__group">
+            <label class="pm-form__label">رقم الهاتف المسجل بالمحفظة</label>
+            <div class="pm-input-wrap">
+              <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+              <input type="text" [(ngModel)]="walletNumber" placeholder="01xxxxxxxxx" maxlength="11" class="pm-input pm-input--ltr">
+            </div>
+          </div>
+        </div>
+
+        <!-- INSTAPAY FORM -->
+        <div *ngIf="method === 'instapay'" class="pm-form">
+          <div class="pm-info-box">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>أدخل عنوان حسابك البنكي على إنستا باي (IPA). سيصلك طلب تأكيد الدفع فوراً على هاتفك.</span>
+          </div>
+          <div class="pm-form__group">
+            <label class="pm-form__label">عنوان InstaPay (IPA)</label>
+            <div class="pm-input-wrap">
+              <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+              <input type="text" [(ngModel)]="instapayAddress" placeholder="username@instapay" class="pm-input pm-input--ltr">
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD FORM -->
+        <div *ngIf="method === 'card'" class="pm-form">
+          <div class="pm-form__group">
+            <label class="pm-form__label">رقم البطاقة</label>
+            <div class="pm-input-wrap">
+              <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+              <input type="text" [value]="cardNumber" (input)="formatCardNumber($event)" placeholder="0000  0000  0000  0000" class="pm-input pm-input--ltr pm-input--card">
+            </div>
+          </div>
+          <div class="pm-form__group">
+            <label class="pm-form__label">اسم حامل البطاقة</label>
+            <div class="pm-input-wrap">
+              <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input type="text" [(ngModel)]="cardHolder" placeholder="FULL NAME AS ON CARD" class="pm-input pm-input--ltr pm-input--uppercase">
+            </div>
+          </div>
+          <div class="pm-form__row">
+            <div class="pm-form__group">
+              <label class="pm-form__label">تاريخ الانتهاء</label>
+              <div class="pm-input-wrap">
+                <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                </svg>
+                <input type="text" [value]="cardExpiry" (input)="formatExpiry($event)" placeholder="MM / YY" maxlength="5" class="pm-input pm-input--ltr">
+              </div>
+            </div>
+            <div class="pm-form__group">
+              <label class="pm-form__label">رمز الأمان CVV</label>
+              <div class="pm-input-wrap">
+                <svg class="pm-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" [(ngModel)]="cardCvv" placeholder="•••" maxlength="3" class="pm-input pm-input--ltr">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button (click)="submitDetails()" class="pm-cta-btn">
+          <span>المتابعة لتأكيد الدفع</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ═══ STEP 3: CONNECTING ════════════════════════════════════ -->
+      <div *ngIf="step === 3" class="pm-status-body">
+        <div class="pm-spinner-ring"></div>
+        <h4 class="pm-status-title">جاري الاتصال الآمن ببوابة الدفع</h4>
+        <p class="pm-status-sub">يتم إرسال طلب الدفع المشفر عبر البنك المركزي المصري. يرجى الانتظار.</p>
+        <div class="pm-ssl-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>256-bit SSL Encrypted</span>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 4: OTP ═══════════════════════════════════════════ -->
+      <div *ngIf="step === 4" class="pm-step-body">
+        <div class="pm-otp-header">
+          <div class="pm-otp-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="pm-otp-title">تحقق برمز SMS</h4>
+            <p class="pm-otp-sub">تم إرسال رمز مؤقت مكون من 6 أرقام إلى رقم هاتفك. يرجى إدخاله أدناه لتأكيد خصم <strong>{{ amount | number:'1.0-0' }} ج.م</strong> وإيداعها في محفظة الضمان.</p>
+          </div>
+        </div>
+
+        <div class="pm-form__group">
+          <label class="pm-form__label">رمز التحقق (OTP)</label>
+          <input type="text" [(ngModel)]="otpCode" placeholder="_ _ _ _ _ _" maxlength="6" class="pm-otp-input">
+        </div>
+
+        <!-- Mock-mode demo hint -->
+        <div class="pm-demo-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span>وضع تجريبي &mdash; أدخل أي تسلسل من 4 أرقام أو أكثر للمتابعة</span>
+        </div>
+
+        <div class="pm-resend-row">
+          <span class="pm-resend-timer" *ngIf="countdown > 0">
+            إعادة الإرسال خلال
+            <strong>{{ countdown }}</strong>
+            ثانية
+          </span>
+          <button type="button" *ngIf="countdown === 0" (click)="resendOtp()" class="pm-resend-btn">
+            إعادة إرسال الرمز
+          </button>
+        </div>
+
+        <button (click)="verifyOtp()" class="pm-cta-btn pm-cta-btn--success">
+          <span>تأكيد الدفع وإيداع الميزانية</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ═══ STEP 5: PROCESSING ════════════════════════════════════ -->
+      <div *ngIf="step === 5" class="pm-status-body">
+        <div class="pm-spinner-ring pm-spinner-ring--teal"></div>
+        <h4 class="pm-status-title">جاري سحب وتأمين المبلغ</h4>
+        <p class="pm-status-sub">نعمل على تأكيد المعاملة مع مزود الدفع. هذا لن يستغرق سوى ثوانٍ.</p>
+      </div>
+
+      <!-- ╣═══ STEP 6: SUCCESS ═══════════════════════════════════════════════ -->
+      <div *ngIf="step === 6" class="pm-success-body">
+
+        <!-- Animated check ring -->
+        <div class="pm-success-ring">
+          <svg class="pm-success-check" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+
+        <h4 class="pm-success-title">تم الإيداع بنجاح</h4>
+        <p class="pm-success-sub">تم تأمين مبلغ <strong>{{ amount | number:'1.0-0' }} جنيه</strong> في محفظة الضمان. سيتلقى الحرفي إشعاراً بالحجز ويبدأ التنفيذ.</p>
+
+        <!-- Breakdown receipt -->
+        <div class="pm-receipt">
+          <div class="pm-receipt__row">
+            <span class="pm-receipt__label">رقم مرجع الحجز</span>
+            <code class="pm-receipt__value pm-receipt__value--mono">{{ bookingId | slice:0:10 }}…</code>
+          </div>
+          <div class="pm-receipt__row">
+            <span class="pm-receipt__label">إجمالي التحويل</span>
+            <span class="pm-receipt__value pm-receipt__value--strong">{{ amount | number:'1.0-0' }} ج.م</span>
+          </div>
+          <div class="pm-receipt__row">
+            <span class="pm-receipt__label">صافي مستحقات الحرفي (90%)</span>
+            <span class="pm-receipt__value pm-receipt__value--green">{{ amount * 0.9 | number:'1.0-0' }} ج.م</span>
+          </div>
+          <div class="pm-receipt__row">
+            <span class="pm-receipt__label">عمولة المنصة (10%)</span>
+            <span class="pm-receipt__value pm-receipt__value--amber">{{ amount * 0.1 | number:'1.0-0' }} ج.م</span>
+          </div>
+          <div class="pm-receipt__row pm-receipt__row--status">
+            <span class="pm-receipt__label">حالة محفظة الضمان</span>
+            <span class="pm-receipt__badge">
+              <span class="pm-receipt__badge-dot"></span>
+              محجوزة ومؤمنة
+            </span>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button (click)="confirmSuccess()" class="pm-cta-btn pm-cta-btn--proceed">
+          <span>متابعة تفاصيل الحجز</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+        </button>
+
+      </div>
+
+    </div>
+    <!-- end pm-content -->
+
+  </div>
+</div>

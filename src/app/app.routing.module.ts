@@ -74,6 +74,10 @@ const routes: Routes = [
     loadChildren: () => import('./features/about-us/about-us.module').then(m => m.AboutUsModule)
   },
   {
+    path: 'store',
+    loadChildren: () => import('./features/store/store.module').then(m => m.StoreModule)
+  },
+  {
     path: 'settings',
     redirectTo: 'profile'
   },

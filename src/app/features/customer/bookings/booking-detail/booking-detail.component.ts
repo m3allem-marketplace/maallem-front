@@ -17,6 +17,7 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
   refreshing = false;
   bookingId = '';
   booking: any = null;
+  showMockPaymentModal = false;
   private destroy$ = new Subject<void>();
 
   // Review State
@@ -193,6 +194,11 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
   }
 
   payBooking(): void {
+    this.showMockPaymentModal = true;
+  }
+
+  onPaymentSuccess(): void {
+    this.showMockPaymentModal = false;
     this.bookingService.payBooking(this.bookingId).subscribe({
       next: () => {
         this.toast.success('تم دفع وتأمين ميزانية الحجز بنجاح! 💳');
@@ -201,15 +207,16 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        // Even if the API fails (e.g. no payment gateway configured yet),
-        // advance locally so the customer can continue through the escrow flow.
-        const msg = err?.error?.message || err?.message || '';
         this.toast.success('تم تأمين ميزانية الحجز وبدء تنفيذ الخدمة! 💳');
         if (this.booking) {
           this.booking.status = 'paid';
         }
       }
     });
+  }
+
+  onPaymentCancel(): void {
+    this.showMockPaymentModal = false;
   }
 
   disputeBooking(): void {
