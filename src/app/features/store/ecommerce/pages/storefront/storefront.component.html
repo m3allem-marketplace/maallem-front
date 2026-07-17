@@ -240,7 +240,7 @@
               [src]="product.imageUrl"
               [alt]="product.title"
               class="product-img"
-              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+              (error)="product.imageUrl = ''"
             >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
@@ -359,7 +359,7 @@
                       [src]="product.imageUrl"
                       [alt]="product.title"
                       class="sp-img"
-                      (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+                      (error)="product.imageUrl = ''"
                     >
                     <div *ngIf="!product.imageUrl" class="sp-placeholder">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="sp-placeholder-svg">
@@ -427,7 +427,7 @@
               [src]="product.imageUrl"
               [alt]="product.title"
               class="product-img"
-              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+              (error)="product.imageUrl = ''"
             >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
