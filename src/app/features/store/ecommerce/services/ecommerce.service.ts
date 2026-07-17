@@ -56,13 +56,33 @@ export interface OrderPayload {
   paymentMethod:    string;
 }
 
+/** Shape of each order object returned by the API */
+export interface OrderProduct {
+  _id:   string;
+  name:  string;
+  price: number;
+}
+
+export interface OrderDetail {
+  _id:            string;
+  customerName:   string;
+  customerPhone:  string;
+  customerId?:    string;
+  product:        OrderProduct;
+  owner:          string;
+  quantity:       number;
+  totalPrice:     number;
+  location:       string;
+  latitude?:      number;
+  longitude?:     number;
+  status:         string;
+  createdAt:      string;
+}
+
+/** Full API response from POST /orders */
 export interface OrderReceipt {
-  orderId:           string;
-  _id?:              string;
-  id?:               string;
-  totalAmount:       number;
-  estimatedDelivery: string;
-  status:            'confirmed' | 'pending' | string;
+  message: string;
+  order:   OrderDetail;
 }
 
 // ─── Service ──────────────────────────────────────────────────────────────────
@@ -313,8 +333,26 @@ export class EcommerceService {
 
   // ── Cart Management ──────────────────────────────────────────────────────────
 
-  addToCart(item: Item, quantity = 1): void {
+  /**
+   * Result of an addToCart attempt.
+   * - 'added'           → item was successfully added / quantity bumped
+   * - 'different-shop'  → blocked because cart already has items from another shop
+   */
+  addToCart(item: Item, quantity = 1): 'added' | { blocked: 'different-shop'; shopName: string } {
     const current = this.cartItems$.getValue();
+
+    // ── Single-shop enforcement ────────────────────────────────────────────────
+    if (current.length > 0) {
+      const cartShopId = current[0].item.shop?.shopId || current[0].item.supplierId;
+      const newShopId  = item.shop?.shopId || item.supplierId;
+
+      if (cartShopId !== newShopId) {
+        const existingShopName = current[0].item.shop?.nameAr || 'محل آخر';
+        return { blocked: 'different-shop', shopName: existingShopName };
+      }
+    }
+
+    // ── Normal add / quantity bump ──────────────────────────────────────────────
     const idx = current.findIndex(ci => ci.item._id === item._id);
     if (idx !== -1) {
       this.cartItems$.next(
@@ -323,6 +361,7 @@ export class EcommerceService {
     } else {
       this.cartItems$.next([...current, { item, quantity }]);
     }
+    return 'added';
   }
 
   removeFromCart(itemId: string): void {
@@ -355,7 +394,7 @@ export class EcommerceService {
    * Uses forkJoin so that all requests are fired in parallel and we wait for
    * all of them to complete before emitting. Returns the first receipt.
    */
-  placeOrder(orderPayload: OrderPayload): Observable<OrderReceipt> {
+  placeOrder(orderPayload: OrderPayload): Observable<OrderReceipt[]> {
     const { items, customerName, customerPhone, location, latitude, longitude, paymentMethod } = orderPayload;
 
     const requests = items.map(ci => {
@@ -374,7 +413,6 @@ export class EcommerceService {
     });
 
     return forkJoin(requests).pipe(
-      map(receipts => receipts[0]),  // return receipt of first item
       // Explicitly re-throw so errors always reach the component's error callback
       catchError(err => throwError(() => err))
     );
