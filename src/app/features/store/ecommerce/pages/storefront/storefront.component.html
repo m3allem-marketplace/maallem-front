@@ -234,7 +234,13 @@
           [attr.id]="'featured-card-' + product._id"
         >
           <div class="product-img-wrap">
-            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <img
+              *ngIf="product.imageUrl"
+              [src]="product.imageUrl"
+              [alt]="product.title"
+              class="product-img"
+              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+            >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
                 <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
@@ -347,7 +353,14 @@
               <div class="shop-products-grid">
                 <div *ngFor="let product of shop.products" class="shop-product-card" (click)="goToDetail(product._id)">
                   <div class="sp-img-wrap">
-                    <div class="sp-placeholder">
+                    <img
+                      *ngIf="product.imageUrl"
+                      [src]="product.imageUrl"
+                      [alt]="product.title"
+                      class="sp-img"
+                      (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+                    >
+                    <div *ngIf="!product.imageUrl" class="sp-placeholder">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="sp-placeholder-svg">
                         <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
                       </svg>
@@ -391,7 +404,13 @@
           [attr.id]="'product-card-' + product._id"
         >
           <div class="product-img-wrap">
-            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <img
+              *ngIf="product.imageUrl"
+              [src]="product.imageUrl"
+              [alt]="product.title"
+              class="product-img"
+              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+            >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
                 <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
