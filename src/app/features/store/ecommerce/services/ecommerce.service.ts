@@ -4,6 +4,7 @@ import { map, shareReplay, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Item, ShopInfo } from '../../shared/models/item.model';
 import { StoreApiService } from '../../services/store-api.service';
+import { replaceImagesWithDynamicUrl } from '../utils/product-image-overrides';
 
 // ─── Supporting Interfaces ────────────────────────────────────────────────────
 
@@ -64,6 +65,7 @@ export interface OrderReceipt {
 export class EcommerceService {
   private productsCache$: Observable<Item[]> | null = null;
   private shopsCache$: Observable<CategoryShops[]> | null = null;
+  private readonly productImageCloudBaseUrl = 'https://res.cloudinary.com/duq0xgmg1/image/upload/f_auto,q_auto/m3allem_categories';
 
   // ── Cart State ───────────────────────────────────────────────────────────────
   private readonly CART_STORAGE_KEY = 'm3allem_cart';
@@ -116,22 +118,8 @@ export class EcommerceService {
     }
 
     let endpoint = '/products/store';
-    const obs$ = this.api.get<any[]>(endpoint).pipe(
-      map((categories: any[]) => {
-        const products: Item[] = [];
-        (categories || []).forEach(cat => {
-          const categoryName = cat.categoryId || cat.name || '';
-          const mappedCategory = this.standardizeCategory(categoryName);
-          
-          if (cat.products && Array.isArray(cat.products)) {
-            cat.products.forEach((p: any) => {
-              p.category = mappedCategory;
-              products.push(this.mapItem(p));
-            });
-          }
-        });
-        return products;
-      }),
+    const obs$ = this.api.get<unknown>(endpoint).pipe(
+      map(response => this.mapProductsResponse(response)),
       shareReplay(1)
     );
     this.productsCache$ = obs$;
@@ -156,7 +144,8 @@ export class EcommerceService {
       return this.shopsCache$;
     }
 
-    const obs$ = this.api.get<any[]>('/products/store').pipe(
+    const obs$ = this.api.get<unknown>('/products/store').pipe(
+      map(response => this.extractResponseArray(response)),
       map((categories: any[]) => {
         const result: CategoryShops[] = [];
         (categories || []).forEach(cat => {
@@ -183,8 +172,12 @@ export class EcommerceService {
                 });
               }
 
-              p.category = mappedCategory;
-              shopMap.get(shopId)!.products.push(this.mapItem(p));
+              const mappedProduct = this.mapItem({ ...p, category: mappedCategory });
+              const productWithImage = replaceImagesWithDynamicUrl(
+                [mappedProduct],
+                this.productImageCloudBaseUrl
+              )[0];
+              shopMap.get(shopId)!.products.push(productWithImage);
             });
           }
 
@@ -203,6 +196,39 @@ export class EcommerceService {
     this.shopsCache$ = obs$;
 
     return obs$;
+  }
+
+  private mapProductsResponse(response: unknown): Item[] {
+    const records = this.extractResponseArray(response);
+    const products: Item[] = [];
+
+    records.forEach(record => {
+      if (Array.isArray(record?.products)) {
+        const categoryName = record.categoryId || record.name || '';
+        const mappedCategory = this.standardizeCategory(categoryName);
+
+        record.products.forEach((product: any) => {
+          products.push(this.mapItem({ ...product, category: mappedCategory }));
+        });
+
+        return;
+      }
+
+      products.push(this.mapItem(record));
+    });
+
+    return replaceImagesWithDynamicUrl(products, this.productImageCloudBaseUrl);
+  }
+
+  private extractResponseArray(response: any): any[] {
+    if (Array.isArray(response)) return response;
+    if (Array.isArray(response?.data)) return response.data;
+    if (Array.isArray(response?.products)) return response.products;
+    if (Array.isArray(response?.categories)) return response.categories;
+    if (Array.isArray(response?.data?.products)) return response.data.products;
+    if (Array.isArray(response?.data?.categories)) return response.data.categories;
+    if (Array.isArray(response?.data?.data)) return response.data.data;
+    return [];
   }
 
   private getCategoryArabicName(english: string): string {
@@ -249,11 +275,34 @@ export class EcommerceService {
       brand: backendItem.brand || '',
       currency: backendItem.currency || 'EGP',
       unit: backendItem.unit || '',
-      imageUrl: backendItem.imageUrl || '',
+      imageUrl: this.getProductImageUrl(backendItem),
       shop,
       status: backendItem.status || 'active',
       createdAt: backendItem.createdAt || new Date().toISOString()
     };
+  }
+
+  private getProductImageUrl(backendItem: any): string {
+    const directImage =
+      backendItem.imageUrl ||
+      backendItem.image_url ||
+      backendItem.image ||
+      backendItem.thumbnail ||
+      backendItem.photo ||
+      backendItem.picture;
+
+    if (typeof directImage === 'string' && directImage.trim()) {
+      return directImage.trim();
+    }
+
+    if (Array.isArray(backendItem.images)) {
+      const firstImage = backendItem.images.find((image: unknown) => typeof image === 'string' && image.trim());
+      if (typeof firstImage === 'string') {
+        return firstImage.trim();
+      }
+    }
+
+    return '';
   }
 
   // ── Cart Management ──────────────────────────────────────────────────────────

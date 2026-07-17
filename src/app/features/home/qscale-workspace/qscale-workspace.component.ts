@@ -429,6 +429,44 @@ export class QScaleWorkspaceComponent implements OnInit, OnDestroy {
     this.sendMessage();
   }
 
+  startQuickSurvey(service: 'painting' | 'plumbing' | 'masonry_building' | 'electrical'): void {
+    this.serviceType = service;
+    this.clearDimensionInputs();
+
+    let userText = '';
+    let greetingText = '';
+
+    switch (service) {
+      case 'painting':
+        userText = 'أريد حساب مقايسة دهانات';
+        greetingText = 'أهلاً بك! سأساعدك في حساب خامات ومصنعية الدهانات. صف لي العمل المطلوب أو المشكلة التي تواجهك (مثال: أريد دهان غرفة بالكامل، أو لدي ثقوب ورطوبة في الحائط وأريد معالجتها) لبدء المقايسة.';
+        break;
+      case 'plumbing':
+        userText = 'أريد حساب مقايسة سباكة حمام';
+        greetingText = 'أهلاً بك! سأساعدك في حساب خامات وتكاليف أعمال السباكة. يرجى وصف المشكلة أو التعديلات المطلوبة (مثال: تأسيس سباكة حمام جديد، أو لدي تسريب في الأحواض) للبدء.';
+        break;
+      case 'masonry_building':
+        userText = 'أريد حساب مقايسة أعمال بناء';
+        greetingText = 'أهلاً بك! سأساعدك في حساب المواد المطلوبة للبناء والمحارة. يرجى وصف العمل المطلوب (مثال: بناء جدار فاصل بالطوب، أو عمل محارة وتلييس لغرفة) للبدء.';
+        break;
+      case 'electrical':
+        userText = 'أريد حساب مقايسة أعمال كهرباء';
+        greetingText = 'أهلاً بك! سأساعدك في حساب خامات وتكاليف التأسيسات الكهربائية. صف لي ما ترغب في تنفيذه (مثال: تأسيس كهرباء لشقة بالكامل، أو تركيب مفاتيح إضافية لغرفة) للبدء.';
+        break;
+    }
+
+    this.messages = [
+      { sender: 'user', text: userText },
+      {
+        sender: 'assistant',
+        text: greetingText,
+        isExtractionComplete: false,
+        showDimensionsForm: false // Allow the user to describe their problem first
+      }
+    ];
+    this.saveLocalSession();
+  }
+
   clearDimensionInputs(): void {
     this.dimWidth = null;
     this.dimLength = null;

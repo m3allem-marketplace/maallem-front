@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "M3allem Store API",
+    "version": "1.0.0",
+    "description": "API Documentation for M3allem Store Dashboard"
+  },
+  "servers": [
+    {
+      "url": "https://m3allem-store-dashboard.vercel.app",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "post": {
+        "summary": "Create a new product"
+      },
+      "get": {
+        "summary": "Get all products for the logged-in user"
+      }
+    },
+    "/api/products/store": {
+      "get": {
+        "summary": "Get all products grouped by category for the public store"
+      }
+    },
+    "/api/products/{id}": {
+      "put": {
+        "summary": "Update a product"
+      },
+      "delete": {
+        "summary": "Delete a product"
+      }
+    },
+    "/api/orders": {
+      "post": {
+        "summary": "Create a new order and notify the seller"
+      },
+      "get": {
+        "summary": "Get all orders for the authenticated seller"
+      }
+    },
+    "/api/orders/my-orders": {
+      "get": {
+        "summary": "Get all orders for the authenticated customer"
+      }
+    },
+    "/api/orders/{id}/status": {
+      "put": {
+        "summary": "Update the status of an order"
+      }
+    },
+    "/api/categories": {
+      "post": {
+        "summary": "Create a new category with an image"
+      },
+      "get": {
+        "summary": "Get all categories"
+      }
+    },
+    "/api/categories/{id}": {
+      "put": {
+        "summary": "Update a category"
+      },
+      "delete": {
+        "summary": "Delete a category"
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user"
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login user"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Product management operations"
+    },
+    {
+      "name": "Auth",
+      "description": "Authentication operations"
+    }
+  ]
+}

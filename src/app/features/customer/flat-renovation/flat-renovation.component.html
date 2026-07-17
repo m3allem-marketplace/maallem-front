@@ -1,358 +1,574 @@
-<div class="flat-renovation-container max-w-7xl mx-auto my-8 px-4" style="direction: rtl;">
+<div class="reno-page" style="direction: rtl;">
 
-  <!-- Header -->
-  <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-    <div class="text-right">
-      <h1 class="text-2xl font-extrabold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">مخطط تشطيب الشقة</h1>
-      <p class="text-sm text-gray-500 mt-1" style="font-family: 'Cairo', var(--font-arabic);">قم بتسجيل وتتبع بنود تشطيب شقتك، وتحديد الميزانية، والعمالة، والخامات المطلوبة لكل بند.</p>
+  <!-- ─── Page Header ─── -->
+  <header class="reno-header">
+    <div class="reno-header__text">
+      <h1 class="reno-header__title">مخطط تشطيب الموقع</h1>
+      <p class="reno-header__subtitle">تتبع كميات البنود، جدول العمالة، والتقارير اليومية لحظة بلحظة</p>
     </div>
-    <div class="flex gap-2">
-      <button 
-        *ngIf="items.length > 0"
-        (click)="openAddModal()" 
-        class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm flex items-center gap-1.5"
-        style="font-family: 'Cairo', var(--font-arabic);"
-      >
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-        <span>إضافة بند جديد</span>
-      </button>
-    </div>
+    <button *ngIf="items.length > 0" (click)="openAddModal()" class="btn btn--primary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      إضافة بند جديد
+    </button>
   </header>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 gap-3">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
-    <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">جاري تحميل البنود والبيانات...</p>
+  <!-- ─── Loading ─── -->
+  <div *ngIf="loading" class="reno-loading">
+    <div class="reno-spinner"></div>
+    <p>جاري مزامنة البيانات...</p>
   </div>
 
-  <!-- Main Content -->
+  <!-- ─── Content ─── -->
   <div *ngIf="!loading">
 
     <!-- Empty State -->
-    <div *ngIf="items.length === 0" class="card p-12 bg-white border border-gray-100 rounded-3xl shadow-sm text-center max-w-xl mx-auto mt-12">
-      <div class="flex justify-center mb-6">
-        <div class="p-4 bg-amber-50 rounded-full text-amber-500">
-          <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-        </div>
+    <div *ngIf="items.length === 0" class="reno-empty">
+      <div class="reno-empty__icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+          <rect width="6" height="4" x="9" y="3" rx="1"/>
+          <path d="m9 14 2 2 4-4"/>
+        </svg>
       </div>
-      <h2 class="text-xl font-bold text-gray-800 mb-2" style="font-family: 'Cairo', var(--font-arabic);">ابدأ التخطيط لتشطيب شقتك</h2>
-      <p class="text-sm text-gray-500 mb-6 leading-relaxed" style="font-family: 'Cairo', var(--font-arabic);">
-        لم تقم بإضافة أي بنود لتشطيب شقتك بعد. يمكنك تهيئة البنود الأساسية (كهرباء، سباكة، نجارة) بضغطة زر واحدة لتسهيل البدء وتتبع ميزانية كل بند.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          [disabled]="saving"
-          (click)="initializeDefaultTasks()"
-          class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-sm disabled:opacity-50"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          {{ saving ? 'جاري التهيئة...' : 'تهيئة البنود الأساسية' }}
-        </button>
-        <button 
-          (click)="openAddModal()"
-          class="border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold px-6 py-3 rounded-xl text-sm transition-all"
-          style="font-family: 'Cairo', var(--font-arabic);"
-        >
-          إضافة بند مخصص
+      <h2 class="reno-empty__title">ابدأ تنظيم موقعك</h2>
+      <p class="reno-empty__desc">لم تقم بإضافة أي بنود تشطيب بعد. يمكنك إضافة بند مخصص للبدء فوراً.</p>
+      <div class="reno-empty__actions">
+        <button (click)="openAddModal()" class="btn btn--primary">
+          إضافة بند جديد
         </button>
       </div>
     </div>
 
-    <!-- Stats & Items list -->
+    <!-- ─── Main Dashboard ─── -->
     <div *ngIf="items.length > 0">
-      
-      <!-- Stats Row -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="stat-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-gray-400 block mb-1" style="font-family: 'Cairo', var(--font-arabic);">إجمالي ميزانية التشطيب</span>
-            <span class="text-2xl font-black text-gray-800">{{ totalBudget | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
-          </div>
-          <div class="p-3 bg-amber-50 rounded-xl text-amber-500 flex items-center justify-center">
-            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+
+        <div class="kpi-card">
+          <div class="kpi-card__icon kpi-card__icon--amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
+          </div>
+          <div class="kpi-card__body">
+            <span class="kpi-card__label">التكلفة التقديرية (العمالة)</span>
+            <span class="kpi-card__value">{{ totalEstimatedCost | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
           </div>
         </div>
 
-        <div class="stat-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-gray-400 block mb-1" style="font-family: 'Cairo', var(--font-arabic);">المصروف على البنود المكتملة</span>
-            <span class="text-2xl font-black text-gray-800 text-emerald-600">{{ completedBudget | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
-          </div>
-          <div class="p-3 bg-emerald-50 rounded-xl text-emerald-500 flex items-center justify-center">
-            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div class="kpi-card">
+          <div class="kpi-card__icon kpi-card__icon--emerald">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="14" x="2" y="5" rx="2"/>
+              <path d="M2 10h20"/>
             </svg>
+          </div>
+          <div class="kpi-card__body">
+            <span class="kpi-card__label">التكلفة الفعلية (اليوميات)</span>
+            <span class="kpi-card__value kpi-card__value--emerald">{{ totalLiveCost | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
           </div>
         </div>
 
-        <div class="stat-card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-semibold text-gray-400" style="font-family: 'Cairo', var(--font-arabic);">نسبة إنجاز المشروع</span>
-            <span class="text-sm font-black text-amber-500">{{ progressPercentage }}%</span>
+        <div class="kpi-card">
+          <div class="kpi-card__icon kpi-card__icon--indigo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
           </div>
-          <div class="w-full bg-gray-100 rounded-full h-3.5 overflow-hidden">
-            <div 
-              class="bg-amber-500 h-full rounded-full transition-all duration-500" 
-              [style.width.%]="progressPercentage"
-            ></div>
+          <div class="kpi-card__body">
+            <span class="kpi-card__label">بانتظار فحص المهندس</span>
+            <span class="kpi-card__value kpi-card__value--indigo">{{ underInspectionCount }} <span class="kpi-card__unit">بنود</span></span>
           </div>
         </div>
+
+        <div class="kpi-card kpi-card--progress">
+          <div class="kpi-card__progress-header">
+            <span class="kpi-card__label">نسبة الإنجاز الكلي</span>
+            <span class="kpi-card__value kpi-card__value--amber">{{ overallProgress }}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="overallProgress"></div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Tabular Renovation Items -->
-      <div class="overflow-hidden border border-gray-100 rounded-2xl shadow-sm bg-white text-right">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-100">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">البند</th>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">الميزانية المطلوبة</th>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">العمالة / الصنايعية</th>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">الخامات والماتريال</th>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">الحالة</th>
-                <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">إجراءات</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-100">
-              <tr *ngFor="let item of items" class="hover:bg-gray-50/50 transition-colors">
-                <!-- Title / Category Icon -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center gap-3">
-                    <span class="p-2 bg-amber-50 rounded-xl text-amber-500 flex items-center justify-center">
-                      <ng-container [ngSwitch]="getIconForTitle(item.title)">
-                        <svg *ngSwitchCase="'⚡'" class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        <svg *ngSwitchCase="'🔧'" class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                        </svg>
-                        <svg *ngSwitchCase="'🪚'" class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M11 9H4a2 2 0 00-2 2v3a2 2 0 002 2h7l9-9-9-9zM18 10l-4 4" />
-                        </svg>
-                        <svg *ngSwitchCase="'🎨'" class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                        <svg *ngSwitchDefault class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                      </ng-container>
-                    </span>
-                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">{{ item.title }}</span>
+      <!-- ─── Filters Bar ─── -->
+      <div class="filters-bar">
+        <div class="category-tabs">
+          <button class="cat-tab" [class.cat-tab--active]="selectedCategory === 'All'" (click)="selectedCategory = 'All'">الكل</button>
+          <button
+            *ngFor="let cat of ['الكهرباء', 'السباكة', 'النجارة', 'الدهانات', 'السيراميك', 'المحارة']"
+            class="cat-tab"
+            [class.cat-tab--active]="selectedCategory === cat"
+            (click)="selectedCategory = cat"
+          >{{ cat }}</button>
+        </div>
+        <select [(ngModel)]="selectedStatusFilter" class="status-filter-select">
+          <option value="All">جميع الحالات</option>
+          <option value="Pending">لم يبدأ</option>
+          <option value="In Progress">قيد التنفيذ</option>
+          <option value="Paused">موقوف مؤقتاً</option>
+          <option value="Under Inspection">بانتظار الفحص</option>
+          <option value="Completed">مكتمل ومستلم</option>
+        </select>
+      </div>
+
+      <!-- ─── Items List ─── -->
+      <div class="items-list">
+
+        <div
+          *ngFor="let item of getFilteredItems()"
+          class="item-card"
+          [ngClass]="{
+            'item-card--pending':    item.status === 'Pending',
+            'item-card--progress':   item.status === 'In Progress',
+            'item-card--paused':     item.status === 'Paused',
+            'item-card--inspection': item.status === 'Under Inspection',
+            'item-card--completed':  item.status === 'Completed'
+          }"
+        >
+          <!-- ── Card Header ── -->
+          <div class="item-card__header">
+
+            <!-- Category SVG Icon -->
+            <div class="item-card__cat-icon">
+              <ng-container [ngSwitch]="item.category">
+                <svg *ngSwitchCase="'الكهرباء'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <svg *ngSwitchCase="'السباكة'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+                </svg>
+                <svg *ngSwitchCase="'النجارة'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/>
+                  <path d="M17.64 15L22 10.64"/>
+                  <path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/>
+                </svg>
+                <svg *ngSwitchCase="'الدهانات'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/>
+                  <path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/>
+                </svg>
+                <svg *ngSwitchCase="'السيراميك'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="7" height="7" x="3" y="3" rx="1"/>
+                  <rect width="7" height="7" x="14" y="3" rx="1"/>
+                  <rect width="7" height="7" x="14" y="14" rx="1"/>
+                  <rect width="7" height="7" x="3" y="14" rx="1"/>
+                </svg>
+                <svg *ngSwitchCase="'المحارة'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <svg *ngSwitchDefault width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+              </ng-container>
+            </div>
+
+            <!-- Title & Meta -->
+            <div class="item-card__meta">
+              <div class="item-card__title-row">
+                <h3 class="item-card__title">{{ item.title }}</h3>
+                <span class="chip chip--gray">{{ item.category }}</span>
+                <span class="chip"
+                  [ngClass]="{
+                    'chip--red':    item.priority === 'Urgent',
+                    'chip--orange': item.priority === 'High',
+                    'chip--blue':   item.priority === 'Medium',
+                    'chip--gray':   item.priority === 'Low'
+                  }"
+                >{{ item.priority === 'Urgent' ? 'عاجل' : item.priority === 'High' ? 'مرتفع' : item.priority === 'Medium' ? 'متوسط' : 'منخفض' }}</span>
+              </div>
+              <div *ngIf="item.location" class="item-card__location">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ item.location }}
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="item-card__actions">
+              <select
+                [value]="item.status"
+                (change)="updateItemStatus(item, $any($event.target).value)"
+                class="item-status-select"
+                [ngClass]="{
+                  'item-status-select--pending':    item.status === 'Pending',
+                  'item-status-select--progress':   item.status === 'In Progress',
+                  'item-status-select--paused':     item.status === 'Paused',
+                  'item-status-select--inspection': item.status === 'Under Inspection',
+                  'item-status-select--completed':  item.status === 'Completed'
+                }"
+              >
+                <option value="Pending">لم يبدأ</option>
+                <option value="In Progress">قيد التنفيذ</option>
+                <option value="Paused">موقوف مؤقتاً</option>
+                <option value="Under Inspection">بانتظار الفحص</option>
+                <option value="Completed">مكتمل ومستلم</option>
+              </select>
+
+              <div class="item-card__icon-actions">
+                <button (click)="openEditModal(item)" class="icon-btn" title="تعديل البند">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button (click)="deleteItem(item._id || '')" class="icon-btn icon-btn--danger" title="حذف البند">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Description ── -->
+          <div *ngIf="item.description" class="item-card__description">
+            <span class="item-card__description-label">توصيف العمل والخامات</span>
+            {{ item.description }}
+          </div>
+
+          <!-- ── Quantities & Progress ── -->
+          <div class="item-card__progress-section">
+            <div class="item-card__qty">
+              <div class="progress-row">
+                <span class="progress-label">معدل إنجاز الكميات</span>
+                <span class="progress-count">{{ item.quantity?.completed || 0 }} / {{ item.quantity?.target }} {{ item.quantity?.unit }}</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="item.quantity ? ((item.quantity.completed || 0) / (item.quantity.target || 1) * 100) : 0"></div>
+              </div>
+            </div>
+            <div>
+              <button
+                *ngIf="item.status !== 'Completed'"
+                (click)="openProgressModal(item)"
+                class="btn btn--sm btn--dark"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                تسجيل إنجاز يومي
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Timeline & Workers ── -->
+          <div class="item-card__details-grid">
+
+            <div class="item-card__timeline">
+              <h4 class="details-label">المخطط الزمني</h4>
+              <div class="timeline-grid">
+                <div class="timeline-item">
+                  <span class="timeline-key">البدء المخطط</span>
+                  <span class="timeline-val">{{ item.timeline?.expectedStartDate ? (item.timeline?.expectedStartDate | date:'mediumDate') : '—' }}</span>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-key">الانتهاء المخطط</span>
+                  <span class="timeline-val">{{ item.timeline?.expectedEndDate ? (item.timeline?.expectedEndDate | date:'mediumDate') : '—' }}</span>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-key">البدء الفعلي</span>
+                  <span class="timeline-val timeline-val--blue">{{ item.timeline?.actualStartDate ? (item.timeline?.actualStartDate | date:'mediumDate') : 'لم يبدأ' }}</span>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-key">الانتهاء الفعلي</span>
+                  <span class="timeline-val timeline-val--green">{{ item.timeline?.actualEndDate ? (item.timeline?.actualEndDate | date:'mediumDate') : 'غير مكتمل' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-card__workers">
+              <h4 class="details-label">العمالة والميزانية</h4>
+              <div *ngIf="!item.workers || item.workers.length === 0" class="no-workers">لا يوجد عمالة مسجلة في هذا البند</div>
+              <div *ngIf="item.workers && item.workers.length > 0" class="workers-list">
+                <div *ngFor="let worker of item.workers" class="worker-row">
+                  <div class="worker-info">
+                    <span class="worker-dot" [ngClass]="worker.source === 'Internal' ? 'worker-dot--amber' : 'worker-dot--gray'"></span>
+                    <span class="worker-name">{{ worker.name }}</span>
+                    <span class="worker-role">{{ worker.role }}</span>
                   </div>
-                </td>
-                <!-- Money -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-gray-800">
-                  {{ item.money | currency:'EGP':'symbol-narrow':'1.0-0' }}
-                </td>
-                <!-- Workers -->
-                <td class="px-6 py-4 text-sm text-gray-600" style="font-family: 'Cairo', var(--font-arabic);">
-                  <div *ngIf="item.workerId; else customWorker" class="flex items-center gap-2">
-                    <img 
-                      *ngIf="item.workerAvatar" 
-                      [src]="item.workerAvatar" 
-                      class="w-6 h-6 rounded-full border border-amber-200 object-cover flex-shrink-0" 
-                      alt="avatar"
-                    />
-                    <a 
-                      [routerLink]="['/workers', item.workerId]" 
-                      class="text-amber-600 hover:text-amber-700 font-bold hover:underline flex items-center gap-1"
-                    >
-                      <span>{{ item.workers }}</span>
-                      <span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">مسجل</span>
-                    </a>
+                  <span class="worker-rate">{{ worker.dailyRate }} ج.م</span>
+                </div>
+                <div class="workers-costs">
+                  <div class="cost-row">
+                    <span>التكلفة التقديرية</span>
+                    <span>{{ getEstimatedCost(item) | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
                   </div>
-                  <ng-template #customWorker>
-                    <span>{{ item.workers || 'لم يحدد بعد' }}</span>
-                  </ng-template>
-                </td>
-                <!-- Materials -->
-                <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" style="font-family: 'Cairo', var(--font-arabic);" [title]="item.materials">
-                  {{ item.materials || 'لم يحدد بعد' }}
-                </td>
-                <!-- Status Select -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <select 
-                    [value]="item.status"
-                    (change)="updateItemStatus(item, $any($event.target).value)"
-                    class="status-select text-xs font-bold py-1.5 px-3 rounded-lg border-0 cursor-pointer shadow-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all"
-                    [ngClass]="{
-                      'bg-yellow-50 text-yellow-800 border border-yellow-100': item.status === 'pending',
-                      'bg-blue-50 text-blue-800 border border-blue-100': item.status === 'scheduled',
-                      'bg-emerald-50 text-emerald-800 border border-emerald-100': item.status === 'completed'
-                    }"
-                    style="font-family: 'Cairo', var(--font-arabic);"
-                  >
-                    <option value="pending">لم يبدأ</option>
-                    <option value="scheduled">بنشتغل عليه</option>
-                    <option value="completed">خلص</option>
-                  </select>
-                </td>
-                <!-- Actions -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div class="flex items-center gap-3">
-                    <button 
-                      (click)="openEditModal(item)" 
-                      class="p-1.5 text-gray-400 hover:text-amber-500 rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center"
-                      title="تعديل"
-                    >
-                      <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button 
-                      (click)="deleteItem(item.id)" 
-                      class="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center"
-                      title="حذف"
-                    >
-                      <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                  <div class="cost-row">
+                    <span>التكلفة الفعلية حتى الآن</span>
+                    <span class="cost-actual">{{ getLiveCost(item) | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── Inspection Section ── -->
+          <div
+            *ngIf="item.status === 'Under Inspection' || item.inspection?.isApproved"
+            class="item-card__inspection"
+            [ngClass]="item.inspection?.isApproved ? 'item-card__inspection--approved' : 'item-card__inspection--pending'"
+          >
+            <div class="inspection-content">
+              <span class="inspection-badge" [ngClass]="item.inspection?.isApproved ? 'inspection-badge--green' : 'inspection-badge--indigo'">
+                {{ item.inspection?.isApproved ? 'تم الاستلام والاعتماد' : 'بانتظار استلام المهندس' }}
+              </span>
+              <div *ngIf="item.inspection?.approvedBy" class="inspection-detail">
+                <strong>المهندس المستلم:</strong> {{ item.inspection?.approvedBy }}
+              </div>
+              <div *ngIf="item.inspection?.notes" class="inspection-detail">
+                <strong>ملاحظات:</strong> {{ item.inspection?.notes }}
+              </div>
+            </div>
+            <button *ngIf="!item.inspection?.isApproved" (click)="openApproveModal(item)" class="btn btn--sm btn--indigo">
+              اعتماد واستلام البند
+            </button>
+          </div>
+
+          <!-- ── Progress Logs ── -->
+          <div *ngIf="item.progressLogs && item.progressLogs.length > 0" class="item-card__logs">
+            <details class="logs-details">
+              <summary class="logs-summary">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="logs-chevron">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+                سجل التقارير اليومية ({{ item.progressLogs.length }})
+              </summary>
+              <div class="logs-timeline">
+                <div *ngFor="let log of item.progressLogs" class="log-entry">
+                  <div class="log-dot"></div>
+                  <div class="log-content">
+                    <div class="log-header">
+                      <span class="log-author">{{ log.updatedBy }}</span>
+                      <span class="log-date">{{ log.date | date:'short' }}</span>
+                    </div>
+                    <p class="log-qty">+{{ log.addedQuantity }} {{ item.quantity?.unit }}</p>
+                    <p *ngIf="log.note" class="log-note">"{{ log.note }}"</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Add/Edit Modal -->
-  <div *ngIf="showModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      
-      <!-- Overlay -->
-      <div (click)="closeModal()" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+  <!-- ══════════════════════════════════════
+       Add / Edit Modal
+  ══════════════════════════════════════ -->
+  <div *ngIf="showModal" class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()" style="direction: rtl;">
+      <div class="modal__header">
+        <h3 class="modal__title">{{ isEditMode ? 'تعديل بند التشطيب' : 'إضافة بند تشطيب جديد' }}</h3>
+        <button (click)="closeModal()" class="modal__close" aria-label="إغلاق">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
 
-      <!-- Center container -->
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="modal__body">
 
-      <!-- Modal Card -->
-      <div class="inline-block align-bottom bg-white rounded-3xl text-right overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-        <div class="bg-white px-6 pt-6 pb-4">
-          <div class="flex justify-between items-center pb-3 border-b border-gray-100 mb-6">
-            <h3 class="text-lg font-bold text-gray-900" style="font-family: 'Cairo', var(--font-arabic);">
-              {{ isEditMode ? 'تعديل بند التشطيب' : 'إضافة بند تشطيب جديد' }}
-            </h3>
-            <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        <!-- Title + Category -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">اسم البند / المهمة</label>
+            <input type="text" [(ngModel)]="formTitle" placeholder="مثال: تركيب علب مفاتيح الصالة" class="form-input"/>
           </div>
+          <div class="form-group">
+            <label class="form-label">التصنيف (المهنة)</label>
+            <select [(ngModel)]="formCategory" class="form-input form-select">
+              <option *ngFor="let cat of ['الكهرباء', 'السباكة', 'النجارة', 'الدهانات', 'السيراميك', 'المحارة', 'أخرى']" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+        </div>
 
-          <!-- Form Fields -->
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1" style="font-family: 'Cairo', var(--font-arabic);">اسم البند</label>
-              <input 
-                type="text" 
-                [(ngModel)]="formTitle"
-                (input)="onTitleChange()"
-                placeholder="مثال: أعمال السباكة، دهان الصالة..."
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all"
-                style="font-family: 'Cairo', var(--font-arabic);"
-              />
+        <!-- Priority + Location + Supervisor -->
+        <div class="form-row form-row--3">
+          <div class="form-group">
+            <label class="form-label">مستوى الأولوية</label>
+            <select [(ngModel)]="formPriority" class="form-input form-select">
+              <option value="Low">منخفض</option>
+              <option value="Medium">متوسط</option>
+              <option value="High">مرتفع</option>
+              <option value="Urgent">عاجل جداً</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">مكان العمل</label>
+            <input type="text" [(ngModel)]="formLocation" placeholder="مثال: غرف النوم، ريسبشن" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">المسؤول</label>
+            <input type="text" disabled value="صاحب الموقع" class="form-input form-input--disabled"/>
+          </div>
+        </div>
+
+        <!-- Quantities -->
+        <div class="form-section">
+          <h4 class="form-section__title">إدارة الكميات المستهدفة</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">الكمية المطلوبة (Target)</label>
+              <input type="number" [(ngModel)]="formQuantityTarget" min="1" class="form-input"/>
             </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1" style="font-family: 'Cairo', var(--font-arabic);">الميزانية والفلوس المطلوبة (بالجنيه المصري)</label>
-              <input 
-                type="number" 
-                [(ngModel)]="formMoney"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all"
-              />
-            </div>
-
-            <!-- Worker Type Selection -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2" style="font-family: 'Cairo', var(--font-arabic);">العمالة والصنايعية</label>
-              <div class="flex flex-col sm:flex-row gap-3 mb-3 border-b border-gray-50 pb-2">
-                <label class="inline-flex items-center cursor-pointer">
-                  <input type="radio" name="workerType" value="custom" [(ngModel)]="workerType" class="form-radio text-amber-500 focus:ring-amber-500">
-                  <span class="mr-2 text-xs text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">صنايعي من خارج المنصة (كتابة اسم)</span>
-                </label>
-                <label class="inline-flex items-center cursor-pointer">
-                  <input type="radio" name="workerType" value="registered" [(ngModel)]="workerType" class="form-radio text-amber-500 focus:ring-amber-500">
-                  <span class="mr-2 text-xs text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">صنايعي مسجل بالمنصة</span>
-                </label>
-              </div>
-
-              <!-- Registered Handyman Selector -->
-              <div *ngIf="workerType === 'registered'">
-                <select 
-                  [(ngModel)]="selectedWorkerProfileId"
-                  (change)="onWorkerSelected()"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 text-xs focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all cursor-pointer"
-                  style="font-family: 'Cairo', var(--font-arabic);"
-                >
-                  <option value="">-- اختر صنايعي مسجل --</option>
-                  <option *ngFor="let worker of filteredWorkersList" [value]="worker._id">
-                    {{ worker.knownWorkerName || worker.user?.name }} ({{ worker.specializations?.join('، ') }}) - التقييم: {{ worker.averageRating || 'جديد' }}⭐
-                  </option>
-                </select>
-              </div>
-
-              <!-- Custom Text Input -->
-              <div *ngIf="workerType === 'custom'">
-                <input 
-                  type="text" 
-                  [(ngModel)]="formWorkers"
-                  placeholder="مثال: فني نجارة مع مساعدين..."
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all"
-                  style="font-family: 'Cairo', var(--font-arabic);"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1" style="font-family: 'Cairo', var(--font-arabic);">الخامات والماتريال المطلوبة</label>
-              <textarea 
-                [(ngModel)]="formMaterials"
-                rows="3"
-                placeholder="اكتب هنا جميع الخامات والمواد المطلوبة لإنجاز هذا البند..."
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all"
-                style="font-family: 'Cairo', var(--font-arabic);"
-              ></textarea>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1" style="font-family: 'Cairo', var(--font-arabic);">حالة البند الحالية</label>
-              <select 
-                [(ngModel)]="formStatus"
-                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:outline-none transition-all cursor-pointer"
-                style="font-family: 'Cairo', var(--font-arabic);"
-              >
-                <option value="pending">لم يبدأ (لسه)</option>
-                <option value="scheduled">بنشتغل عليه (قيد التنفيذ)</option>
-                <option value="completed">خلص (مكتمل)</option>
-              </select>
+            <div class="form-group">
+              <label class="form-label">الوحدة القياسية</label>
+              <input type="text" [(ngModel)]="formQuantityUnit" placeholder="متر مربع، علبة، نقطة..." class="form-input"/>
             </div>
           </div>
         </div>
 
-        <!-- Footer Actions -->
-        <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3 border-t border-gray-50">
-          <button 
-            [disabled]="saving"
-            (click)="saveItem()"
-            class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-6 py-2.5 rounded-xl text-sm transition-all shadow-sm disabled:opacity-50"
-            style="font-family: 'Cairo', var(--font-arabic);"
-          >
-            {{ saving ? 'جاري الحفظ...' : 'حفظ البند' }}
-          </button>
-          <button 
-            (click)="closeModal()"
-            class="border border-gray-200 hover:bg-gray-100 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-sm transition-all"
-            style="font-family: 'Cairo', var(--font-arabic);"
-          >
-            إلغاء
-          </button>
+        <!-- Timeline -->
+        <div class="form-section">
+          <h4 class="form-section__title">المخطط الزمني للمهمة</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">تاريخ البدء المتوقع</label>
+              <input type="date" [(ngModel)]="formExpectedStartDate" class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">تاريخ الانتهاء المتوقع</label>
+              <input type="date" [(ngModel)]="formExpectedEndDate" class="form-input"/>
+            </div>
+          </div>
         </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label">توصيف بنود العمل ونوعية الخامات</label>
+          <textarea [(ngModel)]="formDescription" rows="3" placeholder="اكتب هنا مواصفات الخامات، نوع الأسلاك أو مواد العزل..." class="form-input form-textarea"></textarea>
+        </div>
+
+        <!-- Workers -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <h4 class="form-section__title">العمالة المخصصة للبند</h4>
+            <button (click)="addWorker()" type="button" class="btn btn--sm btn--ghost">+ إضافة عامل</button>
+          </div>
+          <div *ngIf="formWorkers.length === 0" class="form-empty-state">لا يوجد عمالة مخصصة حتى الآن</div>
+          <div class="workers-form-list">
+            <div *ngFor="let worker of formWorkers; let i = index" class="worker-form-card">
+              <button (click)="removeWorker(i)" type="button" class="worker-remove-btn" aria-label="إزالة">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 6 6 18M6 6l12 12"/>
+                </svg>
+              </button>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">تعيين صنايعي مسجل</label>
+                  <select (change)="onRegisteredWorkerSelected($any($event.target).value, i)" class="form-input form-select">
+                    <option value="">-- صنايعي خارجي أو اختر مسجل --</option>
+                    <option *ngFor="let w of workersList" [value]="w._id">{{ w.knownWorkerName || w.user?.name }} ({{ w.specializations?.join('، ') }})</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">اسم العامل</label>
+                  <input type="text" [(ngModel)]="worker.name" placeholder="الاسم الكامل" class="form-input"/>
+                </div>
+              </div>
+              <div class="form-row form-row--3">
+                <div class="form-group">
+                  <label class="form-label">نوع العمل / الصفة</label>
+                  <input type="text" [(ngModel)]="worker.role" placeholder="صنايعي، مساعد..." class="form-input"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">اليومية (ج.م)</label>
+                  <input type="number" [(ngModel)]="worker.dailyRate" class="form-input"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">المصدر</label>
+                  <select [(ngModel)]="worker.source" class="form-input form-select">
+                    <option value="External">خارجي</option>
+                    <option value="Internal">داخلي (مسجل)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal__footer">
+        <button [disabled]="saving" (click)="saveItem()" class="btn btn--primary">{{ saving ? 'جاري الحفظ...' : 'حفظ البند' }}</button>
+        <button (click)="closeModal()" class="btn btn--ghost">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       Progress Log Modal
+  ══════════════════════════════════════ -->
+  <div *ngIf="showProgressModal" class="modal-backdrop" (click)="closeProgressModal()">
+    <div class="modal modal--sm" (click)="$event.stopPropagation()" style="direction: rtl;">
+      <div class="modal__header">
+        <h3 class="modal__title">تسجيل إنجاز يومي</h3>
+        <button (click)="closeProgressModal()" class="modal__close" aria-label="إغلاق">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p class="modal__context-label">البند: <strong>{{ progressTargetItem?.title }}</strong></p>
+        <div class="form-group">
+          <label class="form-label">الكمية المنجزة اليوم ({{ progressTargetItem?.quantity?.unit }})</label>
+          <input type="number" [(ngModel)]="logAddedQuantity" min="0.1" class="form-input"/>
+          <span class="form-hint">المنفذ حتى الآن: {{ progressTargetItem?.quantity?.completed }} من {{ progressTargetItem?.quantity?.target }} {{ progressTargetItem?.quantity?.unit }}</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظة اليوم / تقرير المعاينة</label>
+          <textarea [(ngModel)]="logNote" rows="2" placeholder="تم إنهاء عزل وتوريد مواسير الحمام الرئيسي..." class="form-input form-textarea"></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button [disabled]="saving" (click)="saveProgress()" class="btn btn--primary">{{ saving ? 'جاري الحفظ...' : 'حفظ التقرير' }}</button>
+        <button (click)="closeProgressModal()" class="btn btn--ghost">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       Inspection Approval Modal
+  ══════════════════════════════════════ -->
+  <div *ngIf="showApproveModal" class="modal-backdrop" (click)="closeApproveModal()">
+    <div class="modal modal--sm" (click)="$event.stopPropagation()" style="direction: rtl;">
+      <div class="modal__header">
+        <h3 class="modal__title">اعتماد واستلام البند</h3>
+        <button (click)="closeApproveModal()" class="modal__close" aria-label="إغلاق">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p class="modal__context-label">البند: <strong>{{ approveTargetItem?.title }}</strong></p>
+        <div class="form-group">
+          <label class="form-label">اسم المهندس الاستشاري المستلم</label>
+          <input type="text" [(ngModel)]="approveInspectorName" placeholder="م/ محمود شريف" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظات الاستلام الهندسي والاعتماد</label>
+          <textarea [(ngModel)]="approveNotes" rows="3" placeholder="التقرير النهائي للاستلام أو أي ملاحظات فنية..." class="form-input form-textarea"></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button [disabled]="saving" (click)="saveApprove()" class="btn btn--indigo">{{ saving ? 'جاري الاعتماد...' : 'اعتماد وإغلاق البند' }}</button>
+        <button (click)="closeApproveModal()" class="btn btn--ghost">إلغاء</button>
       </div>
     </div>
   </div>

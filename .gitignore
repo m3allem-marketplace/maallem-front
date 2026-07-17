@@ -8,3 +8,7 @@ dist/
 api-docs.json
 task-context.md
 structure-private.md
+
+reference-doc.md
+swagger.json
+ecommerce-swagger.json

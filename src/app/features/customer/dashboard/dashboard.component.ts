@@ -74,9 +74,9 @@ export class CustomerDashboardComponent implements OnInit {
       b => b.status === 'in-progress' || b.status === 'confirmed' || b.status === 'open'
     ).length;
     
-    // Calculate total spend from completed/closed projects
+    // Calculate total spend (includes any booking where the budget was deposited in escrow)
     this.totalSpend = this.bookings
-      .filter(b => b.status === 'closed' || b.status === 'completed')
+      .filter(b => ['paid', 'in-progress', 'delivered', 'completed', 'closed', 'disputed'].includes(b.status))
       .reduce((sum, b) => sum + (b.budget || 0), 0);
   }
 

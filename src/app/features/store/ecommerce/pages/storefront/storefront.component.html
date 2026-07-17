@@ -49,8 +49,9 @@
               class="sf-search-input"
               (focus)="searchFocused = true"
               (blur)="searchFocused = false"
+              (keyup.enter)="applyFilters(); scrollToResults()"
             >
-            <button class="sf-search-btn" type="button">بحث</button>
+            <button class="sf-search-btn" type="button" (click)="applyFilters(); scrollToResults()">بحث</button>
           </div>
         </div>
 
@@ -234,7 +235,13 @@
           [attr.id]="'featured-card-' + product._id"
         >
           <div class="product-img-wrap">
-            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <img
+              *ngIf="product.imageUrl"
+              [src]="product.imageUrl"
+              [alt]="product.title"
+              class="product-img"
+              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+            >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
                 <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
@@ -347,7 +354,14 @@
               <div class="shop-products-grid">
                 <div *ngFor="let product of shop.products" class="shop-product-card" (click)="goToDetail(product._id)">
                   <div class="sp-img-wrap">
-                    <div class="sp-placeholder">
+                    <img
+                      *ngIf="product.imageUrl"
+                      [src]="product.imageUrl"
+                      [alt]="product.title"
+                      class="sp-img"
+                      (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+                    >
+                    <div *ngIf="!product.imageUrl" class="sp-placeholder">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="sp-placeholder-svg">
                         <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
                       </svg>
@@ -374,10 +388,27 @@
 
     <!-- ═══════════════════ ALL PRODUCTS ═══════════════════ -->
     <section class="all-products-section" id="all-products-section">
+
+      <!-- Search Results Banner -->
+      <div class="search-results-banner" *ngIf="activeSearchTerm">
+        <div class="srb-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" class="srb-icon">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span class="srb-label">نتائج البحث عن:</span>
+          <span class="srb-term">"{{ activeSearchTerm }}"</span>
+          <span class="srb-count">{{ filteredProducts.length }} نتيجة</span>
+          <button class="srb-clear-btn" (click)="searchControl.setValue(''); applyFilters()" title="مسح البحث">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
       <div class="section-header-row">
         <h2 class="section-title-alt">
-          <span *ngIf="selectedCategory === 'الكل'">كل المنتجات</span>
-          <span *ngIf="selectedCategory !== 'الكل'">منتجات {{ selectedCategory }}</span>
+          <span *ngIf="activeSearchTerm">نتائج البحث</span>
+          <span *ngIf="!activeSearchTerm && selectedCategory === 'الكل'">كل المنتجات</span>
+          <span *ngIf="!activeSearchTerm && selectedCategory !== 'الكل'">منتجات {{ selectedCategory }}</span>
         </h2>
         <span class="results-count-badge">{{ filteredProducts.length }} منتج متاح</span>
       </div>
@@ -391,7 +422,13 @@
           [attr.id]="'product-card-' + product._id"
         >
           <div class="product-img-wrap">
-            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.title" class="product-img">
+            <img
+              *ngIf="product.imageUrl"
+              [src]="product.imageUrl"
+              [alt]="product.title"
+              class="product-img"
+              (error)="$any($event.target).src = 'assets/images/product-placeholder.svg'"
+            >
             <div *ngIf="!product.imageUrl" class="product-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="placeholder-svg">
                 <path *ngFor="let p of getCategoryIcon(product.category)" [attr.d]="p"/>
@@ -440,8 +477,14 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
         </div>
-        <h3 class="empty-title">لا توجد نتائج</h3>
-        <p class="empty-text">لم نجد منتجات تطابق بحثك الحالي</p>
+        <h3 class="empty-title">
+          <span *ngIf="activeSearchTerm">لا توجد نتائج لـ "{{ activeSearchTerm }}"</span>
+          <span *ngIf="!activeSearchTerm">لا توجد منتجات</span>
+        </h3>
+        <p class="empty-text">
+          <span *ngIf="activeSearchTerm">جرّب كلمة بحث مختلفة أو تصفّح الأقسام</span>
+          <span *ngIf="!activeSearchTerm">لم نجد منتجات في هذا القسم</span>
+        </p>
         <button class="reset-btn" (click)="searchControl.setValue(''); selectCategory('الكل')" id="reset-filters-btn">
           إعادة تعيين الفلتر
         </button>

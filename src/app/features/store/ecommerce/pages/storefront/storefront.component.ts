@@ -37,6 +37,7 @@ export class StorefrontComponent implements OnInit, OnDestroy {
   searchFocused    = false;
   titleTransitioning = false;
   selectedCategory = 'الكل';
+  activeSearchTerm = '';
   private cartDrawerSub?: Subscription;
 
   heroInterval: any;
@@ -135,7 +136,12 @@ export class StorefrontComponent implements OnInit, OnDestroy {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(() => this.applyFilters());
+    ).subscribe(() => {
+      this.applyFilters();
+      if (this.searchControl.value?.trim()) {
+        this.scrollToResults();
+      }
+    });
 
     this.cartDrawerSub = this.ecommerceService.isCartDrawerOpen$.subscribe(open => {
       this.isCartOpen = open;
@@ -223,14 +229,29 @@ export class StorefrontComponent implements OnInit, OnDestroy {
     }, 150);
   }
 
+  scrollToResults(): void {
+    setTimeout(() => {
+      document.getElementById('all-products-section')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 350);
+  }
+
   applyFilters(): void {
     const searchTerm = (this.searchControl.value || '').trim().toLowerCase();
+    this.activeSearchTerm = searchTerm;
     const activeCategoryEnglish = this.categoryMapping[this.selectedCategory] || 'All';
 
     this.filteredProducts = this.allProducts.filter(product => {
+      const title       = (product.title       || '').toLowerCase();
+      const description = (product.description || '').toLowerCase();
+      const brand       = (product.brand       || '').toLowerCase();
+      const subCat      = (product.subCategory  || '').toLowerCase();
+
       const matchesSearch = !searchTerm ||
-        product.title.toLowerCase().includes(searchTerm) ||
-        product.description.toLowerCase().includes(searchTerm);
+        title.includes(searchTerm)       ||
+        description.includes(searchTerm) ||
+        brand.includes(searchTerm)       ||
+        subCat.includes(searchTerm);
 
       const matchesCategory = activeCategoryEnglish === 'All' ||
         product.category === activeCategoryEnglish;
