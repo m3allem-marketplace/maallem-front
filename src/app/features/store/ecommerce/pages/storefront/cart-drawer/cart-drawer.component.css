@@ -1,5 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
 
+:host {
+  display: block;
+  position: relative;
+  z-index: 9999;
+
+  /* Map missing variables to existing theme variables or direct values */
+  --bg-card:            var(--bg-surface, #ffffff);
+  --border-light:       var(--border-color, #e9ecef);
+  --text-heading:       var(--text-primary, #212529);
+  --bg-input:           var(--color-neutral-50, #f8f9fa);
+  --font-main:          var(--font-sans), 'Cairo', sans-serif;
+  --text-body:          var(--color-neutral-700, #495057);
+  --red-100:            #fef2f2;
+  --red-500:            var(--color-error, #dc3545);
+  --red-700:            var(--color-error-dark, #bd2130);
+  --blue-50:            var(--color-primary-50, #eef0f9);
+  --border-blue:        var(--color-primary-200, #d4d9ef);
+  --blue-600:           var(--color-primary-600, #1f3194);
+  --blue-100:           var(--color-primary-100, #d4d9ef);
+  --blue-300:           var(--color-primary-300, #7f8dcf);
+  --slate-300:          var(--color-neutral-300, #dee2e6);
+  --slate-50:           var(--color-neutral-50, #f8f9fa);
+  --bg-dark:            var(--color-neutral-50, #f8f9fa);
+  --blue-800:           var(--color-primary-800, #142054);
+  --amber-100:          var(--color-accent-100, #ffecb3);
+  --amber-500:          var(--color-accent, #ffb400);
+  --amber-700:          var(--color-accent-700, #cc9000);
+  --transition-fast:    150ms ease;
+  --radius-sm:          6px;
+}
+
 /* ── Backdrop ──────────────────────────────────────────────────────────────── */
 .backdrop {
   position: fixed;

@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── Brand Token Palette ── */
-:root {
+:host {
   --brand-navy:        #1B2B6E;
   --brand-navy-dark:   #142258;
   --brand-navy-light:  #2a3f8a;
@@ -73,9 +73,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(17, 24, 39, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 999;
+    background: rgba(15, 23, 42, 0.15);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
     animation: sidebarFadeIn 0.2s ease;
   }
 }
@@ -88,7 +89,7 @@
 /* ─── LEFT SIDEBAR ─────────────────────────────────────────────────────────── */
 .ws-sidebar {
   width: 260px;
-  background: var(--bg-sidebar);
+  background: #ffffff;
   border-left: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
@@ -1279,12 +1280,14 @@
     width: 280px !important;
     max-width: 85vw !important;
     height: 100vh !important;
-    z-index: 1000 !important;
+    z-index: 1050 !important; /* Stand above the backdrop filter layer */
+    background: #ffffff !important; /* Ensure solid white background */
     transform: translateX(0) !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    box-shadow: -4px 0 25px rgba(27, 43, 110, 0.2) !important;
+    box-shadow: -4px 0 25px rgba(27, 43, 110, 0.15) !important;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform; /* Hardware acceleration to isolate stacking context */
   }
 
   .ws-sidebar.collapsed {

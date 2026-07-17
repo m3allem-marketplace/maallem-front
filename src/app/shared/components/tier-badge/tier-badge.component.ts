@@ -27,6 +27,7 @@ export class TierBadgeComponent {
   };
 
   get current(): TierConfig {
-    return this.config[this.tier];
+    const key = (this.tier || 'bronze').toLowerCase() as Tier;
+    return this.config[key] || this.config['bronze'];
   }
 }

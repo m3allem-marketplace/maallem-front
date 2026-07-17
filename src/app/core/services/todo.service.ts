@@ -33,4 +33,12 @@ export class TodoService {
   deleteTodo(id: string): Observable<any> {
     return this.api.delete<any>(`/todos/${id}`);
   }
+
+  addProgressLog(id: string, payload: { addedQuantity: number; note?: string; updatedBy?: string }): Observable<any> {
+    return this.api.post<any>(`/todos/${id}/progress`, payload);
+  }
+
+  approveInspection(id: string, payload: { approvedBy: string; notes?: string }): Observable<any> {
+    return this.api.post<any>(`/todos/${id}/approve`, payload);
+  }
 }
