@@ -52,8 +52,15 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       justify-content: space-between;
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 2rem;
-      height: 72px;
+      padding: 0 1rem;
+      height: 64px;
+    }
+
+    @media (min-width: 768px) {
+      .nb-inner {
+        padding: 0 2rem;
+        height: 72px;
+      }
     }
 
     /* ── Gold accent line at bottom ── */
@@ -74,18 +81,24 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
     .nb-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
       text-decoration: none;
       flex-shrink: 0;
       transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    @media (min-width: 768px) {
+      .nb-logo {
+        gap: 10px;
+      }
     }
 
     .nb-logo:hover { transform: translateY(-1px) scale(1.015); }
 
     .nb-logo-emblem {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       background: linear-gradient(135deg, #1B2B6E, #0d153a);
       border: 1.5px solid rgba(255, 180, 0, 0.3);
       display: flex;
@@ -93,6 +106,23 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       justify-content: center;
       transition: border-color 300ms ease, box-shadow 300ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 3px 10px rgba(27, 43, 110, 0.15);
+    }
+
+    .nb-logo-emblem svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    @media (min-width: 768px) {
+      .nb-logo-emblem {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+      }
+      .nb-logo-emblem svg {
+        width: 26px;
+        height: 26px;
+      }
     }
 
     .nb-logo:hover .nb-logo-emblem {
@@ -212,8 +242,14 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
     .nb-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 6px;
       flex-shrink: 0;
+    }
+
+    @media (min-width: 768px) {
+      .nb-actions {
+        gap: 12px;
+      }
     }
 
     /* Vertical divider */
@@ -226,7 +262,7 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
 
     /* ── Ghost login button ── */
     .nb-btn-ghost {
-      display: inline-flex;
+      display: none;
       align-items: center;
       padding: 9px 20px;
       font-family: 'Cairo', sans-serif;
@@ -240,20 +276,26 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       white-space: nowrap;
     }
 
+    @media (min-width: 1024px) {
+      .nb-btn-ghost {
+        display: inline-flex;
+      }
+    }
+
     .nb-btn-ghost:hover {
       color: #1B2B6E !important;
       border-color: #1B2B6E;
       background: rgba(27, 43, 110, 0.04);
     }
 
-    /* ── Gold CTA button ── */
     .nb-btn-gold {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 10px 22px;
+      padding: 8px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 800;
       color: #0d153a !important;
       text-decoration: none !important;
@@ -264,6 +306,23 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 14px rgba(255, 180, 0, 0.35);
       white-space: nowrap;
+    }
+
+    @media (min-width: 1024px) {
+      .nb-btn-gold {
+        padding: 10px 22px;
+        font-size: 13.5px;
+      }
+    }
+
+    .nb-btn-gold span {
+      display: none;
+    }
+
+    @media (min-width: 500px) {
+      .nb-btn-gold span {
+        display: inline;
+      }
     }
 
     .nb-btn-gold:hover {

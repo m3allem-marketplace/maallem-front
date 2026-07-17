@@ -2111,6 +2111,33 @@
   .shop-details-row {
     gap: 0.6rem;
   }
+  .sf-hero-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem 0.8rem;
+    gap: 10px;
+    border-radius: 12px;
+  }
+  .sf-stat-card {
+    padding: 0.2rem 0.5rem;
+  }
+  .sf-stat-sep {
+    display: none;
+  }
+  .sf-stat-icon-wrap {
+    width: 32px;
+    height: 32px;
+  }
+  .sf-stat-icon-wrap svg {
+    width: 16px;
+    height: 16px;
+  }
+  .sf-stat-number {
+    font-size: 1.1rem;
+  }
+  .sf-stat-label {
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 480px) {
