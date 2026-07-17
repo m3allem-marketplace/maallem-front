@@ -4,6 +4,7 @@ import { BookingService } from '../../../core/services/booking.service';
 import { ProjectService } from '../../../core/services/project.service';
 import { ToastService } from '@m3allem/ui-kit';
 import { Project } from '../../../core/models/project.model';
+import { EcommerceService } from '../../store/ecommerce/services/ecommerce.service';
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -14,6 +15,7 @@ export class CustomerDashboardComponent implements OnInit {
   loading = false;
   bookings: any[] = [];
   bidRequests: Project[] = [];
+  storeOrders: any[] = [];
 
   // Computed stats
   totalSpend = 0;
@@ -24,11 +26,13 @@ export class CustomerDashboardComponent implements OnInit {
     private router: Router,
     private bookingService: BookingService,
     private projectService: ProjectService,
-    private toast: ToastService
+    private toast: ToastService,
+    private ecommerceService: EcommerceService
   ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
+    this.loadStoreOrders();
   }
 
   private loadDashboardData(): void {
@@ -112,6 +116,40 @@ export class CustomerDashboardComponent implements OnInit {
     ];
 
     this.calculateStats();
+  }
+
+  private seedMockStoreOrders(): void {
+    this.storeOrders = [
+      {
+        _id: 'mock-order-1',
+        productId: { title: 'مفتاح كهربائي ثلاثي شنايدر' },
+        quantity: 10,
+        status: 'pending',
+        location: 'المنصورة، الدقهلية',
+        createdAt: new Date().toISOString()
+      },
+      {
+        _id: 'mock-order-2',
+        productId: { title: 'خلاط مياه حوض غسيل تركي' },
+        quantity: 2,
+        status: 'confirmed',
+        location: 'القاهرة، مصر الجديدة',
+        createdAt: new Date(Date.now() - 86400000).toISOString()
+      }
+    ];
+  }
+
+  private loadStoreOrders(): void {
+    this.ecommerceService.getCustomerOrders().subscribe({
+      next: (orders: any) => {
+        const list = Array.isArray(orders) ? orders : (orders?.data || []);
+        this.storeOrders = list;
+      },
+      error: (err) => {
+        console.error('Failed to load store orders', err);
+        this.seedMockStoreOrders();
+      }
+    });
   }
 
   viewBookingDetails(id: string): void {

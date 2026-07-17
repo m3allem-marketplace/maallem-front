@@ -379,4 +379,8 @@ export class EcommerceService {
       catchError(err => throwError(() => err))
     );
   }
+
+  getCustomerOrders(): Observable<any[]> {
+    return this.api.get<any[]>('/orders/my-orders');
+  }
 }

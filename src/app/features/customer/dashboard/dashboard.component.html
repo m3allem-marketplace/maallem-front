@@ -120,6 +120,64 @@
             </div>
           </div>
         </div>
+
+        <!-- Store Orders Card -->
+        <div class="card p-6 bg-white border border-gray-100 rounded-2xl shadow-sm text-right mt-6">
+          <div class="flex justify-between items-center border-b pb-4 mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <h3 class="text-base font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">طلباتي من المتجر</h3>
+            </div>
+            <a routerLink="/store/storefront" class="text-xs font-bold text-primary hover:underline" style="font-family: 'Cairo', var(--font-arabic);">تصفح المتجر ←</a>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="storeOrders.length === 0" class="py-8 text-center flex flex-col items-center gap-3">
+            <svg class="w-12 h-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <p class="text-sm font-semibold text-gray-500" style="font-family: 'Cairo', var(--font-arabic);">لا توجد طلبات متجر نشطة حالياً.</p>
+          </div>
+
+          <!-- Orders List -->
+          <div *ngIf="storeOrders.length > 0" class="flex flex-col gap-4">
+            <div 
+              *ngFor="let order of storeOrders.slice(0, 5)" 
+              class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-gray-50 hover:border-gray-100 hover:bg-gray-50 transition-all gap-4"
+            >
+              <div class="flex items-center gap-3">
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 text-amber-600">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <div class="flex flex-col text-right">
+                  <h4 class="text-sm font-bold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">
+                    {{ order.productId?.title || order.product?.title || order.title || 'طلب منتج متجر' }}
+                  </h4>
+                  <span class="text-xs text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">
+                    الكمية: {{ order.quantity }} | تاريخ الطلب: {{ order.createdAt | date:'shortDate' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4 justify-between sm:justify-end">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-right"
+                  [ngClass]="{
+                    'bg-slate-100 text-slate-700': order.status === 'pending',
+                    'bg-green-100 text-green-700': order.status === 'confirmed' || order.status === 'delivered',
+                    'bg-red-100 text-red-700': order.status === 'cancelled'
+                  }"
+                  style="font-family: 'Cairo', var(--font-arabic);"
+                >
+                  {{ order.status === 'pending' ? 'قيد المراجعة' : (order.status === 'confirmed' ? 'مؤكد ✓' : (order.status === 'delivered' ? 'تم التوصيل' : 'ملغي')) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Right: Quick Actions & Help (Span 1) -->

@@ -10,8 +10,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.tokenStorageService.getAccessToken();
-    // Only attach authorization header to requests matching our main backend API URL
-    if (token && request.url.startsWith(environment.apiUrl)) {
+    // Only attach authorization header to requests matching our main API or store API
+    if (token && (request.url.startsWith(environment.apiUrl) || request.url.startsWith(environment.storeApiUrl))) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
