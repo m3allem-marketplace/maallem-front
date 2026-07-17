@@ -7,6 +7,8 @@ import { BookingService } from '../../../core/services/booking.service';
 import { ChatService } from '../../../core/services/chat.service';
 import { WorkerProfile } from '../../../core/models/user.model';
 import { ToastService } from '@m3allem/ui-kit';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-worker-detail',
@@ -63,7 +65,33 @@ export class WorkerDetailComponent implements OnInit {
 
   loadProfile(): void {
     this.loading = true;
-    this.workerProfileService.getWorkerProfileById(this.workerId).subscribe({
+
+    // Strategy 1: Try by profile ID directly
+    this.workerProfileService.getWorkerProfileById(this.workerId).pipe(
+      catchError(err => {
+        // Strategy 2: If 404, try by user ID via dedicated endpoint
+        if (err?.status === 404) {
+          return this.workerProfileService.getWorkerProfileByUserId(this.workerId).pipe(
+            catchError(() => {
+              // Strategy 3: Search in the full workers list and match by user._id
+              return this.workerProfileService.getWorkerProfiles().pipe(
+                switchMap((listRes: any) => {
+                  const profiles: any[] = listRes?.data?.profiles || [];
+                  const found = profiles.find(
+                    (p: any) => p._id === this.workerId || p.user?._id === this.workerId || p.user?.id === this.workerId
+                  );
+                  if (found) {
+                    return of({ data: { profile: found } });
+                  }
+                  return throwError(() => new Error('Worker not found'));
+                })
+              );
+            })
+          );
+        }
+        return throwError(() => err);
+      })
+    ).subscribe({
       next: (res) => {
         this.worker = res?.data?.profile || res?.data || null;
         if (this.worker) {

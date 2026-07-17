@@ -16,6 +16,7 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewChecked {
   private readonly userContext = inject(UserContextService);
   private readonly toast = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly pusherService = inject(PusherService);
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
@@ -219,6 +220,19 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewChecked {
   getUnreadCount(conv: any): number {
     if (!conv.unreadCount) return 0;
     return this.currentUserRole === 'user' ? conv.unreadCount.client : conv.unreadCount.worker;
+  }
+
+  getParticipantWorkerId(conv: any): string | null {
+    if (this.currentUserRole !== 'user') return null;
+    const w = conv?.worker;
+    if (!w) return null;
+    return w._id || w.id || (typeof w === 'string' ? w : null);
+  }
+
+  goToWorkerProfile(conv: any): void {
+    const id = this.getParticipantWorkerId(conv);
+    if (!id) return;
+    this.router.navigate(['/workers', id]);
   }
 
   private scrollToBottom(): void {

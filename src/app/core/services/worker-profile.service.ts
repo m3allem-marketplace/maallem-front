@@ -26,6 +26,10 @@ export class WorkerProfileService {
     return this.api.get<any>(`/profiles/workers/${id}`);
   }
 
+  getWorkerProfileByUserId(userId: string): Observable<any> {
+    return this.api.get<any>(`/profiles/workers/user/${userId}`);
+  }
+
   getMyProfile(): Observable<any> {
     return this.api.get<any>('/profiles/worker/me');
   }
