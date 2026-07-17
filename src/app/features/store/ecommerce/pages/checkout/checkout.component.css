@@ -1,5 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
 
+:host {
+  display: block;
+  width: 100%;
+
+  /* Design Tokens mapping for Checkout Component */
+  --bg-card:            var(--bg-surface, #ffffff);
+  --border-light:       var(--border-color, #e9ecef);
+  --text-heading:       var(--text-primary, #212529);
+  --bg-input:           var(--color-neutral-0, #ffffff); /* Solid white inputs */
+  --font-main:          var(--font-sans), 'Cairo', sans-serif;
+  --text-body:          var(--color-neutral-700, #495057);
+  --text-muted:         var(--color-neutral-500, #adb5bd);
+  --blue-50:            var(--color-primary-50, #eef0f9);
+  --blue-300:           var(--color-primary-300, #7f8dcf);
+  --blue-600:           var(--color-primary-600, #1f3194);
+  --blue-700:           var(--color-primary-700, #1b2b6e);
+  --blue-800:           var(--color-primary-800, #142054);
+  --red-500:            var(--color-error, #dc3545);
+  --border-focus:       var(--color-primary-700, #1b2b6e);
+  --radius-md:          8px;
+  --radius-lg:          12px;
+  --radius-sm:          6px;
+  --shadow-sm:          var(--shadow-sm, 0 1px 3px rgba(27,43,110,0.1));
+  --shadow-md:          var(--shadow-md, 0 4px 6px rgba(27,43,110,0.07));
+}
+
 .checkout-page {
   min-height: 100vh;
   background: var(--bg-page);
@@ -152,7 +178,15 @@
 .field-input--error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,.12) !important; }
 
 .field-textarea { height: 90px; padding: .75rem 1rem; resize: vertical; }
-.field-select { appearance: none; cursor: pointer; }
+.field-select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231B2B6E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: left 1rem center;
+  background-size: 14px;
+  padding-left: 2.5rem; /* space for arrow */
+}
 
 .field-error { font-size: .78rem; color: var(--red-500); font-weight: 600; margin: 0; }
 
@@ -174,7 +208,7 @@
 .payment-option--active {
   border-color: var(--blue-600);
   background: var(--blue-50);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  box-shadow: 0 0 0 3px rgba(27,43,110,.08);
 }
 .payment-option__icon { font-size: 1.75rem; flex-shrink: 0; }
 .payment-option__title { font-size: .95rem; font-weight: 700; color: var(--text-heading); margin: 0; }
@@ -212,11 +246,11 @@
   gap: .6rem;
   margin-top: 1.5rem;
   transition: all .2s;
-  box-shadow: 0 4px 14px rgba(37,99,235,.3);
+  box-shadow: 0 4px 14px rgba(27,43,110,.25);
 }
 .submit-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--blue-700), var(--blue-800));
-  box-shadow: 0 6px 20px rgba(37,99,235,.4);
+  box-shadow: 0 6px 20px rgba(27,43,110,.35);
   transform: translateY(-1px);
 }
 .submit-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
