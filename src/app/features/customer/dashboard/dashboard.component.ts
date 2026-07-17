@@ -16,6 +16,7 @@ export class CustomerDashboardComponent implements OnInit {
   bookings: any[] = [];
   bidRequests: Project[] = [];
   storeOrders: any[] = [];
+  selectedOrderId: string | null = null;
 
   // Computed stats
   totalSpend = 0;
@@ -154,6 +155,22 @@ export class CustomerDashboardComponent implements OnInit {
 
   viewBookingDetails(id: string): void {
     this.router.navigate(['/customer/bookings', id]);
+  }
+
+  toggleOrderDetails(orderId: string): void {
+    this.selectedOrderId = this.selectedOrderId === orderId ? null : orderId;
+  }
+
+  getOrderStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      'pending': 'قيد المراجعة',
+      'confirmed': 'مؤكد ✓',
+      'delivered': 'تم التوصيل',
+      'cancelled': 'ملغي',
+      'shipped': 'جاري الشحن',
+      'processing': 'جاري التجهيز'
+    };
+    return map[status] || status;
   }
 
   viewOffers(projectId: string): void {

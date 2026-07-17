@@ -142,38 +142,151 @@
           </div>
 
           <!-- Orders List -->
-          <div *ngIf="storeOrders.length > 0" class="flex flex-col gap-4">
-            <div 
-              *ngFor="let order of storeOrders.slice(0, 5)" 
-              class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-gray-50 hover:border-gray-100 hover:bg-gray-50 transition-all gap-4"
-            >
-              <div class="flex items-center gap-3">
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 text-amber-600">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
+          <div *ngIf="storeOrders.length > 0" class="flex flex-col gap-3">
+            <div *ngFor="let order of storeOrders.slice(0, 5)">
+              <!-- Order Row (Clickable) -->
+              <div 
+                class="store-order-row flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border cursor-pointer transition-all gap-4"
+                [class.store-order-row--active]="selectedOrderId === (order._id || order.id)"
+                [ngClass]="{
+                  'border-amber-200 bg-amber-50/40': selectedOrderId === (order._id || order.id),
+                  'border-gray-50 hover:border-gray-100 hover:bg-gray-50': selectedOrderId !== (order._id || order.id)
+                }"
+                (click)="toggleOrderDetails(order._id || order.id)"
+              >
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 text-amber-600">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                  </div>
+                  <div class="flex flex-col text-right">
+                    <h4 class="text-sm font-bold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">
+                      {{ order.productId?.title || order.product?.title || order.title || 'طلب منتج متجر' }}
+                    </h4>
+                    <span class="text-xs text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">
+                      الكمية: {{ order.quantity }} | تاريخ الطلب: {{ order.createdAt | date:'shortDate' }}
+                    </span>
+                  </div>
                 </div>
-                <div class="flex flex-col text-right">
-                  <h4 class="text-sm font-bold text-gray-900 leading-tight" style="font-family: 'Cairo', var(--font-arabic);">
-                    {{ order.productId?.title || order.product?.title || order.title || 'طلب منتج متجر' }}
-                  </h4>
-                  <span class="text-xs text-gray-400 mt-1" style="font-family: 'Cairo', var(--font-arabic);">
-                    الكمية: {{ order.quantity }} | تاريخ الطلب: {{ order.createdAt | date:'shortDate' }}
+
+                <div class="flex items-center gap-4 justify-between sm:justify-end">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-right"
+                    [ngClass]="{
+                      'bg-slate-100 text-slate-700': order.status === 'pending',
+                      'bg-green-100 text-green-700': order.status === 'confirmed' || order.status === 'delivered',
+                      'bg-blue-100 text-blue-700': order.status === 'shipped' || order.status === 'processing',
+                      'bg-red-100 text-red-700': order.status === 'cancelled'
+                    }"
+                    style="font-family: 'Cairo', var(--font-arabic);"
+                  >
+                    {{ getOrderStatusLabel(order.status) }}
                   </span>
+                  <!-- Expand/Collapse chevron -->
+                  <svg 
+                    class="w-4 h-4 text-gray-400 transition-transform duration-200"
+                    [class.rotate-180]="selectedOrderId === (order._id || order.id)"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
                 </div>
               </div>
 
-              <div class="flex items-center gap-4 justify-between sm:justify-end">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-right"
-                  [ngClass]="{
-                    'bg-slate-100 text-slate-700': order.status === 'pending',
-                    'bg-green-100 text-green-700': order.status === 'confirmed' || order.status === 'delivered',
-                    'bg-red-100 text-red-700': order.status === 'cancelled'
-                  }"
-                  style="font-family: 'Cairo', var(--font-arabic);"
-                >
-                  {{ order.status === 'pending' ? 'قيد المراجعة' : (order.status === 'confirmed' ? 'مؤكد ✓' : (order.status === 'delivered' ? 'تم التوصيل' : 'ملغي')) }}
-                </span>
+              <!-- Expanded Order Details -->
+              <div 
+                *ngIf="selectedOrderId === (order._id || order.id)"
+                class="store-order-details mt-1 mx-2 p-5 rounded-xl bg-white border border-amber-100 shadow-sm"
+                style="direction: rtl;"
+              >
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  
+                  <!-- Product Info -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">اسم المنتج</span>
+                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">
+                      {{ order.productId?.title || order.product?.title || order.title || '—' }}
+                    </span>
+                  </div>
+
+                  <!-- Order ID -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">رقم الطلب</span>
+                    <span class="text-sm font-semibold text-gray-600" style="font-family: 'Onest', monospace; direction: ltr; text-align: right;">
+                      #{{ (order._id || order.id || '—') | slice:-8 }}
+                    </span>
+                  </div>
+
+                  <!-- Quantity -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">الكمية</span>
+                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">{{ order.quantity || '—' }}</span>
+                  </div>
+
+                  <!-- Total Price -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">السعر الإجمالي</span>
+                    <span class="text-sm font-extrabold text-amber-700" style="font-family: 'Cairo', var(--font-arabic);">
+                      {{ order.totalAmount || order.totalPrice || order.price || (order.productId?.price ? order.productId.price * order.quantity : '—') }}
+                      <span *ngIf="order.totalAmount || order.totalPrice || order.price || order.productId?.price" class="text-xs font-bold text-gray-400"> ج.م</span>
+                    </span>
+                  </div>
+
+                  <!-- Customer Name -->
+                  <div class="flex flex-col gap-1" *ngIf="order.customerName">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">اسم المشتري</span>
+                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">{{ order.customerName }}</span>
+                  </div>
+
+                  <!-- Phone -->
+                  <div class="flex flex-col gap-1" *ngIf="order.customerPhone || order.phone">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">رقم الهاتف</span>
+                    <span class="text-sm font-semibold text-gray-700" style="font-family: 'Onest', monospace; direction: ltr; text-align: right;">{{ order.customerPhone || order.phone }}</span>
+                  </div>
+
+                  <!-- Location -->
+                  <div class="flex flex-col gap-1" *ngIf="order.location">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">عنوان التوصيل</span>
+                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">{{ order.location }}</span>
+                  </div>
+
+                  <!-- Payment Method -->
+                  <div class="flex flex-col gap-1" *ngIf="order.paymentMethod">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">طريقة الدفع</span>
+                    <span class="text-sm font-bold text-gray-800" style="font-family: 'Cairo', var(--font-arabic);">
+                      {{ order.paymentMethod === 'cod' ? 'الدفع عند الاستلام' : (order.paymentMethod === 'online' ? 'دفع إلكتروني' : order.paymentMethod) }}
+                    </span>
+                  </div>
+
+                  <!-- Created At -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">تاريخ الطلب</span>
+                    <span class="text-sm font-semibold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">{{ order.createdAt | date:'fullDate' }}</span>
+                  </div>
+
+                  <!-- Updated At -->
+                  <div class="flex flex-col gap-1" *ngIf="order.updatedAt">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">آخر تحديث</span>
+                    <span class="text-sm font-semibold text-gray-700" style="font-family: 'Cairo', var(--font-arabic);">{{ order.updatedAt | date:'fullDate' }}</span>
+                  </div>
+
+                  <!-- Status -->
+                  <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" style="font-family: 'Cairo', var(--font-arabic);">حالة الطلب</span>
+                    <span class="text-sm font-extrabold px-3 py-1 rounded-full w-fit"
+                      [ngClass]="{
+                        'bg-slate-100 text-slate-700': order.status === 'pending',
+                        'bg-green-100 text-green-700': order.status === 'confirmed' || order.status === 'delivered',
+                        'bg-blue-100 text-blue-700': order.status === 'shipped' || order.status === 'processing',
+                        'bg-red-100 text-red-700': order.status === 'cancelled'
+                      }"
+                      style="font-family: 'Cairo', var(--font-arabic);"
+                    >
+                      {{ getOrderStatusLabel(order.status) }}
+                    </span>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
