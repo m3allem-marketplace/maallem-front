@@ -1972,6 +1972,142 @@
     flex-wrap: wrap;
     gap: 0.8rem;
   }
+  align-items: center;
+  justify-content: center;
+  color: var(--slate-300);
+  background: linear-gradient(135deg, var(--slate-50), var(--slate-100));
+}
+
+.sp-placeholder-svg {
+  width: 36px;
+  height: 36px;
+}
+
+.sp-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sp-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0 0 0.3rem 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sp-brand {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: var(--slate-100);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.sp-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.sp-price {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--blue-900);
+}
+
+.sp-price small {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.sp-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sp-cart-btn {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gold-dark);
+  border: 1.5px solid var(--gold-main);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.sp-cart-btn:hover:not(:disabled) {
+  background: var(--gold-main);
+  color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(223, 186, 107, 0.25);
+}
+
+.sp-cart-btn:disabled {
+  background: var(--slate-100);
+  border-color: var(--slate-200);
+  color: var(--slate-400);
+  cursor: not-allowed;
+}
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media (max-width: 1024px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content-inner {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header-search-wrap {
+    order: 3;
+    max-width: 100%;
+    width: 100%;
+  }
+  .header-actions {
+    order: 2;
+  }
+  .benefits-section {
+    margin-top: 1rem;
+  }
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .circular-img-wrap {
+    width: 80px;
+    height: 80px;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .shop-products-grid {
+    grid-template-columns: 1fr;
+  }
+  .shop-card-header {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
   .shop-details-row {
     gap: 0.6rem;
   }
@@ -1988,4 +2124,79 @@
     width: 100%;
     height: 120px;
   }
+}
+
+/* ════════════════════════════════════════════
+   SEARCH RESULTS BANNER
+   ════════════════════════════════════════════ */
+
+.search-results-banner {
+  margin: 0 0 1.2rem 0;
+  animation: fadeSlideIn 0.3s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.srb-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(var(--color-accent-rgb, 223,186,107), 0.12) 0%, rgba(var(--color-accent-rgb, 223,186,107), 0.06) 100%);
+  border: 1px solid rgba(var(--color-accent-rgb, 223,186,107), 0.3);
+  border-radius: 12px;
+  padding: 0.85rem 1.2rem;
+  flex-wrap: wrap;
+}
+
+.srb-icon {
+  color: var(--gold-main, #dfba6b);
+  flex-shrink: 0;
+}
+
+.srb-label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.srb-term {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-main, #dfba6b);
+  letter-spacing: 0.01em;
+}
+
+.srb-count {
+  font-size: 0.82rem;
+  background: var(--gold-main, #dfba6b);
+  color: #1a1a1a;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.srb-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-card, #fff);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.srb-clear-btn:hover {
+  background: var(--color-error, #ef4444);
+  border-color: var(--color-error, #ef4444);
+  color: #fff;
+  transform: rotate(90deg);
 }
