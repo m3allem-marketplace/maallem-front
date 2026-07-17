@@ -58,6 +58,10 @@ export class AiAssistantComponent implements OnInit, OnDestroy, AfterViewInit {
   dimHeight: number | null = null;
   dimArea: number | null = null;
   dimLinearMeters: number | null = null;
+
+  printInvoice(): void {
+    window.print();
+  }
   dimQuantity: number | null = null;
 
   // Toggle helpers for multiple-input options

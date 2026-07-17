@@ -517,3 +517,37 @@
   color: #f8fafc;
   border: 1px solid rgba(234, 88, 12, 0.4);
 }
+
+/* ── Print Styles for Invoice Download ─────────────────────────────────── */
+@media print {
+  /* Hide unnecessary elements globally */
+  header, footer, nav, .main-tabs-bar, .orb-card, .dimension-form-container, .btn-request, .console-card, .btn-action, button, a {
+    display: none !important;
+  }
+
+  /* Make sure the invoice takes the full page */
+  body, html {
+    background: #ffffff !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Reset container styles */
+  .ai-playground, .card, .invoice-body {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .material-tile {
+    break-inside: avoid;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}
