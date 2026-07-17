@@ -19,27 +19,22 @@
   <div class="modal-info-grid">
     <div class="modal-info-item">
       <p class="modal-info-label">رقم الطلب</p>
-      <p class="modal-info-value">#{{ receipt.orderId }}</p>
+      <p class="modal-info-value">#{{ receipt._id || receipt.id || receipt.orderId }}</p>
     </div>
 
     <div class="modal-info-item">
-  <p class="modal-info-label">الحالة</p>
-  <p class="modal-info-value modal-info-value--status">
-    {{ receipt.status === 'confirmed' ? 'مؤكد ✓' : 'قيد المراجعة' }}
-  </p>
-</div>
+      <p class="modal-info-label">الحالة</p>
+      <p class="modal-info-value modal-info-value--status">
+        {{ receipt.status === 'confirmed' ? 'مؤكد ✓' : 'قيد المراجعة' }}
+      </p>
+    </div>
 
-<div class="modal-info-item">
-  <p class="modal-info-label">موعد التوصيل المتوقع</p>
-  <p class="modal-info-value">{{ receipt.estimatedDelivery }}</p>
-</div>
-
-<div class="modal-info-item">
-  <p class="modal-info-label">الإجمالي المدفوع</p>
-  <p class="modal-info-value modal-info-value--total">
-    {{ grandTotal }} ج.م
-  </p>
-</div>
+    <div class="modal-info-item modal-info-item--total">
+      <p class="modal-info-label">الإجمالي المدفوع</p>
+      <p class="modal-info-value modal-info-value--total">
+        {{ grandTotal }} ج.م
+      </p>
+    </div>
   </div>
 
   <hr class="modal-divider"/>
