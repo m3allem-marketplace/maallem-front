@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenStorageService } from '../services/token-storage.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -9,7 +10,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.tokenStorageService.getAccessToken();
-    if (token) {
+    // Only attach authorization header to requests matching our main backend API URL
+    if (token && request.url.startsWith(environment.apiUrl)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
