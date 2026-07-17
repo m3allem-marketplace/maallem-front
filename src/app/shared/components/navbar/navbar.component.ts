@@ -432,6 +432,7 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       background: rgba(0, 0, 0, 0.02);
       cursor: pointer;
       transition: all 220ms ease;
+      flex-shrink: 0;
     }
 
     .nb-avatar-btn:hover {
@@ -447,7 +448,8 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       display: flex;
       flex-direction: column;
       text-align: right;
-      min-width: 0;
+      flex-shrink: 0;
+      min-width: max-content;
     }
 
     .nb-user-name {
@@ -455,9 +457,6 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
       font-size: 13px;
       font-weight: 800;
       color: #1E293B;
-      max-width: 110px;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
       line-height: 1.2;
     }
@@ -972,6 +971,18 @@ import { EcommerceService } from '../../../features/store/ecommerce/services/eco
     .nb-backdrop--show {
       display: block;
       opacity: 1;
+    }
+
+    /* ════════════════════════════════════════════════
+       RESPONSIVE — hide user name when space is tight
+    ════════════════════════════════════════════════ */
+    @media (max-width: 1300px) {
+      .nb-user-info {
+        display: none;
+      }
+      .nb-avatar-btn {
+        padding: 4px 8px 4px 4px;
+      }
     }
 
     /* ════════════════════════════════════════════════
