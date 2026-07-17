@@ -39,7 +39,7 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
     private reviewService: ReviewService,
     private pusherService: PusherService,
     public toast: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -361,6 +361,21 @@ export class BookingDetailComponent implements OnInit, OnDestroy {
       return;
     }
     this.router.navigate(['/chat'], { queryParams: { workerId: id, projectId: this.bookingId } });
+  }
+
+  getWorkerId(): string | null {
+    const w = this.booking?.worker;
+    if (!w) return null;
+    return w._id || w.id || (typeof w === 'string' ? w : null);
+  }
+
+  goToWorkerProfile(): void {
+    const id = this.getWorkerId();
+    if (!id) {
+      this.toast.error('بيانات الحرفي غير متاحة');
+      return;
+    }
+    this.router.navigate(['/workers', id]);
   }
 
   private seedMockData(): void {

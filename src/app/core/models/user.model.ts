@@ -40,6 +40,14 @@ export interface WorkerAvailabilitySlot {
   isActive: boolean;
 }
 
+export interface Review {
+  _id?: string;
+  clientName: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
 export interface WorkerProfile {
   _id?:               string;
   user:               UserPublic;
@@ -55,6 +63,9 @@ export interface WorkerProfile {
   availabilities?:    WorkerAvailabilitySlot[];
   hourlyRate?:        number;
   offersFlatRate?:    boolean;
+  reviews?:           Review[];
+  rating?:            number;
+  reviewCount?:       number;
   createdAt?:         string;
   updatedAt?:         string;
 }

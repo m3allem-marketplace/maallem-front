@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // التعديل هنا: الـ CommonModule بياجي من @angular/common مش core
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-// قم بعمل import لكومبوننت الـ input المخصص هنا، على سبيل المثال:
-// import { InputComponent } from '../../shared/components/input/input.component'; 
+import { ToastService } from '@m3allem/ui-kit';
 
 @Component({
   selector: 'app-footer',
@@ -10,10 +9,19 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule, 
     RouterModule
-    // InputComponent <-- ضيف اسم كومبوننت الـ input المخصص هنا عشان الإيرور يختفي
   ],
   templateUrl: './footer.component.html'
 })
 export class FooterComponent {
   currentYear: number = new Date().getFullYear();
+
+  constructor(private toast: ToastService) {}
+
+  subscribeNewsletter(email: string): void {
+    if (email && email.trim() !== '') {
+      this.toast.success('حسنًا، سنرسل إليك أحدث العروض والكوبونات');
+    } else {
+      this.toast.warning('يرجى إدخال بريدك الإلكتروني أولاً');
+    }
+  }
 }

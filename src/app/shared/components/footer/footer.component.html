@@ -67,12 +67,14 @@
   
   <div class="relative w-full max-w-sm flex items-center">
     <input 
+      #emailInput
       type="email" 
       placeholder="بريدك الإلكتروني" 
       class="w-full h-11 pl-16 pr-4 text-sm text-slate-900 bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium placeholder:text-slate-400"
     />
     <button 
       type="button"
+      (click)="subscribeNewsletter(emailInput.value); emailInput.value=''"
       class="absolute left-1 top-[4px] h-9 w-12 flex items-center justify-center bg-amber-500 text-slate-900 rounded border-0 border-none outline-none transition-all duration-300 hover:bg-amber-400 group"
     >
       <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
