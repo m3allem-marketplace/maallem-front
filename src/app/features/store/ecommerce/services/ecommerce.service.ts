@@ -58,9 +58,11 @@ export interface OrderPayload {
 
 export interface OrderReceipt {
   orderId:           string;
+  _id?:              string;
+  id?:               string;
   totalAmount:       number;
   estimatedDelivery: string;
-  status:            'confirmed' | 'pending';
+  status:            'confirmed' | 'pending' | string;
 }
 
 // ─── Service ──────────────────────────────────────────────────────────────────
