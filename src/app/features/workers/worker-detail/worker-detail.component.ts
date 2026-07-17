@@ -21,6 +21,10 @@ export class WorkerDetailComponent implements OnInit {
   loading = false;
   submitting = false;
 
+  // Lightbox State
+  showLightbox = false;
+  currentImageIndex = 0;
+
   // Booking Modal State
   showBookingModal = false;
   bookingStep = 1;
@@ -125,6 +129,31 @@ export class WorkerDetailComponent implements OnInit {
 
   get isLoggedIn(): boolean {
     return this.userContext.isLoggedIn;
+  }
+
+  // Lightbox Methods
+  openLightbox(index: number): void {
+    if (!this.worker?.portfolioImages || this.worker.portfolioImages.length === 0) return;
+    this.currentImageIndex = index;
+    this.showLightbox = true;
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  closeLightbox(): void {
+    this.showLightbox = false;
+    document.body.style.overflow = '';
+  }
+
+  nextImage(event?: Event): void {
+    if (event) event.stopPropagation();
+    if (!this.worker?.portfolioImages) return;
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.worker.portfolioImages.length;
+  }
+
+  prevImage(event?: Event): void {
+    if (event) event.stopPropagation();
+    if (!this.worker?.portfolioImages) return;
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.worker.portfolioImages.length) % this.worker.portfolioImages.length;
   }
 
   openBookingModal(): void {
