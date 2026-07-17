@@ -99,10 +99,24 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  shopWarningVisible = false;
+  shopWarningName    = '';
+  private shopWarningTimer: any;
+
   addToCart(): void {
     if (!this.product || this.product.stockQuantity === 0) return;
-    this.ecommerceService.addToCart(this.product, this.quantity);
-    this.triggerToast();
+    const result = this.ecommerceService.addToCart(this.product, this.quantity);
+    if (result === 'added') {
+      this.triggerToast();
+    } else {
+      // Blocked — show warning toast
+      this.shopWarningName    = result.shopName;
+      this.shopWarningVisible = true;
+      if (this.shopWarningTimer) clearTimeout(this.shopWarningTimer);
+      this.shopWarningTimer = setTimeout(() => {
+        this.shopWarningVisible = false;
+      }, 4000);
+    }
   }
 
   triggerToast(): void {

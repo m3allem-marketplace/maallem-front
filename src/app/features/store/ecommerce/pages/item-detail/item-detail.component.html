@@ -168,4 +168,23 @@
     (closed)="closeCart()"
     (checkoutClicked)="goToCheckout()"
   ></app-cart-drawer>
+
+  <!-- ══════════════ SHOP RESTRICTION WARNING TOAST ══════════════ -->
+  <div class="shop-warning-toast" *ngIf="shopWarningVisible" (click)="shopWarningVisible = false">
+    <div class="shop-warning-toast__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <div class="shop-warning-toast__content">
+      <p class="shop-warning-toast__title">لا يمكن الإضافة</p>
+      <p class="shop-warning-toast__msg">
+        السلة تحتوي على منتجات من <strong>{{ shopWarningName }}</strong>.
+        يُرجى إتمام الطلب الحالي أو تفريغ السلة أولاً للشراء من محل آخر.
+      </p>
+    </div>
+  </div>
+
 </div>

@@ -32,7 +32,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   /** Human-readable error shown in the error banner */
   errorMessage = '';
   showModal    = false;
-  orderReceipt: OrderReceipt | null = null;
+  orderReceipts: OrderReceipt[] = [];
 
   /** Captured coordinates – populated by Geolocation API or fallback city map */
   private latitude  = 0;
@@ -140,9 +140,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     };
 
     this.ecommerceService.placeOrder(payload).subscribe({
-      next: receipt => {
-        this.isLoading    = false;           // ✅ stop spinner on success
-        this.orderReceipt = receipt;
+      next: receipts => {
+        this.isLoading     = false;           // ✅ stop spinner on success
+        this.orderReceipts = receipts;
         this.ecommerceService.clearCart();   // ✅ clear cart state (201 success)
         this.showModal    = true;            // ✅ show confirmation modal
         this.cdr.detectChanges();            // ✅ force view update immediately

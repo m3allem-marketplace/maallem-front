@@ -177,10 +177,8 @@
 
   <!-- ══════════════ ORDER CONFIRMATION MODAL ══════════════ -->
   <app-order-confirmation-modal
-    *ngIf="showModal && orderReceipt"
-    [receipt]="orderReceipt"
-    [cartItems]="cartItems"
-    [grandTotal]="grandTotal"
+    *ngIf="showModal && orderReceipts.length"
+    [orderReceipts]="orderReceipts"
     (closed)="closeModal()"
   ></app-order-confirmation-modal>
 

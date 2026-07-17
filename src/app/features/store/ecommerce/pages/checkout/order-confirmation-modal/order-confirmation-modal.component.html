@@ -19,14 +19,29 @@
   <div class="modal-info-grid">
     <div class="modal-info-item">
       <p class="modal-info-label">رقم الطلب</p>
-      <p class="modal-info-value">#{{ receipt._id || receipt.id || receipt.orderId }}</p>
+      <p class="modal-info-value">#{{ firstOrder?._id?.slice(-6) }}</p>
     </div>
 
     <div class="modal-info-item">
       <p class="modal-info-label">الحالة</p>
       <p class="modal-info-value modal-info-value--status">
-        {{ receipt.status === 'confirmed' ? 'مؤكد ✓' : 'قيد المراجعة' }}
+        {{ orderStatus }}
       </p>
+    </div>
+
+    <div class="modal-info-item">
+      <p class="modal-info-label">اسم العميل</p>
+      <p class="modal-info-value">{{ firstOrder?.customerName }}</p>
+    </div>
+
+    <div class="modal-info-item">
+      <p class="modal-info-label">رقم الهاتف</p>
+      <p class="modal-info-value">{{ firstOrder?.customerPhone }}</p>
+    </div>
+
+    <div class="modal-info-item modal-info-item--full">
+      <p class="modal-info-label">العنوان</p>
+      <p class="modal-info-value">{{ firstOrder?.location }}</p>
     </div>
 
     <div class="modal-info-item modal-info-item--total">
@@ -42,11 +57,9 @@
   <div class="modal-items">
     <p class="modal-items-label">المنتجات المطلوبة</p>
 
-<div class="modal-item" *ngFor="let ci of cartItems">
+<div class="modal-item" *ngFor="let receipt of orderReceipts">
   <div class="modal-item__thumb">
-    <img *ngIf="ci.item.imageUrl" [src]="ci.item.imageUrl" [alt]="ci.item.title"/>
-
-    <div *ngIf="!ci.item.imageUrl" class="modal-item__placeholder">
+    <div class="modal-item__placeholder">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
       </svg>
@@ -54,12 +67,12 @@
   </div>
 
   <div class="modal-item__info">
-    <p class="modal-item__title">{{ ci.item.title }}</p>
-    <p class="modal-item__qty">× {{ ci.quantity }}</p>
+    <p class="modal-item__title">{{ receipt.order.product.name }}</p>
+    <p class="modal-item__qty">× {{ receipt.order.quantity }}</p>
   </div>
 
   <p class="modal-item__price">
-    {{ ci.item.price * ci.quantity }} ج.م
+    {{ receipt.order.totalPrice }} ج.م
   </p>
 </div>
 

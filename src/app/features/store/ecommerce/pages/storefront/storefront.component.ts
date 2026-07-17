@@ -285,11 +285,28 @@ export class StorefrontComponent implements OnInit, OnDestroy {
     return this.expandedShops.has(shopId);
   }
 
+  // ── Shop restriction toast ──────────────────────────────────────────────────
+  shopWarningVisible = false;
+  shopWarningName    = '';
+  private shopWarningTimer: any;
+
   addToCart(event: Event, item: Item): void {
     event.stopPropagation();
     if (item.stockQuantity > 0) {
-      this.ecommerceService.addToCart(item);
-      this.openCart();
+      const result = this.ecommerceService.addToCart(item);
+      if (result === 'added') {
+        this.openCart();
+      } else {
+        // Blocked — show warning toast
+        this.shopWarningName    = result.shopName;
+        this.shopWarningVisible = true;
+        if (this.shopWarningTimer) clearTimeout(this.shopWarningTimer);
+        this.shopWarningTimer = setTimeout(() => {
+          this.shopWarningVisible = false;
+          this.cdr.detectChanges();
+        }, 4000);
+        this.cdr.detectChanges();
+      }
     }
   }
 
