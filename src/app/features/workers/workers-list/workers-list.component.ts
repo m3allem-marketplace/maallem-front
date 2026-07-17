@@ -26,12 +26,12 @@ export class WorkersListComponent implements OnInit {
 
   specializations = [
     { value: '', label: 'جميع التخصصات' },
-    { value: 'سباكة', label: 'سباكة (Plumbing)' },
-    { value: 'كهرباء', label: 'كهرباء (Electrical)' },
-    { value: 'نجارة', label: 'نجارة (Carpentry)' },
-    { value: 'دهان', label: 'دهانات (Painting)' },
-    { value: 'تكييف', label: 'تكييف وتبريد (AC)' },
-    { value: 'تنظيف', label: 'تنظيف (Cleaning)' }
+    { value: 'plumbing', label: 'سباكة (Plumbing)' },
+    { value: 'electricity', label: 'كهرباء (Electrical)' },
+    { value: 'carpentry', label: 'نجارة (Carpentry)' },
+    { value: 'painting', label: 'دهانات (Painting)' },
+    { value: 'hvac', label: 'تكييف وتبريد (AC)' },
+    { value: 'cleaning', label: 'تنظيف (Cleaning)' }
   ];
 
   constructor(
@@ -41,19 +41,20 @@ export class WorkersListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const categoryMap: Record<string, string> = {
-      'plumbing': 'سباكة',
-      'electricity': 'كهرباء',
-      'carpentry': 'نجارة',
-      'painting': 'دهان',
-      'hvac': 'تكييف',
-      'cleaning': 'تنظيف'
-    };
-
     this.route.queryParams.subscribe(params => {
       const categoryParam = params['category'];
       if (categoryParam) {
-        this.selectedSpecialization = categoryMap[categoryParam.toLowerCase()] || categoryParam;
+        // Map Arabic URL params back to English if necessary, otherwise use as is
+        const arabicToEnglishMap: Record<string, string> = {
+          'سباكة': 'plumbing',
+          'كهرباء': 'electricity',
+          'نجارة': 'carpentry',
+          'دهان': 'painting',
+          'تكييف': 'hvac',
+          'تنظيف': 'cleaning'
+        };
+        const paramLower = categoryParam.toLowerCase();
+        this.selectedSpecialization = arabicToEnglishMap[paramLower] || paramLower;
       }
 
       const cityParam = params['city'];
@@ -81,7 +82,20 @@ export class WorkersListComponent implements OnInit {
 
     this.workerProfileService.getWorkerProfiles(filters).subscribe({
       next: (res) => {
-        const list = res?.data?.profiles || [];
+        let list = res?.data?.profiles || [];
+        
+        // Ensure accurate filtering even if backend is not filtering properly
+        if (this.selectedCity) {
+          list = list.filter((p: any) => p.location?.city === this.selectedCity);
+        }
+        
+        if (this.selectedSpecialization) {
+          list = list.filter((p: any) => {
+            if (!p.specializations || !Array.isArray(p.specializations)) return false;
+            return p.specializations.some((s: string) => s.trim() === this.selectedSpecialization.trim());
+          });
+        }
+
         this.workers = list.map((p: any) => {
           const localImagesStr = localStorage.getItem(`worker_portfolio_images_${p._id}`) ||
                                  (p.user?._id ? localStorage.getItem(`worker_portfolio_images_${p.user._id}`) : null);
