@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -132,6 +132,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const payload = {
       items:        this.cartItems,
       customerName: fullName,
+      customerPhone: phone,
       location:     `${address}، ${city}`,
       latitude:     this.latitude,
       longitude:    this.longitude,

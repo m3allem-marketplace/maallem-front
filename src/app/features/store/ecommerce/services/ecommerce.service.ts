@@ -33,11 +33,14 @@ export interface CartItem {
  */
 export interface OrderApiPayload {
   customerName: string;  // shopper's full name
+  customerPhone?: string; // shopper's phone number
+  phone?:        string; // alias in case backend uses phone
   productId:    string;  // product _id
   quantity:     number;
   location:     string;  // human-readable address / city
   latitude:     number;  // WGS-84 latitude  (0 if not available)
   longitude:    number;  // WGS-84 longitude (0 if not available)
+  paymentMethod?: string;
 }
 
 /**
@@ -46,6 +49,7 @@ export interface OrderApiPayload {
 export interface OrderPayload {
   items:            CartItem[];
   customerName:     string;
+  customerPhone:    string;
   location:         string;
   latitude:         number;
   longitude:        number;
@@ -350,16 +354,19 @@ export class EcommerceService {
    * all of them to complete before emitting. Returns the first receipt.
    */
   placeOrder(orderPayload: OrderPayload): Observable<OrderReceipt> {
-    const { items, customerName, location, latitude, longitude } = orderPayload;
+    const { items, customerName, customerPhone, location, latitude, longitude, paymentMethod } = orderPayload;
 
     const requests = items.map(ci => {
       const body: OrderApiPayload = {
         customerName,
+        customerPhone,
+        phone:     customerPhone,
         productId: ci.item._id,
         quantity:  ci.quantity,
         location,
         latitude,
         longitude,
+        paymentMethod,
       };
       return this.api.post<OrderReceipt>('/orders', body);
     });
