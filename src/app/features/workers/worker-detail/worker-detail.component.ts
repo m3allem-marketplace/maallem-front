@@ -113,6 +113,17 @@ export class WorkerDetailComponent implements OnInit {
               // ignore
             }
           }
+          
+          // Seed mock reviews if empty
+          if (!this.worker.reviews || this.worker.reviews.length === 0) {
+            this.worker.reviews = [
+              { clientName: 'أحمد محمود', rating: 5, comment: 'عمل ممتاز وسريع، شكراً لك، أنصح بالتعامل معه.', date: new Date().toISOString() },
+              { clientName: 'سارة خالد', rating: 4, comment: 'شغل جيد جداً لكن تأخر قليلاً في الموعد.', date: new Date(Date.now() - 86400000 * 2).toISOString() },
+              { clientName: 'محمد علي', rating: 5, comment: 'محترف جداً في عمله وأنصح بالتعامل معه، دقيق في مواعيده.', date: new Date(Date.now() - 86400000 * 5).toISOString() }
+            ];
+            this.worker.rating = 4.7;
+            this.worker.reviewCount = 3;
+          }
         }
         this.loading = false;
       },

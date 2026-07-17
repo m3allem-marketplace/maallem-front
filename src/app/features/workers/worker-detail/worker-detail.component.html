@@ -107,6 +107,63 @@
           </div>
         </div>
 
+        <!-- Reviews Card -->
+        <div class="detail-card p-6 bg-white border border-slate-100 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3.5 mb-5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center border border-rose-100/50">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </div>
+              <h3 class="text-base font-extrabold text-slate-800" style="font-family: 'Cairo', var(--font-arabic);">تقييمات العملاء</h3>
+            </div>
+            
+            <div *ngIf="worker.reviews && worker.reviews.length > 0" class="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+              <span class="text-xs font-bold text-amber-600">{{ worker.rating || '4.8' }}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <span class="text-[10px] text-amber-600/70 ml-1">({{ worker.reviewCount || worker.reviews.length }} تقييم)</span>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="!worker.reviews || worker.reviews.length === 0" class="py-8 flex flex-col items-center justify-center text-center">
+            <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-3 border border-slate-100">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <p class="text-xs font-bold text-slate-500">لا توجد تقييمات بعد</p>
+          </div>
+
+          <!-- Reviews List -->
+          <div *ngIf="worker.reviews && worker.reviews.length > 0" class="flex flex-col gap-4">
+            <div *ngFor="let review of worker.reviews" class="p-4 rounded-xl bg-slate-50/50 border border-slate-100 flex flex-col gap-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
+                    {{ review.clientName.charAt(0) }}
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-800">{{ review.clientName }}</h4>
+                    <span class="text-[10px] text-slate-400">{{ review.date | date:'mediumDate' }}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-0.5">
+                  <svg *ngFor="let star of [1,2,3,4,5]" width="10" height="10" viewBox="0 0 24 24" 
+                       [attr.fill]="star <= review.rating ? 'currentColor' : 'none'" 
+                       [attr.stroke]="star <= review.rating ? 'currentColor' : '#cbd5e1'" 
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       [class]="star <= review.rating ? 'text-amber-400' : 'text-slate-300'">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-600 font-semibold leading-relaxed">{{ review.comment }}</p>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Left Side: Sidebar Stats -->
