@@ -55,7 +55,7 @@ export function replaceImagesWithDynamicUrl<
       return product; // fallback: keep original image when _id is absent
     }
 
-    const constructedUrl = existingImageUrl || `${normalizedCloudBaseUrl}/${product._id}.jpg`;
+    const constructedUrl = existingImageUrl || '';
 
     // Temporary debug log: inspect the first 3 products in the browser console.
     // Remove this block once the correct URL structure is confirmed.
