@@ -106,9 +106,16 @@
 
         <!-- Card Footer: Offer Details & Action -->
         <div class="border-t border-slate-50 pt-4 mt-auto flex justify-between items-center">
-          <div class="flex flex-col">
-            <span class="text-[10px] text-slate-400">قيمة عرضك</span>
-            <span class="text-base font-extrabold text-slate-800">{{ bid.price | currencyFormat }}</span>
+          <div class="flex gap-5">
+            <div class="flex flex-col">
+              <span class="text-[10px] text-slate-400">سعر عرضك الكلي</span>
+              <span class="text-xs font-bold text-slate-500" *ngIf="bid.price">{{ bid.price | currencyFormat }}</span>
+              <span class="text-base font-extrabold text-slate-800" *ngIf="!bid.price">-</span>
+            </div>
+            <div class="flex flex-col border-r border-slate-100 pr-4" *ngIf="bid.price">
+              <span class="text-[10px] text-emerald-600">صافي ربحك (بعد العمولة)</span>
+              <span class="text-sm font-extrabold text-emerald-600">{{ (bid.price * 0.9) | currencyFormat }}</span>
+            </div>
           </div>
           <span class="text-[10px] font-extrabold text-amber-500 flex items-center gap-1">
             عرض التفاصيل والتحكم

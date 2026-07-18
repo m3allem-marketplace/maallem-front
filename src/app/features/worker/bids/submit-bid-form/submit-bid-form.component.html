@@ -96,6 +96,22 @@
             <p class="field-hint" *ngIf="project?.budget">
               ميزانية العميل التقديرية: <strong>{{ project?.budget | currencyFormat }}</strong>
             </p>
+
+            <!-- Commission & Net Earnings Breakdown -->
+            <div class="commission-breakdown-box" *ngIf="price && price > 0">
+              <div class="breakdown-row">
+                <span>سعر العرض الكلي:</span>
+                <span class="breakdown-val-total">{{ price | currencyFormat }}</span>
+              </div>
+              <div class="breakdown-row fee-row">
+                <span>عمولة المنصة (10%):</span>
+                <span class="breakdown-val-fee">- {{ (price * 0.1) | currencyFormat }}</span>
+              </div>
+              <div class="breakdown-row net-row">
+                <span>صافي أرباحك المتوقعة:</span>
+                <span class="breakdown-val-net">{{ (price * 0.9) | currencyFormat }}</span>
+              </div>
+            </div>
           </div>
 
           <!-- Estimated Days -->

@@ -301,3 +301,52 @@
   justify-content: flex-start;
   padding-top: 0.75rem;
 }
+
+/* ── Commission & Net Earnings Breakdown ──────────── */
+.commission-breakdown-box {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: #fefaf0;
+  border: 1px solid rgba(223, 186, 107, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 600;
+  font-family: 'Cairo', var(--font-arabic);
+}
+
+.breakdown-val-total {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.fee-row {
+  color: #b45309;
+}
+
+.breakdown-val-fee {
+  font-weight: 700;
+}
+
+.net-row {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(223, 186, 107, 0.4);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.breakdown-val-net {
+  font-size: 1rem;
+  font-weight: 800;
+}

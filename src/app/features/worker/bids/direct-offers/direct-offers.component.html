@@ -59,10 +59,18 @@
         </div>
 
         <!-- Price & details row -->
-        <div class="flex items-center gap-6 mb-5 p-4 bg-slate-50/60 rounded-2xl border border-slate-100/50">
+        <div class="flex flex-wrap items-center gap-6 mb-5 p-4 bg-slate-50/60 rounded-2xl border border-slate-100/50">
           <div class="flex flex-col">
             <span class="text-[10px] text-slate-400 mb-0.5">قيمة الطلب المتفق عليه</span>
-            <span class="text-lg font-extrabold text-emerald-600">{{ offer.price | currencyFormat }}</span>
+            <span class="text-sm font-bold text-slate-600">{{ offer.price | currencyFormat }}</span>
+          </div>
+          <div class="flex flex-col border-r border-slate-200 pr-6" *ngIf="offer.price">
+            <span class="text-[10px] text-amber-600 mb-0.5">عمولة المنصة (10%)</span>
+            <span class="text-xs font-bold text-amber-600">- {{ (offer.price * 0.1) | currencyFormat }}</span>
+          </div>
+          <div class="flex flex-col border-r border-slate-200 pr-6" *ngIf="offer.price">
+            <span class="text-[10px] text-emerald-600 mb-0.5">صافي مستحقاتك</span>
+            <span class="text-base font-extrabold text-emerald-600">{{ (offer.price * 0.9) | currencyFormat }}</span>
           </div>
           <div *ngIf="offer.project?.location?.address" class="flex flex-col border-r border-slate-200 pr-6">
             <span class="text-[10px] text-slate-400 mb-0.5">العنوان</span>

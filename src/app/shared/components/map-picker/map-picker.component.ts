@@ -112,8 +112,9 @@ export class MapPickerComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private async initMap(): Promise<void> {
     try {
-      this.L = await import('leaflet');
-      const L = this.L;
+      const leafletModule = await import('leaflet');
+      const L = (leafletModule as any).default || leafletModule;
+      this.L = L;
 
       // Fix default icon paths for Angular bundler
       delete (L.Icon.Default.prototype as any)._getIconUrl;
